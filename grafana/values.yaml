@@ -1,0 +1,46 @@
+tolerations:
+- key: "monitoring"
+  operator: "Equal"
+  value: "true"
+nodeSelector:
+  role: monitoring-workers
+persistence:
+  enabled: true
+  accessModes:
+    - ReadWriteOnce
+  size: 5Gi
+datasources: 
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+    - name: Prometheus
+      type: prometheus
+      url: http://prometheus-server.prometheus.svc.cluster.local
+      access: proxy
+      isDefault: true
+dashboards:
+  default:
+    kube-dash:
+      gnetId: 6663
+      revision: 1
+      datasource: Prometheus
+    kube-official-dash:
+      gnetId: 2
+      revision: 1
+      datasource: Prometheus
+    cluster-summary:
+      gnetId: 8685
+      revision: 1
+      datasource: Prometheus
+dashboardProviders:
+  dashboardproviders.yaml:
+    apiVersion: 1
+    providers:
+    - name: 'default'
+      orgId: 1
+      folder: ''
+      type: file
+      disableDeletion: false
+      editable: true
+      options:
+        path: /var/lib/grafana/dashboards

@@ -1,0 +1,11 @@
+usePassword: false
+master:
+  tolerations:
+  - key: "redis"
+    operator: "Equal"
+    value: "true"
+slave:
+  tolerations:
+  - key: "redis"
+    operator: "Equal"
+    value: "true"

@@ -1,0 +1,22 @@
+createCustomResource: true
+installCRDs: true
+tolerations:
+- key: "system"
+  operator: "Equal"
+  value: "true"
+nodeSelector:
+  role: system-workers
+webhook:
+  tolerations:
+  - key: "system"
+    operator: "Equal"
+    value: "true"
+  nodeSelector:
+    role: system-workers
+cainjector:
+  tolerations:
+  - key: "system"
+    operator: "Equal"
+    value: "true"
+  nodeSelector:
+    role: system-workers

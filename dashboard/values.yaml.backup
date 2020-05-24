@@ -1,0 +1,13 @@
+tolerations:
+- key: "monitoring"
+  operator: "Equal"
+  value: "true"
+nodeSelector:
+  role: monitoring-workers
+rbac:
+  create: true
+  clusterAdminRole: true
+  clusterReadOnlyRole: true
+serviceAccount:
+  create: true
+  name: dashboard-service-account

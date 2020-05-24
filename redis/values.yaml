@@ -1,0 +1,13 @@
+usePassword: false
+master:
+  disableCommands: []
+  tolerations:
+  - key: "redis"
+    operator: "Equal"
+    value: "true"
+slave:
+  disableCommands: []
+  tolerations:
+  - key: "redis"
+    operator: "Equal"
+    value: "true"

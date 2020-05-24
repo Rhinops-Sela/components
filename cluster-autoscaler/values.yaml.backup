@@ -1,0 +1,13 @@
+rbac:
+  create: true
+cloudProvider: aws
+awsRegion: @#awsRegion#@
+autoDiscovery:
+  enabled: @#autoDiscovery#@
+  clusterName: @#clusterName#@
+tolerations:
+- key: "system"
+  operator: "Equal"
+  value: "true"
+nodeSelector:
+  role: system-workers
