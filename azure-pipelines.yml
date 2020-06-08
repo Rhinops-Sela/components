@@ -1,17 +1,28 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
+resources:
+  repositories:
+    - repository: devops
+      type: github
+      name: Rhinops-Sela/devops
+      endpoint: Rhinops-Sela
+      
 trigger:
 - master
 
 pool:
   vmImage: 'ubuntu-latest'
 
-steps:
-- task: PublishPipelineArtifact@1
-  inputs:
-    targetPath: '$(Pipeline.Workspace)/s'
-    artifact: 'components'
-    publishLocation: 'pipeline'
+jobs:
+- job: Build
+  steps:
+  - task: PublishPipelineArtifact@1
+    inputs:
+      targetPath: '$(Pipeline.Workspace)/s'
+      artifact: 'components'
+      publishLocation: 'pipeline'
+
+- job: Publish
+  displayName: Publish a new container image
+  condition: and(succeeded(), eq(variables['publish'], 'true'))
+  dependsOn: Build
+  steps:
+    - template: build-and-push.yaml@devops 
