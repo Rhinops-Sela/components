@@ -1,6 +1,14 @@
 cp-kafka:
+  resources:
+    limits:
+      cpu: 3
+      memory: 12Gi
+    requests:
+      cpu: 3
+      memory: 3Gi
+  imageTag: 5.3.1
   enabled: true
-  brokers: 3
+  brokers: 6
   tolerations:
   - key: "kafka"
     operator: "Equal"
@@ -10,9 +18,10 @@ cp-kafka:
     role: kafka-workers
   persistence:
     enabled: true
-    dataDirSize: 5Gi
+    dataDirSize: 1000Gi
     dataLogDirSize: 5Gi
 cp-zookeeper:
+  imageTag: 5.3.1
   enabled: true
   tolerations:
   - key: "kafka"
@@ -21,11 +30,15 @@ cp-zookeeper:
     effect: "NoSchedule"
   nodeSelector:
     role: kafka-workers
-  servers: 3
+  servers: 6
   persistence:
     enabled: true
-    dataDirSize: 5Gi
+    dataDirSize: 1000Gi
     dataLogDirSize: 5Gi
+
+
+
+    
 cp-control-center:
   enabled: false
   tolerations:
@@ -37,8 +50,8 @@ cp-control-center:
     role: kafka-workers
   persistence:
     enabled: true
-    dataDirSize: 1Gi
-    dataLogDirSize: 1Gi
+    dataDirSize: 5Gi
+    dataLogDirSize: 5Gi
 cp-schema-registry:
   enabled: false
   tolerations:
@@ -50,8 +63,8 @@ cp-schema-registry:
     role: kafka-workers
   persistence:
     enabled: true
-    dataDirSize: 1Gi
-    dataLogDirSize: 1Gi
+    dataDirSize: 5Gi
+    dataLogDirSize: 5Gi
 cp-ksql-server:
   enabled: false
   tolerations:
@@ -63,8 +76,8 @@ cp-ksql-server:
     role: kafka-workers
   persistence:
     enabled: true
-    dataDirSize: 1Gi
-    dataLogDirSize: 1Gi
+    dataDirSize: 5Gi
+    dataLogDirSize: 5Gi
 cp-kafka-connect:
   enabled: false
   tolerations:
@@ -74,8 +87,8 @@ cp-kafka-connect:
     effect: "NoSchedule"
   persistence:
     enabled: true
-    dataDirSize: 1Gi
-    dataLogDirSize: 1Gi
+    dataDirSize: 5Gi
+    dataLogDirSize: 5Gi
   nodeSelector:
     role: kafka-workers
 cp-schema-registry:
@@ -87,8 +100,8 @@ cp-schema-registry:
     effect: "NoSchedule"
   persistence:
     enabled: true
-    dataDirSize: 1Gi
-    dataLogDirSize: 1Gi
+    dataDirSize: 5Gi
+    dataLogDirSize: 5Gi
   nodeSelector:
     role: kafka-workers
 cp-kafka-rest:
@@ -100,7 +113,7 @@ cp-kafka-rest:
     effect: "NoSchedule"
   persistence:
     enabled: true
-    dataDirSize: 1Gi
-    dataLogDirSize: 1Gi
+    dataDirSize: 5Gi
+    dataLogDirSize: 5Gi
   nodeSelector:
     role: kafka-workers

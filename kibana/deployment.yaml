@@ -17,15 +17,17 @@ spec:
     spec:
       containers:
       - name: kibana
-        image: docker.elastic.co/kibana/kibana:6.8.9
+        image: docker.elastic.co/kibana/kibana:6.8.5
         resources:
           limits:
-            cpu: 1000m
+            cpu: 3
+            memory: '3Gi'
           requests:
-            cpu: 100m
+            cpu: 3
+            memory: '3Gi'
         env:
           - name: ELASTICSEARCH_HOSTS
-            value: http://elasticsearch-kibana.example.com
+            value: elasticsearch-kibana
         ports:
           - containerPort: 5601
       nodeSelector:

@@ -1,0 +1,224 @@
+---
+# Cluster agent
+apiVersion: v1
+kind: List
+items:
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: datadog-cluster-agent
+      namespace: datadog
+    spec:
+      selector:
+        matchLabels:
+          app: datadog-cluster-agent
+      template:
+        metadata:
+          labels:
+            app: datadog-cluster-agent
+          name: datadog-agent
+          namespace: datadog
+        spec:
+          serviceAccountName: datadog-cluster-agent
+          nodeSelector:
+            role: monitoring-workers
+          tolerations:
+          - key: "system"
+            operator: "Equal"
+            value: "true"
+          - key: "staging"
+            operator: "Equal"
+            value: "true"
+          - key: "vpn"
+            operator: "Equal"
+            value: "true"
+          - key: "monitoring"
+            operator: "Equal"
+            value: "true"
+          - key: "build"
+            operator: "Equal"
+            value: "true"
+          - key: "preprod"
+            operator: "Equal"
+            value: "true"
+          containers:
+          - image: datadog/cluster-agent:latest
+            imagePullPolicy: Always
+            name: datadog-cluster-agent
+            env:
+              - name: DD_API_KEY
+                value: ""
+              - name: DD_COLLECT_KUBERNETES_EVENTS
+                value: "false"
+              - name: DD_LEADER_ELECTION
+                value: "true"
+              - name: DD_EXTERNAL_METRICS_PROVIDER_ENABLED
+                value: "false"
+              - name: DD_CLUSTER_AGENT_AUTH_TOKEN
+                value: ""
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: datadog-cluster-agent
+      namespace: datadog
+      labels:
+        app: datadog-cluster-agent
+    spec:
+      ports:
+      - port: 5005 # Has to be the same as the one exposed in the DCA. Default is 5005.
+        protocol: TCP
+      selector:
+        app: datadog-cluster-agent
+---
+# Node agents
+apiVersion: v1
+kind: List
+items:
+  - apiVersion: apps/v1
+    kind: DaemonSet
+    metadata:
+      name: datadog-agent
+      namespace: datadog
+    spec:
+      selector:
+        matchLabels:
+          app: datadog-agent
+      template:
+        metadata:
+          labels:
+            app: datadog-agent
+          name: datadog-agent
+          namespace: datadog
+        spec:
+          serviceAccountName: datadog-agent
+          containers:
+          - image: datadog/agent:latest
+            imagePullPolicy: Always
+            name: datadog-agent
+            ports:
+              - containerPort: 8125
+                # Custom metrics via DogStatsD - uncomment this section to enable custom metrics collection
+                # hostPort: 8125
+                name: dogstatsdport
+                protocol: UDP
+              - containerPort: 8126
+                # Trace Collection (APM) - uncomment this section to enable APM
+                # hostPort: 8126
+                name: traceport
+                protocol: TCP
+            env:
+              - name: DD_API_KEY
+                value: "c5270b8dd15b9ddbd12b939df0504684"
+              - name: DD_SITE
+                value: "datadoghq.eu"
+              - name: DD_COLLECT_KUBERNETES_EVENTS
+                value: "false"
+              - name: DD_LEADER_ELECTION
+                value: "true"
+              - name: KUBERNETES
+                value: "true"
+              - name: DD_KUBERNETES_KUBELET_HOST
+                valueFrom:
+                  fieldRef:
+                    fieldPath: spec.nodeName
+              - name: DD_APM_ENABLED
+                value: "false"
+              - name: DD_LOGS_ENABLED
+                value: "true"
+              - name: DD_LOGS_CONFIG_CONTAINER_COLLECT_ALL
+                value: "true"
+              - name: DD_CLUSTER_AGENT_ENABLED
+                value: "true"
+              - name: DD_CLUSTER_AGENT_AUTH_TOKEN
+                value: "PDMyX0NIQVJBQ1RFUl9MT05HX1NUUklORz4="
+              - name: DD_AC_EXCLUDE
+                value: "image:.*"
+              - name: DD_AC_INCLUDE
+                value: "image:fg-*"
+              - name: DD_KUBELET_TLS_VERIFY
+                value: "false"
+              - name: DD_ENABLE_PAYLOADS_EVENTS
+                value: "false"
+              - name: DD_ENABLE_PAYLOADS_SERIES
+                value: "false"
+              - name: DD_ENABLE_PAYLOADS_SERVICE_CHECKS
+                value: "false"
+              - name: DD_ENABLE_PAYLOADS_SKETCHES
+                value: "false"
+            resources:
+              requests:
+                memory: "256Mi"
+                cpu: "200m"
+              limits:
+                memory: "256Mi"
+                cpu: "200m"
+            volumeMounts:
+              - name: dockersocket
+                mountPath: /var/run/docker.sock
+              - name: procdir
+                mountPath: /host/proc
+                readOnly: true
+              - name: cgroups
+                mountPath: /host/sys/fs/cgroup
+                readOnly: true
+              - name: pointerdir
+                mountPath: /opt/datadog-agent/run
+              - name: logpodpath
+                mountPath: /var/log/pods
+              # Docker runtime directory, replace this path with your container runtime logs directory,
+              # or remove this configuration if `/var/log/pods` is not a symlink to any other directory.
+              - name: logcontainerpath
+                mountPath: /var/lib/docker/containers
+            livenessProbe:
+              exec:
+                command:
+                - ./probe.sh
+              initialDelaySeconds: 15
+              periodSeconds: 5
+          volumes:
+            - hostPath:
+                path: /var/run/docker.sock
+              name: dockersocket
+            - hostPath:
+                path: /proc
+              name: procdir
+            - hostPath:
+                path: /sys/fs/cgroup
+              name: cgroups
+            - hostPath:
+                path: /opt/datadog-agent/run
+              name: pointerdir
+            - hostPath:
+                path: /var/log/pods
+              name: logpodpath
+            # Docker runtime directory, replace this path with your container runtime logs directory,
+            # or remove this configuration if `/var/log/pods` is not a symlink to any other directory.
+            - hostPath:
+                path: /var/lib/docker/containers
+              name: logcontainerpath
+          tolerations:
+          - key: "system"
+            operator: "Equal"
+            value: "true"
+          - key: "redis"
+            operator: "Equal"
+            value: "true"
+          - key: "elk"
+            operator: "Equal"
+            value: "true"
+          - key: "kafka"
+            operator: "Equal"
+            value: "true"
+          - key: "vpn"
+            operator: "Equal"
+            value: "true"
+          - key: "monitoring"
+            operator: "Equal"
+            value: "true"
+          - key: "build"
+            operator: "Equal"
+            value: "true"
+          - key: "gated"
+            operator: "Equal"
+            value: "true"
+
