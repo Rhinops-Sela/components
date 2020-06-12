@@ -13,7 +13,8 @@ then
     $RELEASE \
     helm/elasticsearch \
     -f helm/elasticsearch/values.yaml \
-    --namespace $NAMESPACE
+    --namespace $NAMESPACE \
+    --dry-run
 else
   echo $NAMESPACE exists
 fi

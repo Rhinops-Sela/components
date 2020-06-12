@@ -12,7 +12,8 @@ then
       $RELEASE \
       stable/prometheus \
       -f values.yaml \
-      -n $NAMESPACE
+      -n $NAMESPACE \
+      --dry-run
 else
   echo $NAMESPACE exists
 fi
