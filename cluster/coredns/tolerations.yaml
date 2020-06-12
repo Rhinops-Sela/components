@@ -6,4 +6,4 @@ spec:
         operator: "Equal"
         value: "true"
       nodeSelector:
-        role: system-workers
+        role: system

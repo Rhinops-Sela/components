@@ -1,0 +1,33 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: fennec-cluster
+  region: eu-west-1
+
+nodeGroups:
+  - name: system
+    labels:
+      role: system
+    instancesDistribution:
+        instanceTypes:
+          - "t3.small"
+          - "t2.small"
+    taints:
+      system: "true:NoSchedule"
+    tags:
+      k8s.io/cluster-autoscaler/node-template/label/role: system
+      k8s.io/cluster-autoscaler/node-template/taint/system: "true:NoSchedule"
+    minSize: 0
+    maxSize: 8
+    desiredCapacity: 1
+    volumeSize: 100
+    volumeType: gp2
+    privateNetworking: true
+    iam:
+      withAddonPolicies:
+        autoScaler: true
+    availabilityZones:
+      - "eu-west-1a"
+      - "eu-west-1b"
+      - "eu-west-1c"
