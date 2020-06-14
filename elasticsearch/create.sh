@@ -1,7 +1,9 @@
 #!/bin/bash
 # from: https://hub.helm.sh/charts/elastic/elasticsearch
-
-
+echo "falling a sleep -es"
+sleep 1
+echo "woke - es"
+echo "test replacement: ${ES_CLUSTER_NAME}"
 NAMESPACE=elasticsearch
 RELEASE=elasticsearch
 

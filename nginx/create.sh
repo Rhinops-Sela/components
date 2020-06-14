@@ -1,7 +1,9 @@
 #!/bin/bash
 NAMESPACE=ingress-nginx
 RELEASE=controller
-
+echo "falling a sleep -nginx"
+sleep 1
+echo "woke -nginx"
 
 if ! kubectl get namespace $NAMESPACE
 then
