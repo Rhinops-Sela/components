@@ -1,0 +1,7 @@
+apiVersion: v1
+data:
+  mapUsers: |
+    - userarn: ${AWS_ADMIN_ARN}
+      username: ${AWS_ADMIN_USER}
+      groups:
+      - system:masters

@@ -1,0 +1,35 @@
+apiVersion: v1
+data:
+  Corefile: |
+    .:53 {
+        errors
+        health
+        rewrite name kibana.fennec.com kibana.kibana.svc.cluster.local
+        rewrite name elasticsearch.fennec.com elasticsearch-master.elasticsearch.svc.cluster.local
+        rewrite name elasticsearch-kibana.fennec.com elasticsearch-kibana.elasticsearch.svc.cluster.local
+        rewrite name dashboard.fennec.com adf93856153ff4974a74f7bed661abdf-983ca521ddec1a16.elb.eu-west-1.amazonaws.com
+        rewrite name grafana.fennec.com grafana.grafana.svc.cluster.local
+        rewrite name prometheus-server.fennec.com prometheus-server.prometheus.svc.cluster.local
+        rewrite name prometheus-alert.fennec.com prometheus-alertmanager.prometheus.svc.cluster.local
+        rewrite name kafka-ui.fennec.com kafka-ui.kafka.svc.cluster.local
+        rewrite name kafka.fennec.com kafka-cp-kafka.kafka.svc.cluster.local
+        rewrite name zookeeper.fennec.com kafka-cp-zookeeper.kafka.svc.cluster.local
+        rewrite name zookeepr.fennec.com kafka-cp-zookeeper.kafka.svc.cluster.local
+        rewrite name redis-ui.fennec.com redis-ui.redis.svc.cluster.local
+        rewrite name redis.fennec.com redis-master.redis.svc.cluster.local
+        rewrite name redis-slave.fennec.com redis-slave.redis.svc.cluster.local
+        rewrite name kafka-zookeeper.fennec.com kafka.kafka-zookeeper.svc.cluster.local
+        rewrite name dynamodb.fennec.com dynamodb-local.dynamodb.svc.cluster.local
+        rewrite name dynamodb-ui.fennec.com dynamodb-local-admin.dynamodb.svc.cluster.local
+        kubernetes cluster.local in-addr.arpa ip6.arpa {
+          pods insecure
+          upstream
+          fallthrough in-addr.arpa ip6.arpa
+        }
+        prometheus :9153
+        forward . /etc/resolv.conf
+        cache 30
+        loop
+        reload
+        loadbalance
+    }

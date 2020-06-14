@@ -1,0 +1,35 @@
+apiVersion: v1
+data:
+  Corefile: |
+    .:53 {
+        errors
+        health
+        rewrite name kibana.${CUSTOM_DOMAIN_NAME} kibana.kibana.svc.cluster.local
+        rewrite name elasticsearch.${CUSTOM_DOMAIN_NAME} elasticsearch-master.elasticsearch.svc.cluster.local
+        rewrite name elasticsearch-kibana.${CUSTOM_DOMAIN_NAME} elasticsearch-kibana.elasticsearch.svc.cluster.local
+        rewrite name dashboard.${CUSTOM_DOMAIN_NAME} adf93856153ff4974a74f7bed661abdf-983ca521ddec1a16.elb.eu-west-1.amazonaws.com
+        rewrite name grafana.${CUSTOM_DOMAIN_NAME} grafana.grafana.svc.cluster.local
+        rewrite name prometheus-server.${CUSTOM_DOMAIN_NAME} prometheus-server.prometheus.svc.cluster.local
+        rewrite name prometheus-alert.${CUSTOM_DOMAIN_NAME} prometheus-alertmanager.prometheus.svc.cluster.local
+        rewrite name kafka-ui.${CUSTOM_DOMAIN_NAME} kafka-ui.kafka.svc.cluster.local
+        rewrite name kafka.${CUSTOM_DOMAIN_NAME} kafka-cp-kafka.kafka.svc.cluster.local
+        rewrite name zookeeper.${CUSTOM_DOMAIN_NAME} kafka-cp-zookeeper.kafka.svc.cluster.local
+        rewrite name zookeepr.${CUSTOM_DOMAIN_NAME} kafka-cp-zookeeper.kafka.svc.cluster.local
+        rewrite name redis-ui.${CUSTOM_DOMAIN_NAME} redis-ui.redis.svc.cluster.local
+        rewrite name redis.${CUSTOM_DOMAIN_NAME} redis-master.redis.svc.cluster.local
+        rewrite name redis-slave.${CUSTOM_DOMAIN_NAME} redis-slave.redis.svc.cluster.local
+        rewrite name kafka-zookeeper.${CUSTOM_DOMAIN_NAME} kafka.kafka-zookeeper.svc.cluster.local
+        rewrite name dynamodb.${CUSTOM_DOMAIN_NAME} dynamodb-local.dynamodb.svc.cluster.local
+        rewrite name dynamodb-ui.${CUSTOM_DOMAIN_NAME} dynamodb-local-admin.dynamodb.svc.cluster.local
+        kubernetes cluster.local in-addr.arpa ip6.arpa {
+          pods insecure
+          upstream
+          fallthrough in-addr.arpa ip6.arpa
+        }
+        prometheus :9153
+        forward . /etc/resolv.conf
+        cache 30
+        loop
+        reload
+        loadbalance
+    }
