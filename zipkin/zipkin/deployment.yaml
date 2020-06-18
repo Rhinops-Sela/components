@@ -1,0 +1,33 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zipkin
+  namespace: zipkin
+spec:
+  selector:
+    matchLabels:
+      run: zipkin
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: zipkin
+    spec:
+      nodeSelector:
+        role: monitoring-workers
+      tolerations:
+        - key: "monitoring"
+          operator: "Equal"
+          value: "true"
+      containers:
+      - name: zipkin
+        image: openzipkin/zipkin-aws
+        ports:
+          - containerPort: 9411
+        env:
+          - name: STORAGE_TYPE
+            value: "elasticsearch"
+          - name: ES_HOSTS
+            value: "http://elasticsearch-internal.fundguard.io:9200"
+
