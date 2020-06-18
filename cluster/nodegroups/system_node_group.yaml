@@ -2,8 +2,8 @@ apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
 
 metadata:
-  name: fennec-cluster
-  region: eu-west-1
+  name: ${CLUSTER_NAME}
+  region: ${CLUSTER_REGION}
 
 nodeGroups:
   - name: system
@@ -28,6 +28,6 @@ nodeGroups:
       withAddonPolicies:
         autoScaler: true
     availabilityZones:
-      - "eu-west-1a"
-      - "eu-west-1b"
-      - "eu-west-1c"
+      - "${CLUSTER_REGION}a"
+      - "${CLUSTER_REGION}b"
+      - "${CLUSTER_REGION}c"

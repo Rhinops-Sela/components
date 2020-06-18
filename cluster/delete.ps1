@@ -1,7 +1,16 @@
 #!/bin/pwsh
-$lookUpCluster = 'fennec-cluster'
-$lookUpRegion = 'eu-west-1'
-$lookUpNodegroup = 'system'
+# Handling parameters
+if ($DebugPreferences -eq "Continue"){
+    $lookUpCluster = 'fennec-cluster'
+    $lookUpRegion = 'eu-west-1'
+    $filepostfix = '.ydebug'
+}
+else {
+    $lookUpCluster = '${CLUSTER_NAME}'
+    $lookUpRegion = '${CLUSTER_REGION}'
+    $filepostfix = ''
+}
+$nodegroupName = 'system'
 
 # check for cluster
 $clusterExists = $false
@@ -13,22 +22,22 @@ if ($clustersList -contains $lookUpCluster) {
 # handle cluster delete
 if ($clusterExists) {
     Write-Host "cluster $lookUpCluster was found, deleting..."
-    aws eks --region $lookUpRegion update-kubeconfig --name fennec-cluster
+    aws eks --region $lookUpRegion update-kubeconfig --name $lookUpCluster --kubeconfig .kube
     # handle worker nodegroup
     $noderoupExists = $false
     $nodegroupList = eksctl get nodegroups --cluster $lookUpCluster -o json | ConvertFrom-Json | Select-Object -ExpandProperty Name
-    if ($nodegroupList -contains $lookUpNodegroup) {
+    if ($nodegroupList -contains $nodegroupName) {
         $noderoupExists = $true
     }
     if ($noderoupExists) {
-        Write-Host "nodegroup $lookUpNodegroup was found. deleting it."
-        eksctl delete nodegroup -f ./nodegroups/system_node_group.yaml --approve
+        Write-Host "nodegroup $nodegroupName was found. deleting it."
+        eksctl delete nodegroup -f "./nodegroups/system_node_group.yaml$filepostfix" --approve
     }
     else {
-        Write-Host "nodegroup $lookUpNodegroup was not found."
+        Write-Host "nodegroup $nodegroupName was not found."
         
     }
-    eksctl delete cluster -f ./cluster.yaml
+    eksctl delete cluster -f "./cluster.yaml$filepostfix"
 }
 else {
     Write-Host "cluster $lookUpCluster was not found"

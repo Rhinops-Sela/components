@@ -1,0 +1,7 @@
+apiVersion: v1
+data:
+  mapUsers: |
+    - userarn: arn:aws:iam::027065296145:user/iliag
+      username: iliag
+      groups:
+      - system:masters
