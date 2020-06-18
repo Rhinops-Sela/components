@@ -1,6 +1,8 @@
 #!/bin/pwsh
 # Handling parameters
-if (! $PSDebugContext){
+Write-Host "cluster-autoscaler.ps1"
+Write-Host (Get-Location)
+if ($PSDebugContext){
     $lookUpCluster = 'fennec-cluster'
     $lookUpRegion = 'eu-west-1'
     $filepostfix = '.ydebug'
@@ -10,9 +12,10 @@ else {
     $lookUpRegion = '${CLUSTER_REGION}'
     $filepostfix = ''
 }
+$kubeConfigFile="/.kube"
 
-../../common/createKubeConfig.ps1 -ClusterName $lookUpCluster -ClusterRegion $lookUpRegion -YamlPostfix $filepostfix -Nodegroup $nodegroupName -KubeConfigFullPath (Get-Item -Path ".\").FullName
-$kubeConfigFile=(Get-Item -Path ".\").FullName+"/.kube"
+../../common/createKubeConfig.ps1 -ClusterName $lookUpCluster -ClusterRegion $lookUpRegion -YamlPostfix $filepostfix -Nodegroup $nodegroupName -KubeConfigFullPath $kubeConfigFile
+#$kubeConfigFile=(Get-Item -Path ".\").FullName+"/.kube"
 
 $nodegroupName = 'system'
 $result=../../common/validateNodeGroup.ps1 -ClusterName $lookUpCluster -ClusterRegion $lookUpRegion -YamlPostfix $filepostfix -Nodegroup $nodegroupName
