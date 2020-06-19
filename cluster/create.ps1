@@ -39,7 +39,7 @@ if ($clusterExists) {
 else {
     Write-Host "cluster $lookUpCluster was not found, creating..."
     eksctl create cluster -f "./cluster.yaml$filepostfix"
-    $result = CreateNodegroup -NodegroupName "system" -Postfix "$filepostfix"
+    CreateNodegroup -NodegroupName "system" -Postfix "$filepostfix"
     $result = CreateKubeConfig -ClusterName $lookUpCluster -ClusterRegion $lookUpRegion -Nodegroup $nodegroupName -KubeConfigName ".kube"
     # coredns:tolerations
     $tolerations = (Get-Content ./coredns/tolerations.yaml -Raw)
