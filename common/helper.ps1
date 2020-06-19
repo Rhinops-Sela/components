@@ -1,3 +1,22 @@
+function CreateNodegroup {
+    param (
+        [Alias("NodegroupName")] $nodeGroup,
+        [Alias("Postfix")] $filepostfix
+    )
+
+    $nodegroupList = eksctl get nodegroups --cluster $lookUpCluster -o json | ConvertFrom-Json | Select-Object -ExpandProperty Name
+    if ($nodegroupList -contains $nodeGroup) {
+        $nodegroupExists = $true
+    }
+
+    if ($nodegroupExists) {
+        Write-Host "nodegroup $nodeGroup was found."
+    }
+    else {
+        Write-Host "nodegroup $nodeGroup was not found, creating it"
+        eksctl create nodegroup -f "./nodegroups/${nodeGroup}_node_group.yaml$filepostfix"
+    }
+}
 function ValidateK8SObject {
     param (
         [Alias("Namespace")] $ns,
