@@ -3,15 +3,23 @@
 param (
     [Alias("Namespace")] $ns,
     [Alias("K8SObject")] $Object,
-    [Alias("KubeConfigFullName")] $kubePath
+    [Alias("KubeConfigName")] $kubePath
 )
 
-$namespaceExists= Invoke-Expression "$./components/common/validateK8sNamespace.ps1 -Namespace $ns -KubeConfigFullName $kubePath"
+$namespaceExists
+$namespaceExists= Invoke-Expression "../common/validateK8sNamespace.ps1 -Namespace $ns -KubeConfigName $kubePath"
+
 if ( $namespaceExists ) {
     $rawObject= ($Object -split "/")[1]
-    $results=kubectl get $Object -n $ns --kubeconfig "$kubePath"
+    $results
+    Write-Host "before"
+    try {
+          $results=Invoke-Expression "kubectl get $Object -n $ns --kubeconfig $kubePath"
+    }
+    catch {}
+    Write-Host "after"
     foreach ($result in $results) {
-        if ($result -match $rawObject) {return $true}
+        if ($result -match $Object) {return $true}
     }
 }
 return $false

@@ -3,9 +3,8 @@
 param (
     [Alias("ClusterName")] $lookUpCluster,
     [Alias("ClusterRegion")] $lookUpRegion,
-    [Alias("YamlPostfix")]  $filepostfix,
     [Alias("Nodegroup")]  $nodegroupName, 
-    [Alias("KubeConfigFullPath")] $kubePath
+    [Alias("KubeConfigName")] $kubePath
 )
 $clusterExists = $false
 
@@ -16,7 +15,7 @@ if ($clustersList -contains $lookUpCluster) {
 
 if ($clusterExists) {
     Write-Host "cluster $lookUpCluster was found, updating kubeconfig..."    
-    aws eks --region $lookUpRegion update-kubeconfig --name $lookUpCluster --kubeconfig "$kubePath/.kube"
+    aws eks --region $lookUpRegion update-kubeconfig --name $lookUpCluster --kubeconfig "$kubePath"
 }
 else {
     Write-Error "cluster $lookUpCluster was not found"

@@ -12,23 +12,22 @@ else {
     $lookUpRegion = '${CLUSTER_REGION}'
     $filepostfix = ''
 }
-$kubeConfigFile="/.kube"
 
-../../common/createKubeConfig.ps1 -ClusterName $lookUpCluster -ClusterRegion $lookUpRegion -YamlPostfix $filepostfix -Nodegroup $nodegroupName -KubeConfigFullPath $kubeConfigFile
+../common/createKubeConfig.ps1 -ClusterName $lookUpCluster -ClusterRegion $lookUpRegion -Nodegroup $nodegroupName -KubeConfigName ".kube"
 #$kubeConfigFile=(Get-Item -Path ".\").FullName+"/.kube"
 
 $nodegroupName = 'system'
-$result=../../common/validateNodeGroup.ps1 -ClusterName $lookUpCluster -ClusterRegion $lookUpRegion -YamlPostfix $filepostfix -Nodegroup $nodegroupName
+$result=../common/validateNodeGroup.ps1 -ClusterName $lookUpCluster -ClusterRegion $lookUpRegion -Nodegroup $nodegroupName
 if (!$result) { return $false } # exit if nodegroup doesnt exist
 
 $ns="cluster-autoscaler"
-$result =../../common/validateK8sObject.ps1 -Namespace $ns -K8SObject "deployment/cluster-autoscaler-aws-cluster-autoscaler" -YamlPostfix $filepostfix -Nodegroup $nodegroupName -KubeConfigFullName $kubeConfigFile
+$result =../common/validateK8sObject.ps1 -Namespace $ns -K8SObject "deployment/cluster-autoscaler-aws-cluster-autoscaler" -Nodegroup $nodegroupName -KubeConfigName ".kube"
 if ($result) { return $false } #exit if object exist
 
 $release="cluster-autoscaler"
 helm repo add stable https://kubernetes-charts.storage.googleapis.com
 helm repo update
-$result= Invoke-Expression "$PSScriptRoot/createK8sNamespace.ps1 -Namespace $ns -KubeConfigFullName $kubePath"
+$result=../common/createK8sNamespace.ps1 -Namespace $ns -KubeConfigName ".kube"
 if ($result) {
-    helm install $release stable/cluster-autoscaler -f "values.yaml$filepostfix" --namespace $ns --kubeconfig .kube --version 7.0.0 # newer versions require kubernetes 1.17 https://hub.helm.sh/charts/stable/cluster-autoscaler/7.0.0
+    helm install $release stable/cluster-autoscaler -f "./cluster-autoscaler/values.yaml$filepostfix" --namespace $ns --kubeconfig .kube --version 7.0.0 # newer versions require kubernetes 1.17 https://hub.helm.sh/charts/stable/cluster-autoscaler/7.0.0
 }

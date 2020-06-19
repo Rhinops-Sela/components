@@ -2,7 +2,7 @@
 #region Cluster
 param (
     [Alias("Namespace")] $ns,
-    [Alias("KubeConfigFullName")] $kubePath
+    [Alias("KubeConfigName")] $kubePath
 )
 
 $namespaces = kubectl get namespaces --kubeconfig "$kubePath"

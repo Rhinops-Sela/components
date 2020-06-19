@@ -225,9 +225,9 @@ spec:
           emptyDir: {}
       serviceAccountName: kubernetes-dashboard
       nodeSelector:
-        role: monitoring
+        role: system
       tolerations:
-        - key: "monitoring"
+        - key: "system"
           operator: "Equal"
           value: "true"
 
@@ -292,9 +292,9 @@ spec:
             runAsGroup: 2001
       serviceAccountName: kubernetes-dashboard
       nodeSelector:
-        role: monitoring
+        role: system
       tolerations:
-        - key: "monitoring"
+        - key: "system"
           operator: "Equal"
           value: "true"
       volumes:
