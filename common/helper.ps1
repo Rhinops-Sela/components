@@ -80,7 +80,7 @@ function CreateK8SNamespace {
     foreach ($namespace in $namespaces) {
         if ($namespace -match $ns) { return $true }
     }
-    kubectl create namespace $ns --kubeconfig "$kubePath"
+    $return = kubectl create namespace $ns --kubeconfig "$kubePath"
     return $true
 }
 function CreateKubeConfig {
