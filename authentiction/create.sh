@@ -1,2 +1,2 @@
 
-echo "Nodegroup ${NAME} Created"
+echo "Auth Credentials are set"
