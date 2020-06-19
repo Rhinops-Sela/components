@@ -63,14 +63,14 @@ else {
     Write-Host "patching aws-auth: adding $userName ARN"
     kubectl patch configmap/aws-auth -n kube-system --patch "$awsAuth" --kubeconfig .kube
 
-    # cluster dashboard
-    if ($lookUpClusterDashboard) {
-        $result = ./dashboard/create.ps1
-    }
-
     # cluster autoscaler
     if ($lookUpClusterAutoscaler) {
         $result = ./cluster-autoscaler/create.ps1
+    }
+    
+    # cluster dashboard
+    if ($lookUpClusterDashboard) {
+        $result = ./dashboard/create.ps1
     }
 
     # cluster autoscaler
