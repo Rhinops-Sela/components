@@ -34,15 +34,13 @@ if ($clustersList -contains $lookUpCluster) {
 
 if ($clusterExists) {
     Write-Host "cluster $lookUpCluster was found, updating kubeconfig..."
-    # aws eks --region $lookUpRegion update-kubeconfig --name $lookUpCluster --kubeconfig .kube
     $result = CreateKubeConfig -ClusterName $lookUpCluster -ClusterRegion $lookUpRegion -Nodegroup $nodegroupName -KubeConfigName ".kube"
 }
 else {
     Write-Host "cluster $lookUpCluster was not found, creating..."
     eksctl create cluster -f "./cluster.yaml$filepostfix"
-
     $result = CreateNodegroup -NodegroupName "system" -Postfix "$filepostfix"
-
+    $result = CreateKubeConfig -ClusterName $lookUpCluster -ClusterRegion $lookUpRegion -Nodegroup $nodegroupName -KubeConfigName ".kube"
     # coredns:tolerations
     $tolerations = (Get-Content ./coredns/tolerations.yaml -Raw)
     $tolerations = $tolerations.replace('"', '\"')
