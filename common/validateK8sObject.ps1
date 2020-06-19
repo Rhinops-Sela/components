@@ -11,13 +11,7 @@ $namespaceExists= Invoke-Expression "../common/validateK8sNamespace.ps1 -Namespa
 
 if ( $namespaceExists ) {
     $rawObject= ($Object -split "/")[1]
-    $results
-    Write-Host "before"
-    try {
-          $results=Invoke-Expression "kubectl get $Object -n $ns --kubeconfig $kubePath"
-    }
-    catch {}
-    Write-Host "after"
+    $results=Invoke-Expression "kubectl get $Object -n $ns --kubeconfig $kubePath"
     foreach ($result in $results) {
         if ($result -match $Object) {return $true}
     }

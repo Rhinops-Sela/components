@@ -37,7 +37,7 @@ if ($clusterExists) {
 }
 else {
     Write-Host "cluster $lookUpCluster was not found, creating..."
-    # eksctl create cluster -f "./cluster.yaml$filepostfix"
+    eksctl create cluster -f "./cluster.yaml$filepostfix"
 
     #region Nodegroups
     $noderoupExists = $false
@@ -51,7 +51,7 @@ else {
     }
     else {
         Write-Host "nodegroup $nodegroupName was not found, creating it"
-        # eksctl create nodegroup -f "./nodegroups/system_node_group.yaml$filepostfix"
+        eksctl create nodegroup -f "./nodegroups/system_node_group.yaml$filepostfix"
     }
     #endregion Nodegroups
 
@@ -90,7 +90,7 @@ else {
     }
 }
 
-# cluster autoscaler
+# cluster dashboard
 if ($lookUpClusterDashboard) {
     ./dashboard/create.ps1
 }
