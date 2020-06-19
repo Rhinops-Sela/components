@@ -1,9 +1,8 @@
 #!/bin/pwsh
 # Handling parameters
 Write-Host "dashboard.ps1"
-Write-Host (Get-Location)
 if ($PSDebugContext){
-    $lookUpCluster = 'fennec-cluster'
+    $lookUpCluster = 'fennec1'
     $lookUpRegion = 'eu-west-1'
     $filepostfix = '.ydebug'
 }
@@ -12,16 +11,15 @@ else {
     $lookUpRegion = '${CLUSTER_REGION}'
     $filepostfix = ''
 }
+. ../common/helper.ps1
 
-../common/createKubeConfig.ps1 -ClusterName $lookUpCluster -ClusterRegion $lookUpRegion -Nodegroup $nodegroupName -KubeConfigName ".kube"
-#$kubeConfigFile=(Get-Item -Path ".\").FullName+"/.kube"
-
+$result=CreateKubeConfig -ClusterName $lookUpCluster -ClusterRegion $lookUpRegion -Nodegroup $nodegroupName -KubeConfigName ".kube"
 $nodegroupName = 'system'
-$result=../common/validateNodeGroup.ps1 -ClusterName $lookUpCluster -ClusterRegion $lookUpRegion -Nodegroup $nodegroupName
+$result=ValidateNodeGroup -ClusterName $lookUpCluster -ClusterRegion $lookUpRegion -Nodegroup $nodegroupName
 if (!$result) { return $false } # exit if nodegroup doesnt exist
 
 $ns="kubernetes-dashboard"
-$result =../common/validateK8sObject.ps1 -Namespace $ns -K8SObject "deployment/kubernetes-dashboard" -Nodegroup $nodegroupName -KubeConfigName ".kube"
+$result = ValidateK8SObject -Namespace $ns -K8SObject "deployment/kubernetes-dashboard" -Nodegroup $nodegroupName -KubeConfigName .kube
 if ($result) { return $false } #exit if object already exist
 
 kubectl apply -f ./dashboard/dashboard

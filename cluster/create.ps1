@@ -1,5 +1,4 @@
 #!/bin/pwsh
-    # $lookUpRegion = '${CLUSTER_REGION}'
 
 & "/home/noama/.aws/credentials.ps1"
 aws configure set aws_access_key_id $Env:AWS_ACCESS_KEY_ID
@@ -8,7 +7,7 @@ aws configure set region $Env:AWS_DEFAULT_REGION
 
 # Handling parameters
 if ($PSDebugContext){
-    $lookUpCluster = 'bubu-cluster'
+    $lookUpCluster = 'fennec1'
     $lookUpRegion = 'eu-west-1'
     $lookUpAdminARN = 'arn:aws:iam::027065296145:user/iliag'
     $lookUpClusterDashboard = "$true"
@@ -23,6 +22,9 @@ else {
     $lookUpClusterAutoscaler = "${CLUSTER_HORIZONTAL_AUTO_SCALE}"
     $filepostfix = ''
 }
+
+. ../common/helper.ps1
+
 $nodegroupName = 'system'
 $clusterExists = $false
 $clustersList = eksctl get clusters -o json | ConvertFrom-Json | Select-Object -ExpandProperty Name
@@ -33,7 +35,7 @@ if ($clustersList -contains $lookUpCluster) {
 if ($clusterExists) {
     Write-Host "cluster $lookUpCluster was found, updating kubeconfig..."
     # aws eks --region $lookUpRegion update-kubeconfig --name $lookUpCluster --kubeconfig .kube
-    ../common/createKubeConfig.ps1 -ClusterName $lookUpCluster -ClusterRegion $lookUpRegion -Nodegroup $nodegroupName -KubeConfigName ".kube"
+    $result = CreateKubeConfig -ClusterName $lookUpCluster -ClusterRegion $lookUpRegion -Nodegroup $nodegroupName -KubeConfigName ".kube"
 }
 else {
     Write-Host "cluster $lookUpCluster was not found, creating..."
@@ -79,23 +81,13 @@ else {
     kubectl patch configmap/aws-auth -n kube-system --patch "$awsAuth" --kubeconfig .kube
     #endregion Configuration
 
-    # cluster autoscaler
+    # cluster dashboard
     if ($lookUpClusterDashboard) {
-        ./dashboard/create.ps1
+        $result = ./dashboard/create.ps1
     }
 
     # cluster autoscaler
     if ($lookUpClusterAutoscaler) {
-        ./cluster-autoscaler/create.ps1
+        $result = ./cluster-autoscaler/create.ps1
     }
-}
-
-# cluster dashboard
-if ($lookUpClusterDashboard) {
-    ./dashboard/create.ps1
-}
-
-# cluster autoscaler
-if ($lookUpClusterAutoscaler) {
-    ./cluster-autoscaler/create.ps1
 }
