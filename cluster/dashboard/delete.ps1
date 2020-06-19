@@ -1,7 +1,7 @@
 #!/bin/pwsh
 # Handling parameters
-if ($DebugPreferences -eq "Continue"){
-    $lookUpCluster = 'fennec-cluster'
+if ($PSDebugContext -eq "Continue"){
+    $lookUpCluster = 'fennec1'
     $lookUpRegion = 'eu-west-1'
 }
 else {
