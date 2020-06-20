@@ -22,7 +22,7 @@ if (!$result) {
 } # exit if nodegroup doesnt exist
 
 $ns="horizontal-pod-scaler"
-$result = ValidateK8SObject -Namespace $ns -Object "deployment/horizontal-pod-scaler" -kubePath .kube
+$result = ValidateK8SObject -Namespace $ns -Object "deployment/metrics-server" -kubePath .kube
 if ($result) { 
     Write-Information "deployment/horizontal-pod-scaler exist, exiting" -InformationAction Continue
     return $false 
