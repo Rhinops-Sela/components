@@ -27,10 +27,10 @@ function ValidateK8SObject {
            $Object,
            $kubePath
         )
-    $namespaceExists = ValidateK8sNamespace $namespace $kubePath
+    $namespaceExists = ValidateK8sNamespace -namespace $namespace -kubePath $kubePath
     if ( $namespaceExists ) {
         $rawObject= ($Object -split "/")[1]
-        $results=Invoke-Expression "kubectl get $Object -n $namespace --kubeconfig $kubePath"
+        $results=kubectl get $Object -n $namespace --kubeconfig $kubePath
         foreach ($result in $results) {
             if ($result -match $rawObject) {return $true}
         }
@@ -43,7 +43,7 @@ function ValidateK8SNamespace {
             $namespace,
             $kubePath
         )
-    $namespaces = kubectl get namespaces --kubeconfig "$kubePath"
+    $namespaces = kubectl get namespaces --kubeconfig $kubePath
     foreach ($ns in $namespaces) {
         if ($ns -match $namespace) { return $true }
     }
@@ -78,9 +78,9 @@ function CreateK8SNamespace {
     )
     $namespaceExists = ValidateK8SNamespace -namespace $namespace -kubePath $kubePath
     if (! $namespaceExists) {
-        $result=kubectl create namespace $namespace --kubeconfig "$kubePath"
+        $results=kubectl create namespace $namespace --kubeconfig $kubePath
+        $namespaceExists = ValidateK8SNamespace -namespace $namespace -kubePath $kubePath
     }
-    $namespaceExists = ValidateK8SNamespace -namespace $namespace -kubePath $kubePath
     return $namespaceExists
 }
 function CreateKubeConfig {
@@ -94,7 +94,7 @@ function CreateKubeConfig {
         $clusterExists = $true
     }
     if ($clusterExists) {
-        aws eks --region $region update-kubeconfig --name $cluster --kubeconfig "$kubePath"
+        aws eks --region $region update-kubeconfig --name $cluster --kubeconfig $kubePath
     }
     else {
         Write-Error "cluster $cluster was not found"
