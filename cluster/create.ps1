@@ -6,11 +6,12 @@ aws configure set region $Env:AWS_DEFAULT_REGION
 
 # Handling parameters
 if ($PSDebugContext){
-    $lookUpCluster = 'fennec1'
+    $lookUpCluster = 'fennec'
     $lookUpRegion = 'eu-west-1'
     $lookUpAdminARN = 'arn:aws:iam::027065296145:user/iliag'
     $lookUpClusterDashboard = "$true"
     $lookUpClusterAutoscaler = "$true"
+    $lookUpHPA = "$true"
     $filepostfix = '.ydebug'
 }
 else {
@@ -25,7 +26,6 @@ else {
 
 . ../common/helper.ps1
 
-$nodegroupName = 'system'
 $clusterExists = $false
 $clustersList = eksctl get clusters -o json | ConvertFrom-Json | Select-Object -ExpandProperty Name
 if ($clustersList -contains $lookUpCluster) {
@@ -33,26 +33,28 @@ if ($clustersList -contains $lookUpCluster) {
 }
 
 if ($clusterExists) {
-    Write-Host "cluster $lookUpCluster was found, updating kubeconfig..."
-    $result = CreateKubeConfig -ClusterName $lookUpCluster -ClusterRegion $lookUpRegion -Nodegroup $nodegroupName -KubeConfigName ".kube"
+    Write-Information "cluster $lookUpCluster was found, updating kubeconfig..." -InformationAction Continue
+    $result = CreateKubeConfig -cluster $lookUpCluster -region $lookUpRegion -kubePath ".kube"
 }
 else {
-    Write-Host "cluster $lookUpCluster was not found, creating..."
+    # cluster: create 
+    Write-Information "cluster $lookUpCluster was not found, creating..." -InformationAction Continue
     eksctl create cluster -f "./cluster.yaml$filepostfix"
-    CreateNodegroup -NodegroupName "system" -Postfix "$filepostfix"
-    $result = CreateKubeConfig -ClusterName $lookUpCluster -ClusterRegion $lookUpRegion -Nodegroup $nodegroupName -KubeConfigName ".kube"
+    CreateNodegroup -cluster $lookUpCluster -nodegroup "system" -filePostfix "$filepostfix"
+    $result = CreateKubeConfig -cluster $lookUpCluster -region $lookUpRegion -kubePath ".kube"
+    
     # coredns:tolerations
     $tolerations = (Get-Content ./coredns/tolerations.yaml -Raw)
     $tolerations = $tolerations.replace('"', '\"')
-    Write-Host "patching coredns: tolerations"
+    Write-Information "patching coredns: tolerations" -InformationAction Continue
     kubectl patch deployment/coredns -n kube-system --patch "$tolerations" --kubeconfig .kube
 
     # coredns:custom domain name
     $nameResolution = (Get-Content "./coredns/configmap.yaml$filepostfix" -Raw)
     $nameResolution = $nameResolution.replace('"', '\"')
-    Write-Host "patching coredns: custom domain name"
+    Write-Information "patching coredns: custom domain name" -InformationAction Continue
     kubectl patch configmap/coredns -n kube-system --patch "$nameResolution" --kubeconfig .kube
-    Write-Host "patching coredns: deleting pods to refresh.."
+    Write-Information "patching coredns: deleting pods to refresh.." -InformationAction Continue
     kubectl delete pods -l k8s-app=kube-dns -n kube-system --kubeconfig .kube
 
     # aws-auth: admin user IAM
@@ -60,7 +62,7 @@ else {
     $awsAuth = (Get-Content "./aws/aws-auth.yaml$filepostfix" -Raw)
     $awsAuth = $awsAuth.replace('"', '\"')
     $awsAuth = $awsAuth.replace('${AWS_ADMIN_USER}', $userName)
-    Write-Host "patching aws-auth: adding $userName ARN"
+    Write-Information "patching aws-auth: adding $userName ARN" -InformationAction Continue
     kubectl patch configmap/aws-auth -n kube-system --patch "$awsAuth" --kubeconfig .kube
 
     # cluster autoscaler

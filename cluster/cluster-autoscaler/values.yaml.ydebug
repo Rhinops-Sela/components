@@ -4,7 +4,7 @@ cloudProvider: aws
 awsRegion: "eu-west-1"
 autoDiscovery:
   enabled: "true"
-  clusterName: "fennec1"
+  clusterName: "fennec"
 tolerations:
 - key: "system"
   operator: "Equal"

@@ -1,32 +1,36 @@
 function CreateNodegroup {
-    param (
-        [Alias("NodegroupName")] $nodeGroup,
-        [Alias("Postfix")] $filepostfix
-    )
-
-    $nodegroupList = eksctl get nodegroups --cluster $lookUpCluster -o json | ConvertFrom-Json | Select-Object -ExpandProperty Name
+    [CmdletBinding()]
+        param (
+            $cluster,
+            $nodegroup,
+            $filePostfix
+        )
+    $nodegroupList = eksctl get nodegroups --cluster $cluster -o json | ConvertFrom-Json | Select-Object -ExpandProperty Name
     if ($nodegroupList -contains $nodeGroup) {
         $nodegroupExists = $true
     }
 
     if ($nodegroupExists) {
-        Write-Host "nodegroup $nodeGroup was found."
+        Write-Information "nodegroup $nodeGroup was found." -InformationAction Continue
     }
     else {
-        Write-Host "nodegroup $nodeGroup was not found, creating it"
-        eksctl create nodegroup -f "./nodegroups/${nodeGroup}_node_group.yaml$filepostfix"
+        Write-Information "nodegroup $nodeGroup was not found, creating it" -InformationAction Continue
+        $result = eksctl create nodegroup -f "./nodegroups/${nodegroup}_node_group.yaml$filepostfix"
+        $result = ValidateNodegroup -cluster $cluster -nodegroup $nodegroup
+        return $result
     }
 }
 function ValidateK8SObject {
-    param (
-        [Alias("Namespace")] $ns,
-        [Alias("K8SObject")] $Object,
-        [Alias("KubeConfigName")] $kubePath
-    )
-    $namespaceExists= ValidateK8sNamespace -Namespace $ns -KubeConfigName $kubePath
+    [CmdletBinding()]
+        param (
+           $namespace,
+           $Object,
+           $kubePath
+        )
+    $namespaceExists = ValidateK8sNamespace $namespace $kubePath
     if ( $namespaceExists ) {
         $rawObject= ($Object -split "/")[1]
-        $results=Invoke-Expression "kubectl get $Object -n $ns --kubeconfig $kubePath"
+        $results=Invoke-Expression "kubectl get $Object -n $namespace --kubeconfig $kubePath"
         foreach ($result in $results) {
             if ($result -match $rawObject) {return $true}
         }
@@ -34,72 +38,66 @@ function ValidateK8SObject {
     return $false
 }
 function ValidateK8SNamespace {
-    param (
-        [Alias("Namespace")] $ns,
-        [Alias("KubeConfigName")] $kubePath
-    )
-
+    [CmdletBinding()]
+        param (
+            $namespace,
+            $kubePath
+        )
     $namespaces = kubectl get namespaces --kubeconfig "$kubePath"
-    $namespaceExists=$false
-
-    foreach ($namespace in $namespaces) {
-        if ($namespace -match $ns) { return $true }
+    foreach ($ns in $namespaces) {
+        if ($ns -match $namespace) { return $true }
     }
     return $false
 }
 function ValidateNodegroup {
-    param (
-        [Alias("ClusterName")] $lookUpCluster,
-        [Alias("NodegroupName")]  $nodegroup
-    )
-
-    $noderoupExists = $false
-    $nodegroupList = eksctl get nodegroups --cluster $lookUpCluster -o json | ConvertFrom-Json | Select-Object -ExpandProperty Name
+    [CmdletBinding()]
+        param (
+            $cluster,
+            $nodegroup
+        )
+    $nodegroupExists = $false
+    $nodegroupList = eksctl get nodegroups --cluster $cluster -o json | ConvertFrom-Json | Select-Object -ExpandProperty Name
     if ($nodegroupList -contains $nodegroup) {
-        $noderoupExists = $true
+        $nodegroupExists = $true
     }
 
-    if ($noderoupExists) {
-        Write-Host "nodegroup $nodegroup was found."
+    if ($nodegroupExists) {
+        Write-Debug "nodegroup $nodegroup was found." -InformationAction Continue
         return $true
     }
     else {
-        Write-Error "nodegroup $nodegroup was not found"
+        Write-Debug "nodegroup $nodegroup was not found" -InformationAction Continue
         return $false
     }
 }
 function CreateK8SNamespace {
+    [CmdletBinding()]
     param (
-    [Alias("Namespace")] $ns,
-    [Alias("KubeConfigName")] $kubePath
+        $namespace,
+        $kubePath
     )
-
-    $namespaces = kubectl get namespaces --kubeconfig "$kubePath"
-    $namespaceExists=$false
-
-    foreach ($namespace in $namespaces) {
-        if ($namespace -match $ns) { return $true }
+    $namespaceExists = ValidateK8SNamespace -namespace $namespace -kubePath $kubePath
+    if (! $namespaceExists) {
+        $result=kubectl create namespace $namespace --kubeconfig "$kubePath"
     }
-    $return = kubectl create namespace $ns --kubeconfig "$kubePath"
-    return $true
+    $namespaceExists = ValidateK8SNamespace -namespace $namespace -kubePath $kubePath
+    return $namespaceExists
 }
 function CreateKubeConfig {
     param (
-        [Alias("ClusterName")] $lookUpCluster,
-        [Alias("ClusterRegion")] $lookUpRegion,
-        [Alias("Nodegroup")]  $nodegroupName, 
-        [Alias("KubeConfigName")] $kubePath
+        $cluster,
+        $region,
+        $kubePath
     )
-    $clusterExists = $false
     $clustersList = eksctl get clusters -o json | ConvertFrom-Json | Select-Object -ExpandProperty Name
-    if ($clustersList -contains $lookUpCluster) {
+    if ($clustersList -contains $cluster) {
         $clusterExists = $true
     }
     if ($clusterExists) {
-        aws eks --region $lookUpRegion update-kubeconfig --name $lookUpCluster --kubeconfig "$kubePath"
+        aws eks --region $region update-kubeconfig --name $cluster --kubeconfig "$kubePath"
     }
     else {
-        Write-Error "cluster $lookUpCluster was not found"
+        Write-Error "cluster $cluster was not found"
         return $false
     }
     return $true
