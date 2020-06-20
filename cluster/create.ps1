@@ -3,7 +3,7 @@
 aws configure set aws_access_key_id $Env:AWS_ACCESS_KEY_ID
 aws configure set aws_secret_access_key $Env:AWS_SECRET_ACCESS_KEY
 aws configure set region $Env:AWS_DEFAULT_REGION
-
+Write-Host "Cluster Component Started"
 # Handling parameters
 if ($PSDebugContext){
     $lookUpCluster = 'fennec'
