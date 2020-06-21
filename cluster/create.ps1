@@ -70,13 +70,13 @@ else {
         $result = ./cluster-autoscaler/create.ps1
     }
     
-    # cluster dashboard
-    if ($lookUpClusterDashboard) {
-        $result = ./dashboard/create.ps1
-    }
-
     # cluster autoscaler
     if ($lookUpHPA) {
         $result = ./horizontal-pod-scaler/create.ps1
+    }
+    
+    # cluster dashboard
+    if ($lookUpClusterDashboard) {
+        $result = ./dashboard/create.ps1
     }
 }
