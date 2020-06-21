@@ -34,4 +34,6 @@ helm repo update
 $result=CreateK8SNamespace -namespace $ns -kubePath ".kube"
 if ($result) {
     helm install $release stable/cluster-autoscaler -f "./cluster-autoscaler/values.yaml$filepostfix" --namespace $ns --kubeconfig .kube --version 7.0.0 # newer versions require kubernetes 1.17 https://hub.helm.sh/charts/stable/cluster-autoscaler/7.0.0
+    Write-Information "cluster-autoscaler installed" -InformationAction Continue
+
 }

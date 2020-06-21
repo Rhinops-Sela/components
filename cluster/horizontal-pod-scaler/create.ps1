@@ -30,3 +30,4 @@ if ($result) {
 
 kubectl create namespace $ns --kubeconfig .kube
 kubectl apply -f ./horizontal-pod-scaler/hpa.yaml  --kubeconfig .kube
+Write-Information "hpa installed" -InformationAction Continue
