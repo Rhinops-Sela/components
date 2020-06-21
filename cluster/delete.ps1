@@ -35,7 +35,6 @@ if ($clusterExists) {
     }
     else {
         Write-Host "nodegroup $nodegroupName was not found."
-        
     }
     eksctl delete cluster -f "./cluster.yaml$filepostfix"
 }

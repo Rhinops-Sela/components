@@ -1,1 +1,0 @@
-echo "Nodegroup ${NAME} Deleted"
