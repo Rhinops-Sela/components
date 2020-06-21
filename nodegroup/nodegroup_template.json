@@ -1,0 +1,20 @@
+{
+  "apiVersion": "eksctl.io/v1alpha5",
+  "kind": "ClusterConfig",
+  "nodeGroups": [
+    {
+      "name": "${NAME}",
+      "minSize": ${MIN},
+      "maxSize": ${MAX},
+      "desiredCapacity": ${DESIRED},
+      "volumeSize": ${VOLUME_SIZE},
+      "volumeType": "gp2",
+      "privateNetworking": ${PRIVATE_NETWORK},
+      "iam": {
+        "withAddonPolicies": {
+          "autoScaler": true
+        }
+      }
+    }
+  ]
+}

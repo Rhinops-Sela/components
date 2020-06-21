@@ -102,3 +102,25 @@ function CreateKubeConfig {
     }
     return $true
 }
+
+function AddArrayItems([String]$ArrayString, $Delimiter, $BaseArray){
+  $Array = StrToArray $Delimiter $ArrayString
+  $BaseArray += $Array
+  return $BaseArray
+}
+
+function AddProperties([String] $OuterDelimiter,[String] $InnerDelimiter,[String]$ItemsToAdd, $BaseObject){
+  if(!$BaseObject){
+    $BaseObject = New-Object PSObject
+  }
+  $Properties = StrToArray $OuterDelimiter $ItemsToAdd
+  foreach ($Property in $Properties) {
+   $Split = StrToArray $InnerDelimiter $Property
+   $BaseObject | Add-Member -MemberType NoteProperty -Name $Split[0] -Value $Split[1]
+ }
+ return $BaseObject
+}
+
+function StrToArray([String] $Delimiter, [String]$StringToParse) {
+  return $StringToParse.split($Delimiter)
+}
