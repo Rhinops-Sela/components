@@ -27,43 +27,55 @@ else {
 . ../common/helper.ps1
 
 $clusterExists = $false
-$clustersList = eksctl get clusters -o json | ConvertFrom-Json | Select-Object -ExpandProperty Name
+$clustersList = Retry-Command -ScriptBlock {
+    eksctl get clusters -o json | ConvertFrom-Json | Select-Object -ExpandProperty Name
+}
 if ($clustersList -contains $lookUpCluster) {
     $clusterExists = $true
 }
 
 if ($clusterExists) {
     Write-Information "cluster $lookUpCluster was found, updating kubeconfig..." -InformationAction Continue
-    $result = CreateKubeConfig -cluster $lookUpCluster -region $lookUpRegion -kubePath ".kube"
+    CreateKubeConfig -cluster $lookUpCluster -region $lookUpRegion -kubePath ".kube" | Out-Null
 }
 else {
     # cluster: create 
     Write-Information "cluster $lookUpCluster was not found, creating..." -InformationAction Continue
-    eksctl create cluster -f "./cluster.yaml$filepostfix"
-    CreateNodegroup -cluster $lookUpCluster -nodegroup "system" -filePostfix "$filepostfix"
-    $result = CreateKubeConfig -cluster $lookUpCluster -region $lookUpRegion -kubePath ".kube"
+    Retry-Command -ScriptBlock {
+        eksctl create cluster -f "./cluster.yaml$filepostfix" | Out-Null
+    }
+    CreateNodegroup -cluster $lookUpCluster -nodegroup "system" -filePostfix "$filepostfix" | Out-Null
+    CreateKubeConfig -cluster $lookUpCluster -region $lookUpRegion -kubePath ".kube" | Out-Null
     
     # coredns:tolerations
     $tolerations = (Get-Content ./coredns/tolerations.yaml -Raw)
     $tolerations = $tolerations.replace('"', '\"')
     Write-Information "patching coredns: tolerations" -InformationAction Continue
-    kubectl patch deployment/coredns -n kube-system --patch "$tolerations" --kubeconfig .kube
+    Retry-Command -ScriptBlock {
+        kubectl patch deployment/coredns -n kube-system --patch "$tolerations" --kubeconfig .kube
+    } | Out-Null
 
     # coredns:custom domain name
     $nameResolution = (Get-Content "./coredns/configmap.yaml$filepostfix" -Raw)
     $nameResolution = $nameResolution.replace('"', '\"')
     Write-Information "patching coredns: custom domain name" -InformationAction Continue
-    kubectl patch configmap/coredns -n kube-system --patch "$nameResolution" --kubeconfig .kube
+    Retry-Command -ScriptBlock {
+        kubectl patch configmap/coredns -n kube-system --patch "$nameResolution" --kubeconfig .kube 
+    } | Out-Null
     Write-Information "patching coredns: deleting pods to refresh.." -InformationAction Continue
-    kubectl delete pods -l k8s-app=kube-dns -n kube-system --kubeconfig .kube
+    Retry-Command -ScriptBlock {
+        kubectl delete pods -l k8s-app=kube-dns -n kube-system --kubeconfig .kube
+    } | Out-Null
 
     # aws-auth: admin user IAM
     $userName = ($lookUpAdminARN -split "/")[1]
     $awsAuth = (Get-Content "./aws/aws-auth.yaml$filepostfix" -Raw)
     $awsAuth = $awsAuth.replace('"', '\"')
-    $awsAuth = $awsAuth.replace('${AWS_ADMIN_USER}', $userName)
+    $awsAuth = $awsAuth.replace('${CLUSTER_ADMIN_USER}', $userName)
     Write-Information "patching aws-auth: adding $userName ARN" -InformationAction Continue
-    kubectl patch configmap/aws-auth -n kube-system --patch "$awsAuth" --kubeconfig .kube
+    Retry-Command -ScriptBlock {
+        kubectl patch configmap/aws-auth -n kube-system --patch "$awsAuth" --kubeconfig .kube
+    } | Out-Null
 
     # cluster autoscaler
     if ($lookUpClusterAutoscaler) {

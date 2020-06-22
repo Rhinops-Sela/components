@@ -3,13 +3,10 @@
 Write-Host "horizontal-pod-scaler.ps1"
 if ($PSDebugContext){
     $lookUpCluster = 'fennec'
-    $lookUpRegion = 'eu-west-1'
-    $filepostfix = '.ydebug'
-}
+    $lookUpRegion = 'eu-west-1'}
 else {
     $lookUpCluster = '${CLUSTER_NAME}'
     $lookUpRegion = '${CLUSTER_REGION}'
-    $filepostfix = ''
 }
 . ../common/helper.ps1
 
