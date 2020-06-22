@@ -71,7 +71,7 @@ else {
     $userName = ($lookUpAdminARN -split "/")[1]
     $awsAuth = (Get-Content "./aws/aws-auth.yaml$filepostfix" -Raw)
     $awsAuth = $awsAuth.replace('"', '\"')
-    $awsAuth = $awsAuth.replace('${CLUSTER_ADMIN_USER}', $userName)
+    $awsAuth = $awsAuth.replace('${AWS_ADMIN_USERNAME}', $userName)
     Write-Information "patching aws-auth: adding $userName ARN" -InformationAction Continue
     Retry-Command -ScriptBlock {
         kubectl patch configmap/aws-auth -n kube-system --patch "$awsAuth" --kubeconfig .kube
