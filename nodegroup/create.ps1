@@ -42,7 +42,7 @@ $spotProperties = @{
     useSpot = $useSpot
 }
 $nodeProperties = @{
-    nodeGroupName = "${NAME}"
+    nodeGroupName = "$nodeGroupName"
     templatePath = "$PSScriptRoot/$jsonFileName"
     clusterName =  $clusterName
     region =  $clusterRegion

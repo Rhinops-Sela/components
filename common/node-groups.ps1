@@ -24,7 +24,7 @@ class Spot {
           "arn:aws:iam::aws:policy/ElasticLoadBalancingFullAccess"
   )
 
- function CreateNodeGroupJSON([NodeGroup]$nodeProperties){
+ function CreateNodeGroup([NodeGroup]$nodeProperties){
   Write-Host "Creating Nodegroup: $nodeGroupName"
   $nodegroupTemplate = (Get-Content $nodeProperties.templatePath | Out-String | ConvertFrom-Json)
   $nodegroupTemplate = AddMetaData $nodeProperties.clusterName $nodeProperties.region $nodegroupTemplate
@@ -33,13 +33,14 @@ class Spot {
   $nodegroupTemplate = AddARNsPolicies $nodeProperties.additionalARNs $nodegroupTemplate
   $nodegroupTemplate = AddTaints $nodeProperties.taintsToAdd $nodegroupTemplate
   CreateJSONFile $nodegroupTemplate
+  eksctl create nodegroup -f "nodegroup_execute.json" | Out-Null
   $result=ValidateNodegroup $nodeProperties.clusterName $nodeProperties.nodeGroupName
   return $result
  }
 
  function CreateJSONFile($nodegroupTemplate){
   $nodegroupTemplate | ConvertTo-Json -depth 100 | Out-File "nodegroup_execute.json"
-  eksctl create nodegroup -f "nodegroup_execute.json" | Out-Null
+  
  }
 
  function AddMetaData([String]$ClusterName, [String]$Region){
@@ -54,7 +55,7 @@ class Spot {
 
 function AddTaints([String]$TaintsToAdd, $nodegroupTemplate){
   if(!$TaintsToAdd){
-    return
+    return $nodegroupTemplate
   }
   $Taints =  New-Object PSObject
   $OuterDelimiter = ';'
@@ -66,7 +67,7 @@ function AddTaints([String]$TaintsToAdd, $nodegroupTemplate){
 
 function AddARNsPolicies([string]$Policies,  $nodegroupTemplate){
   if(!$Policies){
-    return
+    return $nodegroupTemplate
   }
   $currentPolicies = AddArrayItems $Policies ';' $BasePolicies
   $nodegroupTemplate.nodeGroups.iam | Add-Member  -MemberType NoteProperty -Name 'attachPolicyARNs' -Value $currentPolicies
@@ -100,7 +101,7 @@ function AddInstanceTypes([String]$InstanceTypes, $InstanceDistribution){
 
 function AddLabels([String]$LabelsToAdd, $nodegroupTemplate){
   if(!$LabelsToAdd){
-    return
+    return $nodegroupTemplate
   }
   $OuterDelimiter = ';'
   $InnerDelimiter = '='
