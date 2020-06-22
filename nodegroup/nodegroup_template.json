@@ -7,7 +7,7 @@
       "minSize": ${MIN},
       "maxSize": ${MAX},
       "desiredCapacity": ${DESIRED},
-      "volumeSize": ${VOLUME_SIZE},
+      "volumeSize": 100,
       "volumeType": "gp2",
       "privateNetworking": ${PRIVATE_NETWORK},
       "iam": {

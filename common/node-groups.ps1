@@ -33,7 +33,7 @@ class Spot {
   $nodegroupTemplate = AddARNsPolicies $nodeProperties.additionalARNs $nodegroupTemplate
   $nodegroupTemplate = AddTaints $nodeProperties.taintsToAdd $nodegroupTemplate
   CreateJSONFile $nodegroupTemplate
-  eksctl create nodegroup -f "nodegroup_execute.json" | Out-Null
+  eksctl create nodegroup -f "nodegroup_execute.json"
   $result=ValidateNodegroup $nodeProperties.clusterName $nodeProperties.nodeGroupName
   return $result
  }

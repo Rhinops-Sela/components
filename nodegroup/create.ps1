@@ -2,7 +2,7 @@
 $debug='${NAME}'
 Set-Location -Path $PSScriptRoot
 . ../common/node-groups.ps1
-if ($debug -eq '${NAME}'){
+if ($debug -Match 'NAME'){
     $userLabelsStr = 'label1=value1;label2=value2'
     $instanceTypes = 't3.small,t2.small'
     $taintsToAdd = 'taint1=true:NoSchedule;taint2=true:NoSchedule'
@@ -21,13 +21,13 @@ else {
     aws configure set aws_secret_access_key $Env:AWS_SECRET_ACCESS_KEY
     aws configure set region $Env:AWS_DEFAULT_REGION
     $userLabelsStr = '${LABELS}'
-    $instanceTypes = '${INSTANCE_TYPE}'
+    $instanceTypes = '${INSTANCE_TYPES}'
     $additionalARNs = '${ADITONAL_ARNS}'
-    $useSpot = '${SPOT}'
+    $useSpot = '${USE_SPOT}'
     $onDenmandInstances = ${ON_DEMAND_INSTANCES}
-    $spotAllocationStrategy = ${SPOT_ALLOCATION_STRATEGY}
+    $spotAllocationStrategy = '${SPOT_ALLOCATION_STRATEGY}'
     $taintsToAdd = '${TAINTS}'
-    $nodeGroupName = $nodeGroupName
+    $nodeGroupName = '${NAME}'
     $filepostfix = ''
     $clusterName = $Env:CLUSTER_NAME
     $clusterRegion = $Env:CLUSTER_REGION
