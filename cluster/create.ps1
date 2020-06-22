@@ -17,7 +17,7 @@ if ($PSDebugContext){
 else {
     $lookUpCluster = '${CLUSTER_NAME}'
     $lookUpRegion = '${CLUSTER_REGION}'
-    $lookUpAdminARN = '${CLUSTER_ADMIN_ARN}'
+    $lookUpAdminARN = '${AWS_ADMIN_USER}'
     $lookUpClusterDashboard = "${DASHBOARD}"
     $lookUpClusterAutoscaler = "${CLUSTER_AUTO_SCALE}"
     $lookUpHPA = "${POD_HORIZONTAL_AUTO_SCALE}"
