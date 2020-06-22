@@ -49,6 +49,6 @@ $nodeProperties = @{
     additionalARNs = $additionalARNs
     taintsToAdd = $taintsToAdd
 }
-$nodegroupTemplate = CreateNodeGroup $nodeProperties
-$nodegroupTemplate | ConvertTo-Json -depth 100 | Out-File "nodegroup_execute.json"
-Write-Host "$nodegroupTemplate"
+$result = CreateNodeGroup $nodeProperties
+
+Write-Host "NG created: $result"
