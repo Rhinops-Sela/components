@@ -8,6 +8,7 @@ if ($debug -eq '${NAME}'){
     $taintsToAdd = 'taint1=true:NoSchedule;taint2=true:NoSchedule'
     $additionalARNs = 'arn:aws:iam::aws:policy/AmazonS3FullAccess;arn:aws:iam::aws:policy/AmazonWorkMailFullAccess'
     $filepostfix = '.ydebug'
+    $nodeGroupName = 'ilia-ng'
     $useSpot = 'true'
     $spotAllocationStrategy = 'lowest-price'
     $onDenmandInstances = 0
@@ -26,6 +27,7 @@ else {
     $onDenmandInstances = ${ON_DEMAND_INSTANCES}
     $spotAllocationStrategy = ${SPOT_ALLOCATION_STRATEGY}
     $taintsToAdd = '${TAINTS}'
+    $nodeGroupName = $nodeGroupName
     $filepostfix = ''
     $clusterName = $Env:CLUSTER_NAME
     $clusterRegion = $Env:CLUSTER_REGION
@@ -40,6 +42,7 @@ $spotProperties = @{
     useSpot = $useSpot
 }
 $nodeProperties = @{
+    nodeGroupName = "${NAME}"
     templatePath = "$PSScriptRoot/$jsonFileName"
     clusterName =  $clusterName
     region =  $clusterRegion
