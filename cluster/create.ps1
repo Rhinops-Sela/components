@@ -36,16 +36,15 @@ if ($clustersList -contains $lookUpCluster) {
 
 if ($clusterExists) {
     Write-Information "cluster $lookUpCluster was found, updating kubeconfig..." -InformationAction Continue
-    CreateKubeConfig -cluster $lookUpCluster -region $lookUpRegion -kubePath ".kube" | Out-Null
-}
+    CreateKubeConfig -cluster $lookUpCluster -region $lookUpRegion -kubePath ".kube"
 else {
     # cluster: create 
     Write-Information "cluster $lookUpCluster was not found, creating..." -InformationAction Continue
     Retry-Command -ScriptBlock {
-        eksctl create cluster -f "./cluster.yaml$filepostfix" | Out-Null
+        eksctl create cluster -f "./cluster.yaml$filepostfix" 
     }
-    CreateNodegroup -cluster $lookUpCluster -nodegroup "system" -filePostfix "$filepostfix" | Out-Null
-    CreateKubeConfig -cluster $lookUpCluster -region $lookUpRegion -kubePath ".kube" | Out-Null
+    CreateNodegroup -cluster $lookUpCluster -nodegroup "system" -filePostfix "$filepostfix" 
+    CreateKubeConfig -cluster $lookUpCluster -region $lookUpRegion -kubePath ".kube" 
     
     # coredns:tolerations
     $tolerations = (Get-Content ./coredns/tolerations.yaml -Raw)
@@ -53,7 +52,7 @@ else {
     Write-Information "patching coredns: tolerations" -InformationAction Continue
     Retry-Command -ScriptBlock {
         kubectl patch deployment/coredns -n kube-system --patch "$tolerations" --kubeconfig .kube
-    } | Out-Null
+    } 
 
     # coredns:custom domain name
     $nameResolution = (Get-Content "./coredns/configmap.yaml$filepostfix" -Raw)
@@ -61,11 +60,11 @@ else {
     Write-Information "patching coredns: custom domain name" -InformationAction Continue
     Retry-Command -ScriptBlock {
         kubectl patch configmap/coredns -n kube-system --patch "$nameResolution" --kubeconfig .kube 
-    } | Out-Null
+    } 
     Write-Information "patching coredns: deleting pods to refresh.." -InformationAction Continue
     Retry-Command -ScriptBlock {
         kubectl delete pods -l k8s-app=kube-dns -n kube-system --kubeconfig .kube
-    } | Out-Null
+    } 
 
     # aws-auth: admin user IAM
     $userName = ($lookUpAdminARN -split "/")[1]
@@ -75,7 +74,7 @@ else {
     Write-Information "patching aws-auth: adding $userName ARN" -InformationAction Continue
     Retry-Command -ScriptBlock {
         kubectl patch configmap/aws-auth -n kube-system --patch "$awsAuth" --kubeconfig .kube
-    } | Out-Null
+    } 
 
     # cluster autoscaler
     if ($lookUpClusterAutoscaler) {
