@@ -24,23 +24,33 @@ class Spot {
           "arn:aws:iam::aws:policy/ElasticLoadBalancingFullAccess"
   )
 
- function CreateNodeGroup([NodeGroup]$nodeProperties){
+function DeleteNodeGroup([NodeGroup]$nodeProperties){
+  CreateJSONFile $nodegroupTemplate
+  Write-Host "Deleting Nodegroup: $nodeGroupName"
+  eksctl delete nodegroup -f "nodegroup_execute.json" --approve
+  $result=ValidateNodegroup $nodeProperties.clusterName $nodeProperties.nodeGroupName
+  Write-Host "NG deleted: !$result"
+}
+
+function CreateNodeGroup([NodeGroup]$nodeProperties){
+  CreateJSONFile $nodegroupTemplate
   Write-Host "Creating Nodegroup: $nodeGroupName"
+  eksctl create nodegroup -f "nodegroup_execute.json"
+  $result=ValidateNodegroup $nodeProperties.clusterName $nodeProperties.nodeGroupName
+   Write-Host "NG created: $result"
+}
+
+
+
+ function CreateJSONFile($nodegroupTemplate){
   $nodegroupTemplate = (Get-Content $nodeProperties.templatePath | Out-String | ConvertFrom-Json)
   $nodegroupTemplate = AddMetaData $nodeProperties.clusterName $nodeProperties.region $nodegroupTemplate
   $nodegroupTemplate = AddLabels $nodeProperties.userLabelsStr $nodegroupTemplate
   $nodegroupTemplate = CreateInstancesDistribution $nodeProperties.instanceTypes $spotProperties $nodegroupTemplate
   $nodegroupTemplate = AddARNsPolicies $nodeProperties.additionalARNs $nodegroupTemplate
   $nodegroupTemplate = AddTaints $nodeProperties.taintsToAdd $nodegroupTemplate
-  CreateJSONFile $nodegroupTemplate
-  eksctl create nodegroup -f "nodegroup_execute.json"
-  $result=ValidateNodegroup $nodeProperties.clusterName $nodeProperties.nodeGroupName
-  return $result
- }
-
- function CreateJSONFile($nodegroupTemplate){
   $nodegroupTemplate | ConvertTo-Json -depth 100 | Out-File "nodegroup_execute.json"
-  
+
  }
 
  function AddMetaData([String]$ClusterName, [String]$Region){

@@ -52,6 +52,5 @@ $nodeProperties = @{
     additionalARNs = $additionalARNs
     taintsToAdd = $taintsToAdd
 }
-$result = CreateNodeGroup $nodeProperties
+DeleteNodeGroup $nodeProperties
 
-Write-Host "NG created: $result"
