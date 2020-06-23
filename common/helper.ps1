@@ -42,7 +42,11 @@ function CreateNodegroup {
     )
     
     $nodegroupList = Retry-Command -ScriptBlock {
+        
+        Write-Host "CreateNodegroup: eksctl get nodegroups --cluster $cluster -o json | ConvertFrom-Json | Select-Object -ExpandProperty Name"
         eksctl get nodegroups --cluster $cluster -o json | ConvertFrom-Json | Select-Object -ExpandProperty Name
+        Write-Host "CreateNodegroup: success"
+
     }
     if ($nodegroupList -contains $nodeGroup) {
         $nodegroupExists = $true
@@ -54,7 +58,9 @@ function CreateNodegroup {
     else {
         Write-Information "nodegroup $nodeGroup was not found, creating it" -InformationAction Continue
         Retry-Command -ScriptBlock { 
+            Write-Host "CreateNodegroup: eksctl create nodegroup -f ./nodegroups/${nodegroup}_node_group.yaml$filepostfix | Out-Null"
             eksctl create nodegroup -f "./nodegroups/${nodegroup}_node_group.yaml$filepostfix" | Out-Null
+            Write-Host "CreateNodegroup: success"
         }
         $result = ValidateNodegroup -cluster $cluster -nodegroup $nodegroup
         return $result
@@ -71,7 +77,10 @@ function ValidateK8SObject {
     if ( $namespaceExists ) {
         $rawObject= ($Object -split "/")[1]
         $results  = Retry-Command -ScriptBlock { 
+            Write-Host "ValidateK8SObject: kubectl get $Object -n $namespace --kubeconfig $kubePath"
             kubectl get $Object -n $namespace --kubeconfig $kubePath
+            Write-Host "ValidateK8SObject: success"
+
         }
         foreach ($result in $results) {
             if ($result -match $rawObject) {return $true}
@@ -86,7 +95,10 @@ function ValidateK8SNamespace {
             $kubePath
         )
     $namespaces = Retry-Command -ScriptBlock {
+        Write-Host "ValidateK8SNamespace: kubectl get namespaces --kubeconfig $kubePath"
         kubectl get namespaces --kubeconfig $kubePath
+        Write-Host "ValidateK8SNamespace: Success"
+
     }
     foreach ($ns in $namespaces) {
         if ($ns -match $namespace) { return $true }
@@ -100,7 +112,10 @@ function ValidateNodegroup {
             $nodegroup
         )
     $nodegroupList =  Retry-Command -ScriptBlock {
+        Write-Host "ValidateNodegroup: eksctl get nodegroups --cluster $cluster -o json | ConvertFrom-Json | Select-Object -ExpandProperty Name"
         eksctl get nodegroups --cluster $cluster -o json | ConvertFrom-Json | Select-Object -ExpandProperty Name
+        Write-Host "ValidateNodegroup: success"
+
     }
     if ($nodegroupList -contains $nodegroup) {
         $nodegroupExists = $true
@@ -124,7 +139,9 @@ function CreateK8SNamespace {
     $namespaceExists = ValidateK8SNamespace -namespace $namespace -kubePath $kubePath
     if (! $namespaceExists) {
         Retry-Command -ScriptBlock {
+            Write-Host "CreateK8SNamespace: kubectl create namespace $namespace --kubeconfig $kubePath "
             kubectl create namespace $namespace --kubeconfig $kubePath 
+            Write-Host "CreateK8SNamespace: success"
         } | Out-Null
         $namespaceExists = ValidateK8SNamespace -namespace $namespace -kubePath $kubePath
     }
@@ -137,14 +154,19 @@ function CreateKubeConfig {
         $kubePath
     )
     $clustersList =  Retry-Command -ScriptBlock {
+        Write-Host "CreateKubeConfig: eksctl get clusters -o json | ConvertFrom-Json | Select-Object -ExpandProperty Name "
         eksctl get clusters -o json | ConvertFrom-Json | Select-Object -ExpandProperty Name
+        Write-Host "CreateKubeConfig: Success "
     }
+
     if ($clustersList -contains $cluster) {
         $clusterExists = $true
     }
     if ($clusterExists) {
         Retry-Command -ScriptBlock {
+            Write-Host "CreateKubeConfig: aws eks --region $region update-kubeconfig --name $cluster --kubeconfig $kubePath | Out-Null"
             aws eks --region $region update-kubeconfig --name $cluster --kubeconfig $kubePath | Out-Null
+            Write-Host "CreateKubeConfig: success"
         }
     }
     else {
