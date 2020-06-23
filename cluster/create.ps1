@@ -16,7 +16,7 @@ if ($PSDebugContext){
 }
 else {
     $lookUpCluster = '${CLUSTER_NAME}'
-    $lookUpRegion = '${CLUSTER_REGION}'
+    $lookUpRegion = $Env:AWS_DEFAULT_REGION
     $lookUpAdminARN = '${AWS_ADMIN_USER}'
     $lookUpClusterDashboard = "${DASHBOARD}"
     $lookUpClusterAutoscaler = "${CLUSTER_AUTO_SCALE}"

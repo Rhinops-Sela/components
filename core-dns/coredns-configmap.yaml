@@ -8,24 +8,7 @@ data:
     .:53 {
         errors
         health
-        rewrite name services.gated-12554-ns.example.com adf93856153ff4974a74f7bed661abdf-983ca521ddec1a16.elb.eu-west-1.amazonaws.com
-        rewrite name kibana.example.com kibana.kibana.svc.cluster.local
-        rewrite name elasticsearch.example.com elasticsearch-master.elasticsearch.svc.cluster.local
-        rewrite name elasticsearch-kibana.example.com elasticsearch-kibana.elasticsearch.svc.cluster.local
-        rewrite name dashboard.example.com adf93856153ff4974a74f7bed661abdf-983ca521ddec1a16.elb.eu-west-1.amazonaws.com
-        rewrite name grafana.example.com grafana.grafana.svc.cluster.local
-        rewrite name prometheus-server.example.com prometheus-server.prometheus.svc.cluster.local
-        rewrite name prometheus-alert.example.com prometheus-alertmanager.prometheus.svc.cluster.local
-        rewrite name kafka-ui.example.com kafka-ui.kafka.svc.cluster.local
-        rewrite name kafka.example.com kafka-cp-kafka.kafka.svc.cluster.local
-        rewrite name zookeeper.example.com kafka-cp-zookeeper.kafka.svc.cluster.local
-        rewrite name zookeepr.example.com kafka-cp-zookeeper.kafka.svc.cluster.local
-        rewrite name redis-ui.example.com redis-ui.redis.svc.cluster.local
-        rewrite name redis.example.com redis-master.redis.svc.cluster.local
-        rewrite name redis-slave.example.com redis-slave.redis.svc.cluster.local
-        rewrite name kafka-zookeeper.example.com kafka.kafka-zookeeper.svc.cluster.local
-        rewrite name dynamodb.example.com dynamodb-local.dynamodb.svc.cluster.local
-        rewrite name dynamodb-ui.example.com dynamodb-local-admin.dynamodb.svc.cluster.local
+        rewrite name fennec.io fennec.io
         kubernetes cluster.local in-addr.arpa ip6.arpa {
           pods insecure
           upstream
