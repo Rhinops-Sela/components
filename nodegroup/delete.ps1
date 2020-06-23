@@ -46,6 +46,6 @@ $nodeProperties = @{
     additionalARNs = $additionalARNs
     taintsToAdd = $taintsToAdd
 }
-$result = CreateNodeGroup $nodeProperties
+$result = DeleteNodeGroup $nodeProperties
 
 Write-Host "NG deleted: $result"
