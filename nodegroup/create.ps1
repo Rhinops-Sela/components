@@ -52,5 +52,5 @@ $nodeProperties = @{
     additionalARNs = $additionalARNs
     taintsToAdd = $taintsToAdd
 }
-DeleteNodeGroup $nodeProperties
+CreateNodeGroup $nodeProperties
 
