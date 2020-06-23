@@ -25,19 +25,30 @@ class Spot {
   )
 
 function DeleteNodeGroup([NodeGroup]$nodeProperties){
-  CreateJSONFile $nodegroupTemplate
-  Write-Host "Deleting Nodegroup: $nodeGroupName"
-  eksctl delete nodegroup -f "nodegroup_execute.json" --approve
   $result=ValidateNodegroup $nodeProperties.clusterName $nodeProperties.nodeGroupName
-  Write-Host "NG deleted: !$result"
+  if(!$result){
+    Write-Host "Nodgroup ${nodeProperties.nodeGroupName} doesn't exists"
+  } else {
+    CreateJSONFile $nodegroupTemplate
+    Write-Host "Deleting Nodegroup: $nodeGroupName"
+    eksctl delete nodegroup -f "nodegroup_execute.json" --approve
+    $result=ValidateNodegroup $nodeProperties.clusterName $nodeProperties.nodeGroupName
+    Write-Host "NG deleted: !$result"
+  }
 }
 
 function CreateNodeGroup([NodeGroup]$nodeProperties){
-  CreateJSONFile $nodegroupTemplate
-  Write-Host "Creating Nodegroup: $nodeGroupName"
-  eksctl create nodegroup -f "nodegroup_execute.json"
   $result=ValidateNodegroup $nodeProperties.clusterName $nodeProperties.nodeGroupName
-   Write-Host "NG created: $result"
+  if($result){
+    Write-Host "Nodgroup ${nodeProperties.nodeGroupName} already exists"
+  } else {
+    CreateJSONFile $nodegroupTemplate
+    Write-Host "Creating Nodegroup: $nodeGroupName"
+    eksctl create nodegroup -f "nodegroup_execute.json"
+    $result=ValidateNodegroup $nodeProperties.clusterName $nodeProperties.nodeGroupName
+    Write-Host "NG created: $result"
+  }
+  
 }
 
 
