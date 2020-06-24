@@ -5,12 +5,11 @@ if ($debug -eq '${NAME}'){
     $instanceTypes = 't3.small,t2.small'
     $taintsToAdd = 'taint1=true:NoSchedule;taint2=true:NoSchedule'
     $additionalARNs = 'arn:aws:iam::aws:policy/AmazonS3FullAccess;arn:aws:iam::aws:policy/AmazonWorkMailFullAccess'
-    $filepostfix = '.ydebug'
     $useSpot = 'true'
     $spotAllocationStrategy = 'lowest-price'
     $onDenmandInstances = 0
-    $clusterName = "fennec-cluster"
-    $clusterRegion = "eu-west-1"
+    $clusterName = "fennec"
+    $clusterRegion = "eu-west-2"
     $jsonFileName = 'nodegroup_template.json.debug'
 }
 else {
@@ -24,7 +23,6 @@ else {
     $onDenmandInstances = ${ON_DEMAND_INSTANCES}
     $spotAllocationStrategy = ${SPOT_ALLOCATION_STRATEGY}
     $taintsToAdd = '${TAINTS}'
-    $filepostfix = ''
     $clusterName = $Env:CLUSTER_NAME
     $clusterRegion = $Env:CLUSTER_REGION
     $jsonFileName = 'nodegroup_template.json'

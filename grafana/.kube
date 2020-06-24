@@ -1,0 +1,27 @@
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUN5RENDQWJDZ0F3SUJBZ0lCQURBTkJna3Foa2lHOXcwQkFRc0ZBREFWTVJNd0VRWURWUVFERXdwcmRXSmwKY201bGRHVnpNQjRYRFRJd01EWXlNekV6TkRJeU9Wb1hEVE13TURZeU1URXpOREl5T1Zvd0ZURVRNQkVHQTFVRQpBeE1LYTNWaVpYSnVaWFJsY3pDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBTGI0CnVtR2NjeGFiMVpMQW9jWUxXWXcwb1BEeXV5bGF5WUFFN0VDRmRNeTJ3UkQwaXRWaUhmSmRmUjlQNmVCdmxHZzUKYmdVeVEzMU80NEZxU0VPMlhmVmNVcjByUWtxODFWWSt4eUkxU1htNDZHN1ZUZWNJLzJRakQzZnlmVGFiRnVOSgplTUxIbXA4bG9mRmpyazdlay9oYlhVbEVwS1Qxc0VPa3MvenFiRUJQdjZRSXl6bndCRHd4ekQxNDlFL3R5TlhzCm1scUxibE8vcUtFVUt4bW9KbGlQY0NtNFFTSVdoTnRCTExsT2tHTHVUL3R6MnA1bFd2TEJ5TEtIaHN4Z0lKWG8KSHY2VGZxdng3TDRlNlJEV0NWZnpTRmNtN09kZ2N1dlJIY3ZVdVdna2huU0lzRzdXOWRRZjhnYUU0a3BjSHhKVgpSUmRBM3E2WVhDenV6QjFQRERrQ0F3RUFBYU1qTUNFd0RnWURWUjBQQVFIL0JBUURBZ0trTUE4R0ExVWRFd0VCCi93UUZNQU1CQWY4d0RRWUpLb1pJaHZjTkFRRUxCUUFEZ2dFQkFGR0xveTZ4NzVWamlLamc5QXQ0SU9rLzB6MFkKaFBUMUUrNkhYUGhoMWUwZlhhOFpaeDZsQmE0RVRxaDZleExqenVMMmN3Y3NxeGRCZnVEcDNvdFFEd09PNjIxegorNGFES21CLzdZd2ViRE1OeXlJaVFCcnNiZGR6RVIxTXY5Ty9ReG4vQUFjSXVpcWE0eWwwWFpwMGhHUWZtckt0CjVOSGY5MmdqZUxlSTNVWTcvMU9NNy92UkxkODlWYUMvaWVnQTVaMzA0WUdIeVJ2eml0Z2E3alFQNVp2blV5Y1gKcTYvNkxkUGxMMTdpNXdJM3k3cUoyQ3ZWZUtGK0hheWFnQjMxeTVudFRkZjVlKzBtSGFUeWgwRHJjOVk0aG5zNgpFVk02T1V6UXhjZXI4RHBmdm5pNlJLOER3Y2NEYmpXdXhhS3FHQUx1MTlSQTU2bUJjTEFoTlI1cVREdz0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=
+    server: https://A4F99E4D0DA275BC68A02B2BB1FAC2F4.sk1.eu-west-2.eks.amazonaws.com
+  name: arn:aws:eks:eu-west-2:027065296145:cluster/fennec
+contexts:
+- context:
+    cluster: arn:aws:eks:eu-west-2:027065296145:cluster/fennec
+    user: arn:aws:eks:eu-west-2:027065296145:cluster/fennec
+  name: arn:aws:eks:eu-west-2:027065296145:cluster/fennec
+current-context: arn:aws:eks:eu-west-2:027065296145:cluster/fennec
+kind: Config
+preferences: {}
+users:
+- name: arn:aws:eks:eu-west-2:027065296145:cluster/fennec
+  user:
+    exec:
+      apiVersion: client.authentication.k8s.io/v1alpha1
+      args:
+      - --region
+      - eu-west-2
+      - eks
+      - get-token
+      - --cluster-name
+      - fennec
+      command: aws

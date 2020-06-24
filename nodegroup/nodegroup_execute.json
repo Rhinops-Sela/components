@@ -1,0 +1,48 @@
+{
+  "apiVersion": "eksctl.io/v1alpha5",
+  "kind": "ClusterConfig",
+  "nodeGroups": [
+    {
+      "name": "ilia-ng1",
+      "minSize": 1,
+      "maxSize": 1,
+      "desiredCapacity": 1,
+      "volumeSize": 100,
+      "volumeType": "gp2",
+      "privateNetworking": true,
+      "iam": {
+        "withAddonPolicies": {
+          "autoScaler": true
+        },
+        "attachPolicyARNs": [
+          "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy",
+          "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy",
+          "arn:aws:iam::aws:policy/ElasticLoadBalancingFullAccess",
+          "arn:aws:iam::aws:policy/AmazonS3FullAccess",
+          "arn:aws:iam::aws:policy/AmazonWorkMailFullAccess"
+        ]
+      },
+      "labels": {
+        "label1": "value1",
+        "label2": "value2"
+      },
+      "instancesDistribution": {
+        "instanceTypes": [
+          "t3.small",
+          "t2.small"
+        ],
+        "onDemandBaseCapacity": 0,
+        "onDemandPercentageAboveBaseCapacity": 0,
+        "spotAllocationStrategy": "lowest-price"
+      },
+      "taints": {
+        "taint1": "true:NoSchedule",
+        "taint2": "true:NoSchedule"
+      }
+    }
+  ],
+  "metadata": {
+    "name": "fennec",
+    "region": "eu-west-2"
+  }
+}

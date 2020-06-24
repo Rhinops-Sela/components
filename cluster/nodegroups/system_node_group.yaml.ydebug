@@ -3,7 +3,7 @@ kind: ClusterConfig
 
 metadata:
   name: fennec
-  region: eu-west-1
+  region: eu-west-2
 
 nodeGroups:
   - name: system
@@ -28,6 +28,6 @@ nodeGroups:
       withAddonPolicies:
         autoScaler: true
     availabilityZones:
-      - "eu-west-1a"
-      - "eu-west-1b"
-      - "eu-west-1c"
+      - "eu-west-2a"
+      - "eu-west-2b"
+      - "eu-west-2c"

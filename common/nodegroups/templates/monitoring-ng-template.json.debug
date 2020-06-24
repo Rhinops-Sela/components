@@ -3,10 +3,10 @@
   "kind": "ClusterConfig",
   "nodeGroups": [
     {
-      "name": "ilia-ng1",
-      "minSize": 1,
-      "maxSize": 1,
-      "desiredCapacity": 1,
+      "name": "monitoring",
+      "minSize": 0,
+      "maxSize": 4,
+      "desiredCapacity": 0,
       "volumeSize": 100,
       "volumeType": "gp2",
       "privateNetworking": true,

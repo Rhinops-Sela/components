@@ -1,19 +1,19 @@
 #!/bin/pwsh
+Using module '$PSScriptRoot/../common/nodegroups/nodegroup.psm1'
 $debug='${NAME}'
 Set-Location -Path $PSScriptRoot
-. ../common/node-groups.ps1
+
 if ($debug -Match 'NAME'){
     $userLabelsStr = 'label1=value1;label2=value2'
     $instanceTypes = 't3.small,t2.small'
     $taintsToAdd = 'taint1=true:NoSchedule;taint2=true:NoSchedule'
     $additionalARNs = 'arn:aws:iam::aws:policy/AmazonS3FullAccess;arn:aws:iam::aws:policy/AmazonWorkMailFullAccess'
-    $filepostfix = '.ydebug'
-    $nodeGroupName = 'ilia-ng'
+    $nodeGroupName = 'ilia-ng1'
     $useSpot = 'true'
     $spotAllocationStrategy = 'lowest-price'
     $onDenmandInstances = 0
-    $clusterName = "fennec-cluster"
-    $clusterRegion = "eu-west-1"
+    $clusterName = "fennec"
+    $clusterRegion = "eu-west-2"
     $jsonFileName = 'nodegroup_template.json.debug'
 }
 else {
@@ -28,7 +28,6 @@ else {
     $spotAllocationStrategy = '${SPOT_ALLOCATION_STRATEGY}'
     $taintsToAdd = '${TAINTS}'
     $nodeGroupName = '${NAME}'
-    $filepostfix = ''
     $clusterName = $Env:CLUSTER_NAME
     $clusterRegion = $Env:CLUSTER_REGION
     $jsonFileName = 'nodegroup_template.json'
@@ -44,6 +43,7 @@ $spotProperties = @{
 $nodeProperties = @{
     nodeGroupName = "$nodeGroupName"
     templatePath = "$PSScriptRoot/$jsonFileName"
+    workingFilePath = "$PSScriptRoot"
     clusterName =  $clusterName
     region =  $clusterRegion
     spotProperties = $spotProperties
@@ -52,5 +52,7 @@ $nodeProperties = @{
     additionalARNs = $additionalARNs
     taintsToAdd = $taintsToAdd
 }
-CreateNodeGroup $nodeProperties
+
+$NodeGroup = [GenericNodeGroup]::new($nodeProperties)
+$NodeGroup.CreateNodeGroup()
 

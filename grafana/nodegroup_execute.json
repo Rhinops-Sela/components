@@ -1,0 +1,36 @@
+{
+  "apiVersion": "eksctl.io/v1alpha5",
+  "kind": "ClusterConfig",
+  "nodeGroups": [
+    {
+      "name": "monitoring",
+      "minSize": 0,
+      "maxSize": 4,
+      "desiredCapacity": 0,
+      "volumeSize": 100,
+      "volumeType": "gp2",
+      "privateNetworking": true,
+      "iam": {
+        "withAddonPolicies": {
+          "autoScaler": true
+        }
+      },
+      "labels": {
+        "role": "monitoring"
+      },
+      "instancesDistribution": {
+        "instanceTypes": [
+          "t3.large",
+          "t2.large"
+        ]
+      },
+      "taints": {
+        "monitoring": "true:NoSchedule"
+      }
+    }
+  ],
+  "metadata": {
+    "name": "fennec",
+    "region": "eu-west-2"
+  }
+}
