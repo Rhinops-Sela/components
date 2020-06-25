@@ -7,6 +7,6 @@ $nodeProperties = @{
     workingFilePath = "$PSScriptRoot"
 }
 $Namespace = [Namespace]::new("monitoring", "$($PSScriptRoot)/.kube")
-$Namespace.CreateNamespace()
+$Namespace.DeleteNamespace()
 $MonitoringNodeGroup = [MonitoringNodeGroup]::new($nodeProperties)
 $MonitoringNodeGroup.DeleteNodeGroup()

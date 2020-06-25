@@ -16,11 +16,11 @@ class Namespace {
     }
   }
 
-  DeleteNamespace([String]$namespace,[String]$kubePath){
+  DeleteNamespace(){
     $result = $this.VerifyNamespaceExists()
     if($result){
       Write-Host "Deleting namespace $($this.namespace)"
-      kubectl delete namespace $this.namespace
+      kubectl delete namespace $this.namespace --kubeconfig $this.kubePath
     } else {
       Write-Host "Namespace $($this.namespace) doesn't exists"
     }
