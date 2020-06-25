@@ -1,4 +1,9 @@
 Using module '$PSScriptRoot/../../common/parent.psm1'
+Using module '$PSScriptRoot/../../common/nodegroups/nodegroup.psm1'
+Using module '$PSScriptRoot/../../common/namespace/namespace.psm1'
+Using module '$PSScriptRoot/../../common/core-dns/core-dns.psm1'
+
+
 class HelmChartProperties {
   [String]$name
   [String]$chart
@@ -7,8 +12,15 @@ class HelmChartProperties {
   [String]$region
   [String]$valuesFilepath
   [String]$workingFolder
+  [GenericNodeGroup]$nodeGroup
+  [String]$dnsTarget
   [bool]$deployed
 }
+
+
+
+
+
 class HelmChart: Parent {
   [HelmChartProperties]$helmChartProperties
   HelmChart([HelmChartProperties]$HelmChartProperties): base($helmChartProperties.workingFolder){
@@ -27,6 +39,11 @@ class HelmChart: Parent {
     $this.CheckIfHelmInstalled()
     if($this.helmChartProperties.deployed){
       helm uninstall --debug $this.helmChartProperties.name -n $this.helmChartProperties.namespace
+      $DNS = [CoreDNS]::new($this.helmChartProperties.dnsTarget,$this.workingFolder)
+      $DNS.DeleteEntry()
+      $Namespace = [Namespace]::new($this.helmChartProperties.namesapce, $this.workingFolder)
+      $Namespace.DeleteNamespace()
+      $this.helmChartProperties.nodeGroup.DeleteNodeGroup()
     } else {
      Write-Host "Helmchart: $($this.helmChartProperties.name) doens't exists in NS: $($this.helmChartProperties.namespace)"
     }
@@ -40,14 +57,31 @@ class HelmChart: Parent {
       $this.helmChartProperties.deployed = $false
     }
   }
-  
+
+  PreInstall(){
+    $this.helmChartProperties.nodeGroup.CreateNodeGroup()
+    $namespace = [Namespace]::new($this.helmChartProperties.namesapce, $this.workingFolder)
+    $namespace.CreateNamespace()
+
+  }
+
+  PostInstall(){
+    $DNS = [CoreDNS]::new($this.helmChartProperties.dnsTarget,$this.workingFolder)
+    $DNS.AddEntry()
+  }
+
   Install([bool]$upgrade){
-    $verb = "install"
     if($upgrade){
       $verb = "upgrade"
+    } else {
+      $verb = "install"
+      $this.PreInstall()
     }
     helm repo add stable "https://kubernetes-charts.storage.googleapis.com"
     helm repo update
     helm $verb --wait --debug --timeout 3600s $this.helmChartProperties.name $this.helmChartProperties.chart -f $this.helmChartProperties.valuesFilepath -n $this.helmChartProperties.namespace
+    if(!$upgrade){
+      $this.PostInstall()
+    }
   }
 }

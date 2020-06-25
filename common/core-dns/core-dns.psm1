@@ -30,7 +30,7 @@ class CoreDNS: Parent{
     $this.ModifyEntry($lineToReplace, $newLine)
   }
   DeleteEntry(){
-    $lineToReplace = "    rewrite name $($this.dnsRecordy.Source) $($this.dnsRecord.Target)\n"
+    $lineToReplace = "    rewrite name $($this.dnsRecord.Source) $($this.dnsRecord.Target)\n"
     $this.ModifyEntry($lineToReplace, "")
   }
 
