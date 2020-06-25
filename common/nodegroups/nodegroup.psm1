@@ -1,3 +1,4 @@
+Using module '$PSScriptRoot/../../common/parent.psm1'
 class Spot {
     [int]$OnDemandBaseCapacity
     [int]$OnDemandPercentageAboveBaseCapacity
@@ -17,8 +18,7 @@ class NodeProperties {
     [String]$additionalARNs
     [String]$taintsToAdd
 }
-. $PSScriptRoot/../helper.ps1
-class GenericNodeGroup {
+class GenericNodeGroup: Parent {
   
   $BasePolicies = @(
         "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy",
@@ -26,10 +26,20 @@ class GenericNodeGroup {
         "arn:aws:iam::aws:policy/ElasticLoadBalancingFullAccess"
   )
   [NodeProperties]$nodeProperties
-  GenericNodeGroup(
-    [NodeProperties]$nodeProperties)
+  GenericNodeGroup([NodeProperties]$nodeProperties, [String]$debugTemplateName):base()
   {
+    Write-Host "GenericNodeGroup - PSScriptRoot: $PSScriptRoot"
+    if($this.debug){
+      $this.templatePath = "$PSScriptRoot/templates/debug/$debugTemplateName"
+    } else {
+      $this.templatePath = "$PSScriptRoot/templates/nodegroup-template.json"
+    }
+    $nodeProperties.clusterName = $this.clusterName
+    $nodeProperties.region = $this.clusterRegion
+    $nodeProperties.templatePath = $this.templatePath
     $this.nodeProperties = $nodeProperties
+    $outputPath = "$($this.nodeProperties.workingFilePath)/.kube"
+    aws eks update-kubeconfig --name $this.clusterName --region $this.clusterRegion --kubeconfig $outputPath
   }
 
   DeleteNodeGroup(){
@@ -38,7 +48,7 @@ class GenericNodeGroup {
       Write-Host "Nodgroup $($this.nodeProperties.nodeGroupName) doesn't exists"
     } else {
       $this.CreateJSONFile()
-      Write-Host "Deleting Nodegroup: $($this.nodeGroupName)"
+      Write-Host "Deleting Nodegroup: $($this.nodeProperties.nodeGroupName)"
       eksctl delete nodegroup -f "$($this.nodeProperties.workingFilePath)/nodegroup_execute.json" --approve
       $result = $this.CheckIfNGExists()
       Write-Host "NG deleted: !$result"
@@ -72,7 +82,7 @@ class GenericNodeGroup {
       $OuterDelimiter = ';'
       $InnerDelimiter = '='
       $MetadataToAdd = "name=$($this.nodeProperties.clusterName);region=$($this.nodeProperties.region)"
-      $metadata = AddProperties $OuterDelimiter $InnerDelimiter $MetadataToAdd
+      $metadata = $this.AddProperties($OuterDelimiter, $InnerDelimiter, $MetadataToAdd)
       $nodegroupTemplate | Add-Member  -MemberType NoteProperty -Name metadata -Value $metadata
       return $nodegroupTemplate
   }
@@ -85,7 +95,7 @@ class GenericNodeGroup {
     $Taints =  New-Object PSObject
     $OuterDelimiter = ';'
     $InnerDelimiter = '='
-    $taints = AddProperties $OuterDelimiter $InnerDelimiter $this.nodeProperties.taintsToAdd
+    $taints = $this.AddProperties($OuterDelimiter, $InnerDelimiter, $this.nodeProperties.taintsToAdd)
     $nodegroupTemplate.nodeGroups | Add-Member  -MemberType NoteProperty -Name 'taints' -Value $taints
     return $nodegroupTemplate
   }
@@ -94,7 +104,7 @@ class GenericNodeGroup {
     if(!$this.nodeProperties.additionalARNs){
       return $nodegroupTemplate
     }
-    $currentPolicies = AddArrayItems $this.nodeProperties.additionalARNs ';' $this.BasePolicies
+    $currentPolicies = $this.AddArrayItems($this.nodeProperties.additionalARNs, ';', $this.BasePolicies)
     $nodegroupTemplate.nodeGroups.iam | Add-Member  -MemberType NoteProperty -Name 'attachPolicyARNs' -Value $currentPolicies
     return $nodegroupTemplate
   }
@@ -113,13 +123,13 @@ class GenericNodeGroup {
 
 
   [psobject]AddSpotConfiguration($InstanceDistribution){
-    $InstanceTypesArr = StrToArray ',' $this.nodeProperties.instanceTypes
+    $InstanceTypesArr = $this.StrToArray(',', $this.nodeProperties.instanceTypes)
     $InstanceDistribution | Add-Member -MemberType NoteProperty -Name 'instanceTypes' -Value $InstanceTypesArr
     return $InstanceDistribution
   }
 
   [psobject]AddInstanceTypes($InstanceDistribution){
-    $InstanceTypesArr = StrToArray ',' $this.nodeProperties.instanceTypes
+    $InstanceTypesArr = $this.StrToArray(',', $this.nodeProperties.instanceTypes)
     $InstanceDistribution | Add-Member -MemberType NoteProperty -Name 'instanceTypes' -Value $InstanceTypesArr
     return $InstanceDistribution
   }
@@ -130,7 +140,7 @@ class GenericNodeGroup {
     }
     $OuterDelimiter = ';'
     $InnerDelimiter = '='
-    $labels = AddProperties $OuterDelimiter $InnerDelimiter $this.nodeProperties.userLabelsStr
+    $labels = $this.AddProperties($OuterDelimiter, $InnerDelimiter, $this.nodeProperties.userLabelsStr)
     $nodegroupTemplate.nodeGroups | Add-Member  -MemberType NoteProperty -Name labels -Value $labels
     return $nodegroupTemplate
   }
@@ -155,19 +165,7 @@ class GenericNodeGroup {
 }
 
 
-class MonitoringNodeGroup : GenericNodeGroup {
-  MonitoringNodeGroup([String]$ClusterName,[String]$ClusterRegion,[String]$WorkingFilePath, [String]$debugPrefix):base(@{
-      nodeGroupName = "monitoring"
-      templatePath = "$PSScriptRoot/templates/monitoring-ng-template.json$debugPrefix"
-      workingFilePath = "$WorkingFilePath"
-      clusterName =  $ClusterName
-      region =  $ClusterRegion
-      userLabelsStr = 'role=monitoring'
-      instanceTypes = 't3.large,t2.large'
-      taintsToAdd = 'monitoring=true:NoSchedule'
-    }){
-  }
-}
+
 
 
 

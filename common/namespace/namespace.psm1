@@ -1,4 +1,3 @@
-. $PSScriptRoot/../helper.ps1
 class Namespace {
   [String]$namespace
   [String]$kubePath
@@ -28,17 +27,12 @@ class Namespace {
   }
 
   [bool]VerifyNamespaceExists(){
-    $namespaces = Retry-Command -ScriptBlock {
-          Write-Host "ValidateK8SNamespace: kubectl get namespaces --kubeconfig $($this.kubePath)"
-          kubectl get namespaces --kubeconfig $this.kubePath
-          Write-Host "ValidateK8SNamespace: Success"
-
-      }
-      foreach ($ns in $namespaces) {
-          if ($ns -match $this.namespace) { 
-            return $true 
-          }
-      }
-      return $false
+    $namespaces = kubectl get namespaces --kubeconfig $this.kubePath
+    foreach ($ns in $namespaces) {
+        if ($ns -match $this.namespace) {
+          return $true
+        }
+    }
+    return $false
   }
 }

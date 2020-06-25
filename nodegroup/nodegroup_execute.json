@@ -3,7 +3,7 @@
   "kind": "ClusterConfig",
   "nodeGroups": [
     {
-      "name": "ilia-ng1",
+      "name": "generic-ng",
       "minSize": 1,
       "maxSize": 1,
       "desiredCapacity": 1,
