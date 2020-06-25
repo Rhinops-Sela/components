@@ -1,0 +1,15 @@
+{
+  "apiVersion": "v1",
+  "kind": "ConfigMap",
+  "metadata": {
+    "labels": {
+      "eks.amazonaws.com/component": "coredns",
+      "k8s-app": "kube-dns"
+    },
+    "name": "coredns",
+    "namespace": "kube-system"
+  },
+  "data": {
+    "Corefile": ".:53 {\n    errors\n    health\n    rewrite name bobo.io bobo.com\n    rewrite name bobo.io grafana.monitoring.svc.cluster.local\n    rewrite name fennec.io fennec.io\n    kubernetes cluster.local in-addr.arpa ip6.arpa {\n      pods insecure\n      upstream\n      fallthrough in-addr.arpa ip6.arpa\n    }\n    prometheus :9153\n    forward . /etc/resolv.conf\n    cache 30\n    loop\n    reload\n    loadbalance\n}"
+  }
+}

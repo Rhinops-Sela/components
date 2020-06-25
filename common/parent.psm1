@@ -3,7 +3,8 @@ class Parent {
   $clusterRegion
   $templatePath
   $debug=$false
-  Parent(){
+  $kubeConfigFile
+  Parent([String]$workingFilePath){
     if ($Env:CLUSTER_NAME){
         aws configure set aws_access_key_id $Env:AWS_ACCESS_KEY_ID
         aws configure set aws_secret_access_key $Env:AWS_SECRET_ACCESS_KEY
@@ -17,6 +18,9 @@ class Parent {
         $this.debug = $true
     }
     Write-Host "Parent - PSScriptRoot: $PSScriptRoot"
+    $this.kubeConfigFile = "$workingFilePath/.kube"
+    aws eks update-kubeconfig --name $this.clusterName --region $this.clusterRegion --kubeconfig $this.kubeConfigFile
+    $env:KUBECONFIG = $this.kubeConfigFile
   }
 
   [psobject]AddArrayItems([String]$ArrayString, $Delimiter, $BaseArray){

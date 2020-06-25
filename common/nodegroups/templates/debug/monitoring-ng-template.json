@@ -4,9 +4,9 @@
   "nodeGroups": [
     {
       "name": "monitoring",
-      "minSize": 0,
+      "minSize": 1,
       "maxSize": 4,
-      "desiredCapacity": 0,
+      "desiredCapacity": 1,
       "volumeSize": 100,
       "volumeType": "gp2",
       "privateNetworking": true,

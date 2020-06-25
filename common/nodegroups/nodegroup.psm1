@@ -19,14 +19,13 @@ class NodeProperties {
     [String]$taintsToAdd
 }
 class GenericNodeGroup: Parent {
-  
   $BasePolicies = @(
         "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy",
         "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy",
         "arn:aws:iam::aws:policy/ElasticLoadBalancingFullAccess"
   )
   [NodeProperties]$nodeProperties
-  GenericNodeGroup([NodeProperties]$nodeProperties, [String]$debugTemplateName):base()
+  GenericNodeGroup([NodeProperties]$nodeProperties, [String]$debugTemplateName):base($nodeProperties.workingFilePath)
   {
     Write-Host "GenericNodeGroup - PSScriptRoot: $PSScriptRoot"
     if($this.debug){
@@ -38,8 +37,6 @@ class GenericNodeGroup: Parent {
     $nodeProperties.region = $this.clusterRegion
     $nodeProperties.templatePath = $this.templatePath
     $this.nodeProperties = $nodeProperties
-    $outputPath = "$($this.nodeProperties.workingFilePath)/.kube"
-    aws eks update-kubeconfig --name $this.clusterName --region $this.clusterRegion --kubeconfig $outputPath
   }
 
   DeleteNodeGroup(){

@@ -3,7 +3,7 @@ tolerations:
   operator: "Equal"
   value: "true"
 nodeSelector:
-  role: monitoring-workers
+  role: monitoring
 persistence:
   enabled: true
   accessModes:

@@ -1,16 +1,15 @@
-class Namespace {
+Using module '$PSScriptRoot/../../common/parent.psm1'
+class Namespace: Parent {
   [String]$namespace
-  [String]$kubePath
-  Namespace([String]$namespace,[String]$kubePath)
+  Namespace([String]$namespace,[String]$workingFolder):base($workingFolder)
   {
     $this.namespace = $namespace
-    $this.kubePath = $kubePath
   }
   CreateNamespace(){
     $result = $this.VerifyNamespaceExists()
     if(!$result){
       Write-Host "Createing namespace $($this.namespace)"
-      kubectl create namespace $this.namespace --kubeconfig $this.kubePath
+      $this.ExecuteCommand("create")
     } else {
       Write-Host "Namespace $($this.namespace) already exists"
     }
@@ -20,14 +19,18 @@ class Namespace {
     $result = $this.VerifyNamespaceExists()
     if($result){
       Write-Host "Deleting namespace $($this.namespace)"
-      kubectl delete namespace $this.namespace --kubeconfig $this.kubePath
+      $this.ExecuteCommand("delete")
     } else {
       Write-Host "Namespace $($this.namespace) doesn't exists"
     }
   }
 
+  ExecuteCommand([String]$verb){
+    kubectl $verb namespace $this.namespace
+  }
+
   [bool]VerifyNamespaceExists(){
-    $namespaces = kubectl get namespaces --kubeconfig $this.kubePath
+    $namespaces = kubectl get namespaces
     foreach ($ns in $namespaces) {
         if ($ns -match $this.namespace) {
           return $true
