@@ -1,8 +1,6 @@
 #!/bin/pwsh
 Using module '$PSScriptRoot/../../common/nodegroups/monitoring-nodegroup.psm1'
-Using module '$PSScriptRoot/../../common/namespace/namespace.psm1'
 Using module '$PSScriptRoot/../../common/helm/helm.psm1'
-Using module '$PSScriptRoot/../../common/core-dns/core-dns.psm1'
 
 $workingFolder= "$PSScriptRoot"
 Write-Host "Grafana - PSScriptRoot: $workingFolder"

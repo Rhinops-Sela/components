@@ -1,4 +1,5 @@
 #!/bin/pwsh
+Using module '$PSScriptRoot/../../common/nodegroups/monitoring-nodegroup.psm1'
 Using module '$PSScriptRoot/../../common/helm/helm.psm1'
 Set-Location -Path $PSScriptRoot
 $workingFolder= "$PSScriptRoot"
