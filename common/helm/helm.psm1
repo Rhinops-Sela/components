@@ -35,7 +35,7 @@ class HelmChart: Parent {
   UninstallHelmChart(){
     $this.CheckIfHelmInstalled()
     if($this.helmChartProperties.deployed){
-      helm uninstall --debug $this.helmChartProperties.name -n $this.helmChartProperties.namespace.namespace
+      helm uninstall $this.helmChartProperties.name -n $this.helmChartProperties.namespace.namespace
     } else {
      Write-Host "Helmchart: $($this.helmChartProperties.name) doens't exists in NS: $($this.helmChartProperties.namespace.namespace)"
     }
@@ -64,7 +64,7 @@ class HelmChart: Parent {
     }
     helm repo add stable "https://kubernetes-charts.storage.googleapis.com"
     helm repo update
-    helm $verb --wait --debug --timeout 3600s $this.helmChartProperties.name $this.helmChartProperties.chart -f $this.helmChartProperties.valuesFilepath -n $this.helmChartProperties.namespace.namespace
+    helm $verb --wait --timeout 3600s $this.helmChartProperties.name $this.helmChartProperties.chart -f $this.helmChartProperties.valuesFilepath -n $this.helmChartProperties.namespace.namespace
     if(!$upgrade){
       $this.helmChartProperties.DNS.AddEntry()
     }

@@ -31,7 +31,7 @@ class GenericNodeGroup: Parent {
     if($this.debug){
       $this.templatePath = "$PSScriptRoot/templates/debug/$debugTemplateName"
     } else {
-      $this.templatePath = "$PSScriptRoot/templates/nodegroup-template.json"
+      $this.templatePath = "$($nodeProperties.workingFilePath)/nodegroup_template.json"
     }
     $nodeProperties.clusterName = $this.clusterName
     $nodeProperties.region = $this.clusterRegion
