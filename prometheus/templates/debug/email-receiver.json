@@ -1,0 +1,14 @@
+
+{
+  "name": "email-alert",
+  "email_configs": [
+    {
+      "to": "devops-to@fennec.io",
+      "from": "devops-from@fennec.io",
+      "smarthost": "smtp.devops@fennec.io:583",
+      "auth_username": "admin",
+      "auth_identity": "devops-to@fennec.io",
+      "auth_password": "12345"
+    }
+  ]
+}

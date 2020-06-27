@@ -7,11 +7,11 @@ Using module '$PSScriptRoot/../../common/core-dns/core-dns.psm1'
 Set-Location -Path $PSScriptRoot
 $workingFolder= "$PSScriptRoot"
 $HelmChart = [HelmChart]::new(@{
-  name = "grafana"
+  name = "prometheus"
   namespace = [Namespace]::new("monitoring", $workingFolder)
   workingFolder = $workingFolder
   nodeGroup = [MonitoringNodeGroup]::new($workingFolder)
-  DNS = [CoreDNS]::new("grafana.monitoring.svc.cluster.local",$workingFolder)
+  DNS = [CoreDNS]::new("prometheus.monitoring.svc.cluster.local",$workingFolder)
 })
 $HelmChart.UninstallHelmChart()
 
@@ -19,8 +19,12 @@ $HelmChart.UninstallHelmChart()
 
 <#
 #If prev helm uninstall fails
-kubectl delete PodSecurityPolicy grafana && \
-kubectl delete PodSecurityPolicy grafana-test && \
-kubectl delete clusterrole grafana-clusterrole && \
-kubectl delete ClusterRoleBinding grafana-clusterrolebinding
+kubectl delete clusterrole prometheus-alertmanager && \
+kubectl delete clusterrole prometheus-pushgateway && \
+kubectl delete clusterrole prometheus-server && \
+kubectl delete clusterrole prometheus-kube-state-metrics && \
+kubectl delete ClusterRoleBinding prometheus-kube-state-metrics && \
+kubectl delete ClusterRoleBinding prometheus-alertmanager && \
+kubectl delete ClusterRoleBinding prometheus-pushgateway && \
+kubectl delete ClusterRoleBinding prometheus-server
 #>

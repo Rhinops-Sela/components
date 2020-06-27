@@ -1,0 +1,8 @@
+{
+  "receiver": "slack-alert",
+  "group_wait": "10s",
+  "match_re": {
+    "severity": "error|warning"
+  },
+  "continue": true
+}

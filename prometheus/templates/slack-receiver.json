@@ -1,0 +1,11 @@
+{
+  "name": "slack-alert",
+  "slack_configs": [
+    {
+      "api_url": "${SLACK_URL}",
+      "send_resolved": true,
+      "channel": "#alerts",
+      "text": "{{ range .Alerts }}<!channel> {{ .Annotations.summary }}\n{{ .Annotations.description }}\n{{ end }}"
+    }
+  ]
+}
