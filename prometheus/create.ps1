@@ -20,49 +20,54 @@ $HelmChart = [HelmChart]::new(@{
   DNS = [CoreDNS]::new("prometheus.monitoring.svc.cluster.local",$workingFolder)
 })
 
+$alertmanagerYAML = $alertManager.alertmanagerFiles."alertmanager.yml"
+
 if($HelmChart.debug){
   $templateFilesPath += "debug/"
 }
- $alertManager = (Get-Content "$templateFilesPath/alert-manager.json" | Out-String | ConvertFrom-Json)
- $emailReceiver = (Get-Content "$templateFilesPath/email-receiver.json" | Out-String | ConvertFrom-Json)
- $emailRoute = (Get-Content "$templateFilesPath/email-route.json" | Out-String | ConvertFrom-Json)
- $slackReceiver = (Get-Content "$templateFilesPath/slack-receiver.json" | Out-String | ConvertFrom-Json)
- $slackRoute = (Get-Content "$templateFilesPath/slack-route.json" | Out-String | ConvertFrom-Json)
- $webhooksReceiver = (Get-Content "$templateFilesPath/webhooks-receiver.json" | Out-String | ConvertFrom-Json)
- $webhooksRoute = (Get-Content "$templateFilesPath/webhooks-route.json" | Out-String | ConvertFrom-Json)
-
+$alertManager = (Get-Content "$templateFilesPath/alert-manager.json" | Out-String | ConvertFrom-Json)
 $valuesFile =  (Get-Content $valuesFilepath | Out-String | ConvertFrom-Json)
 
 
+$receivers = @()
+$routes = @()
+
 if($HelmChart.debug){
-  $alertManager.alertmanagerFiles."alertmanager.yml".route.receiver = "slack-alert"
-  $alertManager.alertmanagerFiles."alertmanager.yml".receivers += $emailReceiver
-  $alertManager.alertmanagerFiles."alertmanager.yml".route.routes += $emailRoute
-  $alertManager.alertmanagerFiles."alertmanager.yml".receivers += $slackReceiver
-  $alertManager.alertmanagerFiles."alertmanager.yml".route.routes += $slackRoute
-  $alertManager.alertmanagerFiles."alertmanager.yml".receivers += $webhooksReceiver
-  $alertManager.alertmanagerFiles."alertmanager.yml".route.routes += $webhooksRoute
- 
+  $alertmanagerYAML.route.receiver = "email-receiver"
+  $receivers = @(
+    "$templateFilesPath/email-receiver.json",
+    "$templateFilesPath/slack-receiver.json",
+    "$templateFilesPath/webhooks-receiver.json"
+  )
+  $routes = @(
+    "$templateFilesPath/email-route.json",
+    "$templateFilesPath/slack-route.json",
+    "$templateFilesPath/webhooks-route.json"
+  )
 } else {
   $addEmailReceiver = "${EMAIL_NOTIFER}"
   $addSlackReceiver = "${SLACK_NOTIFER}"
   $addWebhooksReceiver = "${WEBHOOK_NOTIFER}"
+  $alertmanagerYAML.route.receiver = "${DEFAULT_RECEIVER}"
+ 
   if($addEmailReceiver){
-    $alertManager.alertmanagerFiles."alertmanager.yml".receivers += $emailReceiver
-    $alertManager.alertmanagerFiles."alertmanager.yml".route.routes += $emailRoute
-    $alertManager.alertmanagerFiles."alertmanager.yml".route.receiver = "email-alert"
+    $receivers += "$templateFilesPath/email-receiver.json"
+    $routes += "$templateFilesPath/email-route.json"
   }
   if($addSlackReceiver){
-    $alertManager.alertmanagerFiles."alertmanager.yml".receivers += $slackReceiver
-    $alertManager.alertmanagerFiles."alertmanager.yml".route.routes += $slackRoute
-    $alertManager.alertmanagerFiles."alertmanager.yml".route.receiver = "slack-alert"
+    $receivers += "$templateFilesPath/slack-receiver.json"
+    $routes += "$templateFilesPath/slack-route.json"
+    
   }
   if($addWebhooksReceiver){
-    $alertManager.alertmanagerFiles."alertmanager.yml".receivers += $webhooksReceiver
-    $alertManager.alertmanagerFiles."alertmanager.yml".route.routes += $webhooksRoute
-    $alertManager.alertmanagerFiles."alertmanager.yml".route.receiver = "webhooks-alert"
+    $receivers += "$templateFilesPath/webhooks-receiver.json"
+    $routes += "$templateFilesPath/webhooks-route.json"
   }
 }
+
+$alertmanagerYAML.receivers = $HelmChart.AddArrayItems($receivers,$alertmanagerYAML.receivers)
+$alertmanagerYAML.route.routes = $HelmChart.AddArrayItems($routes,$alertmanagerYAML.route.routes)
+
 $valuesFile | Add-Member -MemberType NoteProperty -Name "alertmanagerFiles" -Value $alertManager.alertmanagerFiles
 $valuesFile | ConvertTo-Json -depth 100 | Out-File "$executeValuesFilepath"
 $HelmChart.InstallHelmChart()
