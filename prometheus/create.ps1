@@ -4,10 +4,13 @@ Using module '$PSScriptRoot/../../common/namespace/namespace.psm1'
 Using module '$PSScriptRoot/../../common/helm/helm.psm1'
 Using module '$PSScriptRoot/../../common/core-dns/core-dns.psm1'
 
+$receivers = @()
+$routes = @()
 $workingFolder= "$PSScriptRoot"
 $valuesFilepath= "$workingFolder/values.json"
 $executeValuesFilepath= "$workingFolder/values-execute.json"
 $templateFilesPath= "$workingFolder/templates/"
+
 Write-Host "Grafana - PSScriptRoot: $workingFolder"
 $HelmChart = [HelmChart]::new(@{
   name = "prometheus"
@@ -19,18 +22,13 @@ $HelmChart = [HelmChart]::new(@{
   nodeGroup = [MonitoringNodeGroup]::new($workingFolder)
   DNS = [CoreDNS]::new("prometheus.monitoring.svc.cluster.local",$workingFolder)
 })
-
-$alertmanagerYAML = $alertManager.alertmanagerFiles."alertmanager.yml"
-
 if($HelmChart.debug){
   $templateFilesPath += "debug/"
 }
+#Load JSON files
+$alertmanagerYAML = $alertManager.alertmanagerFiles."alertmanager.yml"
 $alertManager = (Get-Content "$templateFilesPath/alert-manager.json" | Out-String | ConvertFrom-Json)
 $valuesFile =  (Get-Content $valuesFilepath | Out-String | ConvertFrom-Json)
-
-
-$receivers = @()
-$routes = @()
 
 if($HelmChart.debug){
   $alertmanagerYAML.route.receiver = "email-receiver"
@@ -49,7 +47,7 @@ if($HelmChart.debug){
   $addSlackReceiver = "${SLACK_NOTIFER}"
   $addWebhooksReceiver = "${WEBHOOK_NOTIFER}"
   $alertmanagerYAML.route.receiver = "${DEFAULT_RECEIVER}"
- 
+
   if($addEmailReceiver){
     $receivers += "$templateFilesPath/email-receiver.json"
     $routes += "$templateFilesPath/email-route.json"
@@ -57,7 +55,7 @@ if($HelmChart.debug){
   if($addSlackReceiver){
     $receivers += "$templateFilesPath/slack-receiver.json"
     $routes += "$templateFilesPath/slack-route.json"
-    
+
   }
   if($addWebhooksReceiver){
     $receivers += "$templateFilesPath/webhooks-receiver.json"
