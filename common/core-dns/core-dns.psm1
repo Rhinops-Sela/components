@@ -28,7 +28,7 @@ class CoreDNS: Parent{
     }
   }
 
-  ModforifyEntry([String]$lineToReplace,[String]$newLine){
+  ModifyEntry([String]$lineToReplace,[String]$newLine){
     $configFile = $this.GetCoreDNSData()
     $configFile = $configFile.replace($lineToReplace, $newLine)
     $configFile = $configFile | ConvertFrom-Json

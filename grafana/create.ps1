@@ -15,10 +15,11 @@ $HelmChart = [HelmChart]::new(@{
   workingFolder = $workingFolder
   nodeGroup = [MonitoringNodeGroup]::new($workingFolder)
   DNS = [CoreDNS]::new(@(
-    {
-      Source = "grafana.monitoring.svc.cluster.local", Target = "${DNS_RECORD}"
+    @{
+      Source = "grafana.monitoring.svc.cluster.local"
+      Target = "${DNS_RECORD}"
     }
-    ),$workingFolder)
+  ),$workingFolder)
 })
 $HelmChart.InstallHelmChart()
 

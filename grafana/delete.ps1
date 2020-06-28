@@ -11,7 +11,12 @@ $HelmChart = [HelmChart]::new(@{
   namespace = [Namespace]::new("monitoring", $workingFolder)
   workingFolder = $workingFolder
   nodeGroup = [MonitoringNodeGroup]::new($workingFolder)
-  DNS = [CoreDNS]::new("grafana.monitoring.svc.cluster.local",$workingFolder)
+  DNS = [CoreDNS]::new(@(
+    @{
+      Source = "grafana.monitoring.svc.cluster.local"
+      Target = "${DNS_RECORD}"
+    }
+  ),$workingFolder)
 })
 $HelmChart.UninstallHelmChart()
 
