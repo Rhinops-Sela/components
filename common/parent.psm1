@@ -29,6 +29,14 @@ class Parent {
     return $BaseArray
   }
 
+  [psobject]AddArrayItems([String[]] $JSONPaths, $BaseArray){
+    foreach ($JSONPath in $args){
+      $Object = (Get-Content "$JSONPath" | Out-String | ConvertFrom-Json)
+      $BaseArray += $Object
+    }
+    return $BaseArray
+  }
+
   [psobject]AddProperties([String] $OuterDelimiter,[String] $InnerDelimiter,[String]$ItemsToAdd){
     return $this.AddProperties([String] $OuterDelimiter,[String] $InnerDelimiter,[String]$ItemsToAdd, $null)
   }
