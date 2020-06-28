@@ -5,36 +5,30 @@ class DNSRecord {
 }
 class CoreDNS: Parent{
   $namespace = "kube-system"
-  [DNSRecord]$dnsRecord
+  [DNSRecord[]]$dnsRecords
   $templatePath = ""
   $workingFolder
-  CoreDNS([String]$target,[String]$workingFolder):base($workingFolder){
+  CoreDNS([DNSRecord[]]$dnsRecords,[String]$workingFolder):base($workingFolder){
     $this.templatePath = "$PSScriptRoot/templates/coredns-configmap.json"
     $this.workingFolder = $workingFolder
-    if($this.debug){
-      $this.dnsRecord = @{
-        Source = "bobo.io"
-        Target = $target
-      }
-    } else {
-      $this.dnsRecord = @{
-        Source = '${DNS_RECORD}'
-        Target = $target
-      }
-    }
+    $this.dnsRecords = $dnsRecords
   }
 
   AddEntry(){
-    $lineToReplace = "\n    rewrite name fennec.io fennec.io\n"
-    $newLine = "\n    rewrite name $($this.dnsRecord.Source) $($this.dnsRecord.Target)\n    rewrite name fennec.io fennec.io\n"
-    $this.ModifyEntry($lineToReplace, $newLine)
+    foreach($dnsRecord in $this.dnsRecords){
+      $lineToReplace = "\n    rewrite name fennec.io fennec.io\n"
+      $newLine = "\n    rewrite name $($dnsRecord.Source) $($dnsRecord.Target)\n    rewrite name fennec.io fennec.io\n"
+      $this.ModifyEntry($lineToReplace, $newLine)
+    }
   }
   DeleteEntry(){
-    $lineToReplace = "    rewrite name $($this.dnsRecord.Source) $($this.dnsRecord.Target)\n"
-    $this.ModifyEntry($lineToReplace, "")
+    foreach($dnsRecord in $this.dnsRecords){
+      $lineToReplace = "    rewrite name $($dnsRecord.Source) $($dnsRecord.Target)\n"
+      $this.ModifyEntry($lineToReplace, "")
+    }
   }
 
-  ModifyEntry([String]$lineToReplace,[String]$newLine){
+  ModforifyEntry([String]$lineToReplace,[String]$newLine){
     $configFile = $this.GetCoreDNSData()
     $configFile = $configFile.replace($lineToReplace, $newLine)
     $configFile = $configFile | ConvertFrom-Json

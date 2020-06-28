@@ -20,14 +20,23 @@ $HelmChart = [HelmChart]::new(@{
   valuesFilepath = $executeValuesFilepath
   workingFolder = $workingFolder
   nodeGroup = [MonitoringNodeGroup]::new($workingFolder)
-  DNS = [CoreDNS]::new("prometheus.monitoring.svc.cluster.local",$workingFolder)
+  DNS = [CoreDNS]::new(@(
+  @{
+    Source = "prometheus.monitoring.svc.cluster.local"
+    Target = "${SERVER_DNS_RECORD}"
+  },
+  @{
+    Source = "prometheus-alertmanager.monitoring.svc.cluster.local"
+    Target = "${ALERTMANAGER_RECORD}"
+  }
+  ),$workingFolder)
 })
 if($HelmChart.debug){
   $templateFilesPath += "debug/"
 }
 #Load JSON files
-$alertmanagerYAML = $alertManager.alertmanagerFiles."alertmanager.yml"
 $alertManager = (Get-Content "$templateFilesPath/alert-manager.json" | Out-String | ConvertFrom-Json)
+$alertmanagerYAML = $alertManager.alertmanagerFiles."alertmanager.yml"
 $valuesFile =  (Get-Content $valuesFilepath | Out-String | ConvertFrom-Json)
 
 if($HelmChart.debug){

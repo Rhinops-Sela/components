@@ -46,7 +46,7 @@ class GenericNodeGroup: Parent {
     } else {
       $this.CreateJSONFile()
       Write-Host "Deleting Nodegroup: $($this.nodeProperties.nodeGroupName)"
-      eksctl delete nodegroup -f "$($this.nodeProperties.workingFilePath)/nodegroup_execute.json" --approve
+      eksctl delete nodegroup -f "$($this.nodeProperties.workingFilePath)/nodegroup-execute.json" --approve
       $result = $this.CheckIfNGExists()
       Write-Host "NG deleted: !$result"
     }
@@ -59,7 +59,7 @@ class GenericNodeGroup: Parent {
     } else {
       $this.CreateJSONFile()
       Write-Host "Creating Nodegroup: $($this.nodeProperties.nodeGroupName)"
-      eksctl create nodegroup -f "$($this.nodeProperties.workingFilePath)/nodegroup_execute.json"
+      eksctl create nodegroup -f "$($this.nodeProperties.workingFilePath)/nodegroup-execute.json"
       $result = $this.CheckIfNGExists()
       Write-Host "NG created: $result"
     }
@@ -72,7 +72,7 @@ class GenericNodeGroup: Parent {
     $nodegroupTemplate = $this.CreateInstancesDistribution($nodegroupTemplate)
     $nodegroupTemplate = $this.AddARNsPolicies($nodegroupTemplate)
     $nodegroupTemplate = $this.AddTaints($nodegroupTemplate)
-    $nodegroupTemplate | ConvertTo-Json -depth 100 | Out-File "$($this.nodeProperties.workingFilePath)/nodegroup_execute.json"
+    $nodegroupTemplate | ConvertTo-Json -depth 100 | Out-File "$($this.nodeProperties.workingFilePath)/nodegroup-execute.json"
   }
 
   [psobject]AddMetaData($nodegroupTemplate){

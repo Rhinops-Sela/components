@@ -30,7 +30,7 @@ class Parent {
   }
 
   [psobject]AddArrayItems([String[]] $JSONPaths, $BaseArray){
-    foreach ($JSONPath in $args){
+    foreach ($JSONPath in $JSONPaths){
       $Object = (Get-Content "$JSONPath" | Out-String | ConvertFrom-Json)
       $BaseArray += $Object
     }
