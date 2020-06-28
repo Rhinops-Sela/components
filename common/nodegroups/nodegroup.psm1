@@ -84,12 +84,11 @@ class GenericNodeGroup: Parent {
       return $nodegroupTemplate
   }
 
-
+ #$taintsToAdd = 'taint1=true:NoSchedule;taint2=true:NoSchedule'
   [psobject]AddTaints($nodegroupTemplate){
     if(!$this.nodeProperties.taintsToAdd){
       return $nodegroupTemplate
     }
-    $Taints =  New-Object PSObject
     $OuterDelimiter = ';'
     $InnerDelimiter = '='
     $taints = $this.AddProperties($OuterDelimiter, $InnerDelimiter, $this.nodeProperties.taintsToAdd)

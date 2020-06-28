@@ -14,7 +14,6 @@ class HelmChartProperties {
   [String]$region
   [String]$valuesFilepath
   [String]$workingFolder
-  [bool]$deployed
 }
 
 class HelmChart: Parent {
@@ -24,37 +23,7 @@ class HelmChart: Parent {
     $this.helmChartProperties = $HelmChartProperties
   }
   InstallHelmChart(){
-    $this.CheckIfHelmInstalled()
-    if($this.helmChartProperties.deployed){
-      $this.Install($true)
-    } else {
-      $this.Install($false)
-    }
-  }
-
-  UninstallHelmChart(){
-    $this.CheckIfHelmInstalled()
-    if($this.helmChartProperties.deployed){
-      helm uninstall $this.helmChartProperties.name -n $this.helmChartProperties.namespace.namespace
-    } else {
-     Write-Host "Helmchart: $($this.helmChartProperties.name) doens't exists in NS: $($this.helmChartProperties.namespace.namespace)"
-    }
-    $this.helmChartProperties.DNS.DeleteEntry()
-    $this.helmChartProperties.namespace.DeleteNamespace()
-    $this.helmChartProperties.nodeGroup.DeleteNodeGroup()
-  }
-
-  CheckIfHelmInstalled(){
-    $helmChartStatus = (helm status $this.helmChartProperties.name -n $this.helmChartProperties.namespace.namespace -o json| Out-String | ConvertFrom-Json)
-    if(($helmChartStatus) -And ($helmChartStatus.info.status -eq "deployed")) {
-      $this.helmChartProperties.deployed = $true
-    } else {
-      $this.helmChartProperties.deployed = $false
-    }
-  }
-
-
-  Install([bool]$upgrade){
+    $upgrade = $this.CheckIfHelmInstalled()
     if($upgrade){
       $verb = "upgrade"
     } else {
@@ -69,4 +38,28 @@ class HelmChart: Parent {
       $this.helmChartProperties.DNS.AddEntry()
     }
   }
+
+  UninstallHelmChart(){
+    if($this.CheckIfHelmInstalled()){
+      helm uninstall $this.helmChartProperties.name -n $this.helmChartProperties.namespace.namespace
+    } else {
+     Write-Host "Helmchart: $($this.helmChartProperties.name) doens't exists in NS: $($this.helmChartProperties.namespace.namespace)"
+    }
+    $this.helmChartProperties.DNS.DeleteEntry()
+    $this.helmChartProperties.namespace.DeleteNamespace()
+    # Need to find the correct time to delete the node
+    $this.helmChartProperties.nodeGroup.DeleteNodeGroup()
+  }
+
+  [bool]CheckIfHelmInstalled(){
+    $helmChartStatus = (helm status $this.helmChartProperties.name -n $this.helmChartProperties.namespace.namespace -o json| Out-String | ConvertFrom-Json)
+    if(($helmChartStatus) -And ($helmChartStatus.info.status -eq "deployed")) {
+      return $true
+    } else {
+      return $false
+    }
+  }
+
+
+
 }
