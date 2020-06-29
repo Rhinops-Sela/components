@@ -11,20 +11,22 @@ $HelmChart = [HelmChart]::new(@{
   namespace = [Namespace]::new("monitoring", $workingFolder)
   workingFolder = $workingFolder
   nodeGroup = [MonitoringNodeGroup]::new($workingFolder)
-  DNS = [CoreDNS]::new(@(
-  @{
-    Source = "prometheus.monitoring.svc.cluster.local"
-    Target = "${SERVER_DNS_RECORD}"
-  },
-  @{
-    Source = "prometheus-alertmanager.monitoring.svc.cluster.local"
-    Target = "${ALERTMANAGER_RECORD}"
-  }
-  ),$workingFolder)
 })
 $HelmChart.UninstallHelmChart()
 
-
+$DNS = [CoreDNS]::new($workingFolder)
+$DNS.DeleteEntries(
+                  @(
+                    @{
+                      Source = "prometheus.monitoring.svc.cluster.local"
+                      Target = "${SERVER_DNS_RECORD}"
+                    },
+                    @{
+                      Source = "prometheus-alertmanager.monitoring.svc.cluster.local"
+                      Target = "${ALERTMANAGER_RECORD}"
+                    }
+                  )
+                )
 
 <#
 #If prev helm uninstall fails

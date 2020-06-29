@@ -11,17 +11,18 @@ $HelmChart = [HelmChart]::new(@{
   namespace = [Namespace]::new("monitoring", $workingFolder)
   workingFolder = $workingFolder
   nodeGroup = [MonitoringNodeGroup]::new($workingFolder)
-  DNS = [CoreDNS]::new(@(
-    @{
-      Source = "grafana.monitoring.svc.cluster.local"
-      Target = "${DNS_RECORD}"
-    }
-  ),$workingFolder)
 })
 $HelmChart.UninstallHelmChart()
 
-
-
+$DNS = [CoreDNS]::new($workingFolder)
+$DNS.DeleteEntries(
+                  @(
+                    @{
+                      Source = "grafana.monitoring.svc.cluster.local"
+                      Target = "${DNS_RECORD}"
+                    }
+                  )
+                )
 <#
 #If prev helm uninstall fails
 kubectl delete PodSecurityPolicy grafana && \

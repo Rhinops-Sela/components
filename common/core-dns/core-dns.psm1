@@ -5,24 +5,23 @@ class DNSRecord {
 }
 class CoreDNS: Parent{
   $namespace = "kube-system"
-  [DNSRecord[]]$dnsRecords
   $templatePath = ""
   $workingFolder
-  CoreDNS([DNSRecord[]]$dnsRecords,[String]$workingFolder):base($workingFolder){
+  CoreDNS([String]$workingFolder):base($workingFolder){
     $this.templatePath = "$PSScriptRoot/templates/coredns-configmap.json"
     $this.workingFolder = $workingFolder
-    $this.dnsRecords = $dnsRecords
   }
 
-  AddEntry(){
-    foreach($dnsRecord in $this.dnsRecords){
+  AddEntries([DNSRecord[]]$dnsRecords){
+    foreach($dnsRecord in $dnsRecords){
+      Write-Host "Adding record: Source: $($dnsRecord.Source) Target: $($dnsRecord.Target)"
       $lineToReplace = "\n    rewrite name fennec.io fennec.io\n"
       $newLine = "\n    rewrite name $($dnsRecord.Source) $($dnsRecord.Target)\n    rewrite name fennec.io fennec.io\n"
       $this.ModifyEntry($lineToReplace, $newLine)
     }
   }
-  DeleteEntry(){
-    foreach($dnsRecord in $this.dnsRecords){
+  DeleteEntries([DNSRecord[]]$dnsRecords){
+    foreach($dnsRecord in $dnsRecords){
       $lineToReplace = "    rewrite name $($dnsRecord.Source) $($dnsRecord.Target)\n"
       $this.ModifyEntry($lineToReplace, "")
     }

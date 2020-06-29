@@ -1,12 +1,10 @@
 Using module '$PSScriptRoot/../../common/namespace/namespace.psm1'
 Using module '$PSScriptRoot/../../common/nodegroups/nodegroup.psm1'
 Using module '$PSScriptRoot/../../common/parent.psm1'
-Using module '$PSScriptRoot/../../common/core-dns/core-dns.psm1'
 
 
 class HelmChartProperties {
   [GenericNodeGroup]$nodeGroup
-  [CoreDNS]$DNS
   [Namespace]$namespace
   [String]$name
   [String]$chart
@@ -38,9 +36,7 @@ class HelmChart: Parent {
     helm repo update
     Write-Host "helm $verb --wait --timeout 3600s $($this.helmChartProperties.name) $($this.helmChartProperties.chart) -f $($this.helmChartProperties.valuesFilepath) -n $($this.helmChartProperties.namespace.namespace)"
     helm $verb --wait --timeout 3600s $this.helmChartProperties.name $this.helmChartProperties.chart -f $this.helmChartProperties.valuesFilepath -n $this.helmChartProperties.namespace.namespace
-    if(!$upgrade -And $this.helmChartProperties.DNS){
-      $this.helmChartProperties.DNS.AddEntry()
-    }
+    
   }
 
   UninstallHelmChart(){
@@ -49,7 +45,6 @@ class HelmChart: Parent {
     } else {
      Write-Host "Helmchart: $($this.helmChartProperties.name) doens't exists in NS: $($this.helmChartProperties.namespace.namespace)"
     }
-    $this.helmChartProperties.DNS.DeleteEntry()
     $this.helmChartProperties.namespace.DeleteNamespace()
     # Need to find the correct time to delete the node
     $this.helmChartProperties.nodeGroup.DeleteNodeGroup()

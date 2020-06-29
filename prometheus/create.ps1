@@ -20,16 +20,6 @@ $HelmChart = [HelmChart]::new(@{
   valuesFilepath = $executeValuesFilepath
   workingFolder = $workingFolder
   nodeGroup = [MonitoringNodeGroup]::new($workingFolder)
-  DNS = [CoreDNS]::new(@(
-  @{
-    Source = "prometheus.monitoring.svc.cluster.local"
-    Target = "${SERVER_DNS_RECORD}"
-  },
-  @{
-    Source = "prometheus-alertmanager.monitoring.svc.cluster.local"
-    Target = "${ALERTMANAGER_RECORD}"
-  }
-  ),$workingFolder)
 })
 if($HelmChart.debug){
   $templateFilesPath += "debug/"
@@ -78,6 +68,20 @@ $alertmanagerYAML.route.routes = $HelmChart.AddArrayItems($routes,$alertmanagerY
 $valuesFile | Add-Member -MemberType NoteProperty -Name "alertmanagerFiles" -Value $alertManager.alertmanagerFiles
 $valuesFile | ConvertTo-Json -depth 100 | Out-File "$executeValuesFilepath"
 $HelmChart.InstallHelmChart()
+
+$DNS = [CoreDNS]::new($workingFolder)
+$DNS.AddEntries(
+                  @(
+                    @{
+                      Source = "prometheus.monitoring.svc.cluster.local"
+                      Target = "${SERVER_DNS_RECORD}"
+                    },
+                    @{
+                      Source = "prometheus-alertmanager.monitoring.svc.cluster.local"
+                      Target = "${ALERTMANAGER_RECORD}"
+                    }
+                  )
+                )
 
 
 

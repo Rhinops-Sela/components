@@ -14,15 +14,18 @@ $HelmChart = [HelmChart]::new(@{
   valuesFilepath = "$workingFolder/values.yaml"
   workingFolder = $workingFolder
   nodeGroup = [MonitoringNodeGroup]::new($workingFolder)
-  DNS = [CoreDNS]::new(@(
-    @{
-      Source = "grafana.monitoring.svc.cluster.local"
-      Target = "${DNS_RECORD}"
-    }
-  ),$workingFolder)
 })
 $HelmChart.InstallHelmChart()
 
+$DNS = [CoreDNS]::new($workingFolder)
+$DNS.AddEntries(
+                  @(
+                    @{
+                      Source = "grafana.monitoring.svc.cluster.local"
+                      Target = "${DNS_RECORD}"
+                    }
+                  )
+                )
 
 #kubectl get secret --namespace grafana grafana -o jsonpath="{.data.admin-password}" | base64 --decode > ../../output/grafana-admin-secret
 
