@@ -1,0 +1,20 @@
+{
+  "datadog": {
+    "apiKey": "",
+    "appKey": "",
+    "logs": {
+      "enabled": true,
+      "containerCollectAll": true
+    },
+    "clusterAgent": {
+      "enabled": true,
+      "metricsProvider": {
+        "enabled": true
+      },
+      "rbac": {
+        "create": true,
+        "serviceAccountName": "default"
+      }
+    }
+  }
+}

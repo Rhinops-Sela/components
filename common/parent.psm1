@@ -8,7 +8,7 @@ class Parent {
     if ($Env:GLOBAL_CLUSTER_NAME){
         aws configure set aws_access_key_id $Env:AWS_ACCESS_KEY_ID
         aws configure set aws_secret_access_key $Env:AWS_SECRET_ACCESS_KEY
-        aws configure set region $Env:AWS_DEFAULT_REGION
+        aws configure set region $Env:GLOBAL_CLUSTER_REGION
         $this.clusterName = $Env:GLOBAL_CLUSTER_NAME
         $this.clusterRegion = $Env:GLOBAL_CLUSTER_REGION
     }

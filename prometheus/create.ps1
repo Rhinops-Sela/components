@@ -11,7 +11,7 @@ $valuesFilepath= "$workingFolder/values.json"
 $executeValuesFilepath= "$workingFolder/values-execute.json"
 $templateFilesPath= "$workingFolder/templates/"
 
-Write-Host "Grafana - PSScriptRoot: $workingFolder"
+Write-Host "Prometheus - PSScriptRoot: $workingFolder"
 $HelmChart = [HelmChart]::new(@{
   name = "prometheus"
   chart = "stable/prometheus"

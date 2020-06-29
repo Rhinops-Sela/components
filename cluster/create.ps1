@@ -2,7 +2,7 @@
 
 aws configure set aws_access_key_id $Env:AWS_ACCESS_KEY_ID
 aws configure set aws_secret_access_key $Env:AWS_SECRET_ACCESS_KEY
-aws configure set region $Env:AWS_DEFAULT_REGION
+aws configure set region $Env:GLOBAL_CLUSTER_REGION
 Write-Host "Cluster Component Started"
 # Handling parameters
 if ($PSDebugContext){
@@ -16,7 +16,7 @@ if ($PSDebugContext){
 }
 else {
     $lookUpCluster = '${GLOBAL_CLUSTER_NAME}'
-    $lookUpRegion = $Env:AWS_DEFAULT_REGION
+    $lookUpRegion = $Env:GLOBAL_CLUSTER_REGION
     $lookUpAdminARN = '${AWS_ADMIN_USER}'
     $lookUpClusterDashboard = "${DASHBOARD}"
     $lookUpClusterAutoscaler = "${CLUSTER_AUTO_SCALE}"

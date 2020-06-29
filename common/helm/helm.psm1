@@ -32,11 +32,13 @@ class HelmChart: Parent {
       $this.helmChartProperties.namespace.CreateNamespace()
        Write-Host "Deploying Helm Chart: $($this.helmChartProperties.name)"
     }
-   
-    helm repo add stable "https://kubernetes-charts.storage.googleapis.com"
+    if($this.helmChartProperties.repoUrl){
+      helm repo add stable $this.helmChartProperties.repoUrl
+    }
     helm repo update
+    Write-Host "helm $verb --wait --timeout 3600s $($this.helmChartProperties.name) $($this.helmChartProperties.chart) -f $($this.helmChartProperties.valuesFilepath) -n $($this.helmChartProperties.namespace.namespace)"
     helm $verb --wait --timeout 3600s $this.helmChartProperties.name $this.helmChartProperties.chart -f $this.helmChartProperties.valuesFilepath -n $this.helmChartProperties.namespace.namespace
-    if(!$upgrade){
+    if(!$upgrade -And $this.helmChartProperties.DNS){
       $this.helmChartProperties.DNS.AddEntry()
     }
   }
