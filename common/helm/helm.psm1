@@ -19,18 +19,20 @@ class HelmChartProperties {
 class HelmChart: Parent {
   [HelmChartProperties]$helmChartProperties
   HelmChart([HelmChartProperties]$HelmChartProperties): base($HelmChartProperties.workingFolder){
-    Write-Host "HelmChart: $PSScriptRoot"
     $this.helmChartProperties = $HelmChartProperties
   }
   InstallHelmChart(){
     $upgrade = $this.CheckIfHelmInstalled()
     if($upgrade){
       $verb = "upgrade"
+       Write-Host "Upgrading Helm Chart: $($this.helmChartProperties.name)"
     } else {
       $verb = "install"
       $this.helmChartProperties.nodeGroup.CreateNodeGroup()
       $this.helmChartProperties.namespace.CreateNamespace()
+       Write-Host "Deploying Helm Chart: $($this.helmChartProperties.name)"
     }
+   
     helm repo add stable "https://kubernetes-charts.storage.googleapis.com"
     helm repo update
     helm $verb --wait --timeout 3600s $this.helmChartProperties.name $this.helmChartProperties.chart -f $this.helmChartProperties.valuesFilepath -n $this.helmChartProperties.namespace.namespace
@@ -52,14 +54,31 @@ class HelmChart: Parent {
   }
 
   [bool]CheckIfHelmInstalled(){
-    $helmChartStatus = (helm status $this.helmChartProperties.name -n $this.helmChartProperties.namespace.namespace -o json| Out-String | ConvertFrom-Json)
+    $helmReleseExists = $false
+    $helmList = helm ls --all-namespaces -o json | ConvertFrom-Json | Select-Object -ExpandProperty NAME
+    if ($helmList -contains $this.helmChartProperties.name ) {
+        $helmReleseExists = $true
+    }
+
+    if ($helmReleseExists) {
+        Write-Host "helm $($this.helmChartProperties.name ) was found."
+        return $true
+    }
+    else {
+        Write-Host "helm $($this.helmChartProperties.name ) was not found"
+        return $false
+    }
+  }
+
+<#   [bool]CheckIfHelmInstalled(){
+    $helmChartStatus = (helm status $this.helmChartProperties.name -n $this.helmChartProperties.namespace.namespace --stderrthreshold 0 -o json| Out-String | ConvertFrom-Json)
     if(($helmChartStatus) -And ($helmChartStatus.info.status -eq "deployed")) {
       return $true
     } else {
       return $false
-    }
-  }
-
-
-
+    } #>
 }
+
+
+
+

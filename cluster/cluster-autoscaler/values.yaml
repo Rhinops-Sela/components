@@ -1,13 +1,13 @@
 rbac:
   create: true
 cloudProvider: aws
-awsRegion: ${CLUSTER_REGION}
+awsRegion: ${GLOBAL_CLUSTER_REGION}
 autoDiscovery:
   enabled: "true"
-  clusterName: ${CLUSTER_NAME}
+  clusterName: ${GLOBAL_CLUSTER_NAME}
 tolerations:
-- key: "system"
-  operator: "Equal"
-  value: "true"
+  - key: "system"
+    operator: "Equal"
+    value: "true"
 nodeSelector:
   role: system

@@ -4,9 +4,9 @@
   "nodeGroups": [
     {
       "name": "generic-ng",
-      "minSize": 1,
-      "maxSize": 1,
-      "desiredCapacity": 1,
+      "minSize": ${MIN},
+      "maxSize": ${MAC},
+      "desiredCapacity": ${DESIRED},
       "volumeSize": 100,
       "volumeType": "gp2",
       "privateNetworking": true,

@@ -7,7 +7,5 @@ class MonitoringNodeGroup : GenericNodeGroup {
       instanceTypes = 't3.large,t2.large'
       taintsToAdd = 'monitoring=true:NoSchedule'
     }, "monitoring-ng-template.json"){
-      Write-Host "MonitoringNodeGroup - PSScriptRoot: $PSScriptRoot"
   }
-  
-} 
+}

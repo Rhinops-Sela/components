@@ -7,8 +7,8 @@ if ($PSDebugContext){
     $filepostfix = '.ydebug'
 }
 else {
-    $lookUpCluster = '${CLUSTER_NAME}'
-    $lookUpRegion = '${CLUSTER_REGION}'
+    $lookUpCluster = '${GLOBAL_CLUSTER_NAME}'
+    $lookUpRegion = '${GLOBAL_CLUSTER_REGION}'
     $filepostfix = ''
 }
 . ../common/helper.ps1

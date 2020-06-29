@@ -25,13 +25,12 @@ class GenericNodeGroup: Parent {
         "arn:aws:iam::aws:policy/ElasticLoadBalancingFullAccess"
   )
   [NodeProperties]$nodeProperties
-  GenericNodeGroup([NodeProperties]$nodeProperties, [String]$debugTemplateName):base($nodeProperties.workingFilePath)
+  GenericNodeGroup([NodeProperties]$nodeProperties, [String]$templateName):base($nodeProperties.workingFilePath)
   {
-    Write-Host "GenericNodeGroup - PSScriptRoot: $PSScriptRoot"
     if($this.debug){
-      $this.templatePath = "$PSScriptRoot/templates/debug/$debugTemplateName"
+      $this.templatePath = "$PSScriptRoot/templates/debug/$templateName"
     } else {
-      $this.templatePath = "$($nodeProperties.workingFilePath)/nodegroup_template.json"
+      $this.templatePath = "$PSScriptRoot/templates/$templateName"
     }
     $nodeProperties.clusterName = $this.clusterName
     $nodeProperties.region = $this.clusterRegion
@@ -40,28 +39,24 @@ class GenericNodeGroup: Parent {
   }
 
   DeleteNodeGroup(){
-    $result = $this.CheckIfNGExists()
-    if(!$result){
-      Write-Host "Nodgroup $($this.nodeProperties.nodeGroupName) doesn't exists"
+    $this.CreateJSONFile()
+    Write-Host "Deleting Nodegroup: $($this.nodeProperties.nodeGroupName)"
+    $exitCode = $this.ExecuteCommand("eksctl", "delete nodegroup -f $($this.nodeProperties.workingFilePath)/nodegroup-execute.json --approve")
+    if($exitCode -eq 0){
+      Write-Host "NG Delted!"
     } else {
-      $this.CreateJSONFile()
-      Write-Host "Deleting Nodegroup: $($this.nodeProperties.nodeGroupName)"
-      eksctl delete nodegroup -f "$($this.nodeProperties.workingFilePath)/nodegroup-execute.json" --approve
-      $result = $this.CheckIfNGExists()
-      Write-Host "NG deleted: !$result"
+      Write-Error "Failed to delete NG"
     }
   }
 
   CreateNodeGroup(){
-    $result = $this.CheckIfNGExists()
-    if($result){
-      Write-Host "Nodgroup $($this.nodeProperties.nodeGroupName) already exists"
+    $this.CreateJSONFile()
+    Write-Host "Creating Nodegroup: $($this.nodeProperties.nodeGroupName)"
+    $exitCode =  $this.ExecuteCommand("eksctl", "create nodegroup -f $($this.nodeProperties.workingFilePath)/nodegroup-execute.json")
+    if($exitCode -eq 0){
+        Write-Host "NG Created!"
     } else {
-      $this.CreateJSONFile()
-      Write-Host "Creating Nodegroup: $($this.nodeProperties.nodeGroupName)"
-      eksctl create nodegroup -f "$($this.nodeProperties.workingFilePath)/nodegroup-execute.json"
-      $result = $this.CheckIfNGExists()
-      Write-Host "NG created: $result"
+      Write-Error "Failed to create NG"
     }
   }
 
@@ -139,24 +134,6 @@ class GenericNodeGroup: Parent {
     $labels = $this.AddProperties($OuterDelimiter, $InnerDelimiter, $this.nodeProperties.userLabelsStr)
     $nodegroupTemplate.nodeGroups | Add-Member  -MemberType NoteProperty -Name labels -Value $labels
     return $nodegroupTemplate
-  }
-
-  [bool]CheckIfNGExists(){
-    $nodegroupExists = $false
-    $nodegroupList = eksctl get nodegroup --cluster $this.nodeProperties.clusterName --region $this.nodeProperties.region -o json | ConvertFrom-Json | Select-Object -ExpandProperty Name
-    Write-Host "CheckIfNGExists: success"
-    if ($nodegroupList -contains $this.nodeProperties.nodeGroupName) {
-        $nodegroupExists = $true
-    }
-
-    if ($nodegroupExists) {
-        Write-Debug "nodegroup $($this.nodeProperties.nodeGroupName) was found." -InformationAction Continue
-        return $true
-    }
-    else {
-        Write-Debug "nodegroup $($this.nodeProperties.nodeGroupName) was not found" -InformationAction Continue
-        return $false
-    }
   }
 }
 

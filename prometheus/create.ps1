@@ -40,7 +40,7 @@ $alertmanagerYAML = $alertManager.alertmanagerFiles."alertmanager.yml"
 $valuesFile =  (Get-Content $valuesFilepath | Out-String | ConvertFrom-Json)
 
 if($HelmChart.debug){
-  $alertmanagerYAML.route.receiver = "email-receiver"
+  $alertmanagerYAML.route.receiver = "email-alert"
   $receivers = @(
     "$templateFilesPath/email-receiver.json",
     "$templateFilesPath/slack-receiver.json",
@@ -55,18 +55,18 @@ if($HelmChart.debug){
   $addEmailReceiver = "${EMAIL_NOTIFER}"
   $addSlackReceiver = "${SLACK_NOTIFER}"
   $addWebhooksReceiver = "${WEBHOOK_NOTIFER}"
-  $alertmanagerYAML.route.receiver = "${DEFAULT_RECEIVER}"
-
-  if($addEmailReceiver){
+  $alertmanagerYAML.route.receiver = "${DEFAULT_RECEIVER}-alert"
+  [System.Convert]::ToBoolean($addEmailReceiver)
+  if($addEmailReceiver -And [System.Convert]::ToBoolean($addEmailReceiver)){
     $receivers += "$templateFilesPath/email-receiver.json"
     $routes += "$templateFilesPath/email-route.json"
   }
-  if($addSlackReceiver){
+  if($addSlackReceiver -And [System.Convert]::ToBoolean($addSlackReceiver)){
     $receivers += "$templateFilesPath/slack-receiver.json"
     $routes += "$templateFilesPath/slack-route.json"
 
   }
-  if($addWebhooksReceiver){
+  if($addWebhooksReceiver -And [System.Convert]::ToBoolean($addWebhooksReceiver)){
     $receivers += "$templateFilesPath/webhooks-receiver.json"
     $routes += "$templateFilesPath/webhooks-route.json"
   }

@@ -3,7 +3,7 @@
 echo "falling a sleep -es"
 sleep 1
 echo "woke - es"
-echo "test replacement: ${ES_CLUSTER_NAME}"
+echo "test replacement: ${ES_GLOBAL_CLUSTER_NAME}"
 NAMESPACE=elasticsearch
 RELEASE=elasticsearch
 

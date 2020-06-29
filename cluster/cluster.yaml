@@ -2,8 +2,8 @@ apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
 
 metadata:
-  name: ${CLUSTER_NAME}
-  region: ${CLUSTER_REGION}
+  name: ${GLOBAL_CLUSTER_NAME}
+  region: ${GLOBAL_CLUSTER_REGION}
   version: "1.16"
 
 vpc:
@@ -15,20 +15,19 @@ vpc:
 iam:
   withOIDC: true
   serviceAccounts:
-  - metadata:
-      name: cluster-autoscaler
-      namespace: kube-system
-      labels: {aws-usage: "cluster-ops"}
-    attachPolicy:
-      Version: "2012-10-17"
-      Statement:
-      - Effect: Allow
-        Action:
-        - "autoscaling:DescribeAutoScalingGroups"
-        - "autoscaling:DescribeAutoScalingInstances"
-        - "autoscaling:DescribeLaunchConfigurations"
-        - "autoscaling:DescribeTags"
-        - "autoscaling:SetDesiredCapacity"
-        - "autoscaling:TerminateInstanceInAutoScalingGroup"
-        Resource: '*'
-
+    - metadata:
+        name: cluster-autoscaler
+        namespace: kube-system
+        labels: { aws-usage: "cluster-ops" }
+      attachPolicy:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action:
+              - "autoscaling:DescribeAutoScalingGroups"
+              - "autoscaling:DescribeAutoScalingInstances"
+              - "autoscaling:DescribeLaunchConfigurations"
+              - "autoscaling:DescribeTags"
+              - "autoscaling:SetDesiredCapacity"
+              - "autoscaling:TerminateInstanceInAutoScalingGroup"
+            Resource: "*"

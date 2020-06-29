@@ -15,7 +15,7 @@ if ($PSDebugContext){
     $filepostfix = '.ydebug'
 }
 else {
-    $lookUpCluster = '${CLUSTER_NAME}'
+    $lookUpCluster = '${GLOBAL_CLUSTER_NAME}'
     $lookUpRegion = $Env:AWS_DEFAULT_REGION
     $lookUpAdminARN = '${AWS_ADMIN_USER}'
     $lookUpClusterDashboard = "${DASHBOARD}"

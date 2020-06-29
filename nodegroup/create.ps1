@@ -37,6 +37,6 @@ $nodeProperties = @{
     taintsToAdd = $taintsToAdd
 }
 
-$NodeGroup = [GenericNodeGroup]::new($nodeProperties,"nodegroup_template.json")
+$NodeGroup = [GenericNodeGroup]::new($nodeProperties,"nodegroup-template.json")
 $NodeGroup.CreateNodeGroup()
 

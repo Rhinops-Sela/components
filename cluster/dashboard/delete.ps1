@@ -5,8 +5,8 @@ if ($PSDebugContext -eq "Continue"){
     $lookUpRegion = 'eu-west-1'
 }
 else {
-    $lookUpCluster = '${CLUSTER_NAME}'
-    $lookUpRegion = '${CLUSTER_REGION}'
+    $lookUpCluster = '${GLOBAL_CLUSTER_NAME}'
+    $lookUpRegion = '${GLOBAL_CLUSTER_REGION}'
 }
 
 # check for cluster

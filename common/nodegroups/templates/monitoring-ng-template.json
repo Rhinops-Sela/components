@@ -3,9 +3,9 @@
   "kind": "ClusterConfig",
   "nodeGroups": [
     {
-      "name": "generic-ng",
+      "name": "monitoring",
       "minSize": 1,
-      "maxSize": 1,
+      "maxSize": 4,
       "desiredCapacity": 1,
       "volumeSize": 100,
       "volumeType": "gp2",

@@ -2,17 +2,17 @@ apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
 
 metadata:
-  name: ${CLUSTER_NAME}
-  region: ${CLUSTER_REGION}
+  name: ${GLOBAL_CLUSTER_NAME}
+  region: ${GLOBAL_CLUSTER_REGION}
 
 nodeGroups:
   - name: system
     labels:
       role: system
     instancesDistribution:
-        instanceTypes:
-          - "t3.small"
-          - "t2.small"
+      instanceTypes:
+        - "t3.small"
+        - "t2.small"
     taints:
       system: "true:NoSchedule"
     tags:
@@ -28,6 +28,6 @@ nodeGroups:
       withAddonPolicies:
         autoScaler: true
     availabilityZones:
-      - "${CLUSTER_REGION}a"
-      - "${CLUSTER_REGION}b"
-      - "${CLUSTER_REGION}c"
+      - "${GLOBAL_CLUSTER_REGION}a"
+      - "${GLOBAL_CLUSTER_REGION}b"
+      - "${GLOBAL_CLUSTER_REGION}c"

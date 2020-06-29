@@ -6,8 +6,8 @@ if ($PSDebugContext){
     $lookUpRegion = 'eu-west-1'
 }
 else {
-    $lookUpCluster = '${CLUSTER_NAME}'
-    $lookUpRegion = '${CLUSTER_REGION}'
+    $lookUpCluster = '${GLOBAL_CLUSTER_NAME}'
+    $lookUpRegion = '${GLOBAL_CLUSTER_REGION}'
 }
 . ../common/helper.ps1
 
