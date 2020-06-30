@@ -1,7 +1,0 @@
-controller:
-  kind: DaemonSet
-  service:
-    annotations:
-      service.beta.kubernetes.io/aws-load-balancer-internal: "true"
-  tolerations:
-  - operator: "Exists"

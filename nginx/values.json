@@ -1,0 +1,15 @@
+{
+   "controller": {
+      "kind": "DaemonSet",
+      "service": {
+         "annotations": {
+            "service.beta.kubernetes.io/aws-load-balancer-internal": ""
+         }
+      },
+      "tolerations": [
+         {
+            "operator": "Exists"
+         }
+      ]
+   }
+}

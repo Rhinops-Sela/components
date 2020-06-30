@@ -27,8 +27,12 @@ class HelmChart: Parent {
       } else {
         $this.verb = "install"
         Write-Host "Deploying Helm Chart: $($this.helmChartProperties.name)"
-        $this.helmChartProperties.nodeGroup.CreateNodeGroup()
-        $this.helmChartProperties.namespace.CreateNamespace()
+        if($this.helmChartProperties.nodeGroup){
+          $this.helmChartProperties.nodeGroup.CreateNodeGroup()
+        }
+        if($this.helmChartProperties.namespace){
+          $this.helmChartProperties.namespace.CreateNamespace()
+        }
       }
       if($this.helmChartProperties.repoUrl){
         helm repo add stable $this.helmChartProperties.repoUrl
