@@ -32,6 +32,16 @@ class GenericNodeGroup: Parent {
     } else {
       $this.templatePath = "$PSScriptRoot/templates/$templateName"
     }
+    $this.Init($nodeProperties)
+  }
+
+  GenericNodeGroup([NodeProperties]$nodeProperties, [String]$templateFolder, [String]$templateName):base($nodeProperties.workingFilePath)
+  {
+    $this.templatePath = Join-Path $templateFolder $templateName
+    $this.Init($nodeProperties)
+  }
+
+  Init([NodeProperties]$nodeProperties){
     $nodeProperties.clusterName = $this.clusterName
     $nodeProperties.region = $this.clusterRegion
     $nodeProperties.templatePath = $this.templatePath

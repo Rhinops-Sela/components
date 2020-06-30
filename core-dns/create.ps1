@@ -11,7 +11,7 @@ if($DNS.debug){
   $DNSRecords=@(
     @{
         Source = "debug.fennec.svc.cluster.local"
-        Target = "debug.fennec.io"
+        Target = "debug.fennec.ai"
       }
   )
   $DNS.AddEntries($DNSRecord)

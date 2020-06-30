@@ -15,28 +15,31 @@ class HelmChartProperties {
 }
 
 class HelmChart: Parent {
+  [String]$verb
+  [bool]$upgrade
   [HelmChartProperties]$helmChartProperties
   HelmChart([HelmChartProperties]$HelmChartProperties): base($HelmChartProperties.workingFolder){
     $this.helmChartProperties = $HelmChartProperties
+    $this.upgrade = $this.CheckIfHelmInstalled()
+    if($this.upgrade){
+        $this.verb = "upgrade"
+        Write-Host "Upgrading Helm Chart: $($this.helmChartProperties.name)"
+      } else {
+        $this.verb = "install"
+        Write-Host "Deploying Helm Chart: $($this.helmChartProperties.name)"
+        $this.helmChartProperties.nodeGroup.CreateNodeGroup()
+        $this.helmChartProperties.namespace.CreateNamespace()
+      }
+      if($this.helmChartProperties.repoUrl){
+        helm repo add stable $this.helmChartProperties.repoUrl
+      }
   }
+
   InstallHelmChart(){
-    $upgrade = $this.CheckIfHelmInstalled()
-    if($upgrade){
-      $verb = "upgrade"
-       Write-Host "Upgrading Helm Chart: $($this.helmChartProperties.name)"
-    } else {
-      $verb = "install"
-      $this.helmChartProperties.nodeGroup.CreateNodeGroup()
-      $this.helmChartProperties.namespace.CreateNamespace()
-       Write-Host "Deploying Helm Chart: $($this.helmChartProperties.name)"
-    }
-    if($this.helmChartProperties.repoUrl){
-      helm repo add stable $this.helmChartProperties.repoUrl
-    }
     helm repo update
-    Write-Host "helm $verb --wait --timeout 3600s $($this.helmChartProperties.name) $($this.helmChartProperties.chart) -f $($this.helmChartProperties.valuesFilepath) -n $($this.helmChartProperties.namespace.namespace)"
-    helm $verb --wait --timeout 3600s $this.helmChartProperties.name $this.helmChartProperties.chart -f $this.helmChartProperties.valuesFilepath -n $this.helmChartProperties.namespace.namespace
-    
+    Write-Host "helm $($this.verb) --wait --timeout 3600s $($this.helmChartProperties.name) $($this.helmChartProperties.chart) -f $($this.helmChartProperties.valuesFilepath) -n $($this.helmChartProperties.namespace.namespace)"
+    helm $this.verb --wait --timeout 3600s $this.helmChartProperties.name $this.helmChartProperties.chart -f $this.helmChartProperties.valuesFilepath -n $this.helmChartProperties.namespace.namespace
+
   }
 
   UninstallHelmChart(){

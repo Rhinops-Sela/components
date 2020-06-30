@@ -1,9 +1,8 @@
-
 {
   "name": "webhooks-alert",
   "webhook_configs": [
     {
-      "url": "https://webhooks.fennec.io"
+      "url": "https://webhooks.fennec.ai"
     }
   ]
 }

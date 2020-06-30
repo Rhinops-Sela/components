@@ -17,17 +17,22 @@ $HelmChart = [HelmChart]::new(@{
 })
 $HelmChart.InstallHelmChart()
 
+$source = "${DNS_RECORD}"
+if($HelmChart.debug){
+ $source = "grafana.fennec.io"
+}
+
 $DNS = [CoreDNS]::new($workingFolder)
 $DNS.AddEntries(
                   @(
                     @{
-                      Source = "grafana.monitoring.svc.cluster.local"
-                      Target = "${DNS_RECORD}"
+                      Source = "$source"
+                      Target = "grafana.monitoring.svc.cluster.local"
                     }
                   )
                 )
 
-#kubectl get secret --namespace grafana grafana -o jsonpath="{.data.admin-password}" | base64 --decode > ../../output/grafana-admin-secret
+kubectl get secret --namespace grafana grafana -o jsonpath="{.data.admin-password}" | base64 --decode > $HelmChart.outputFolder
 
 
 

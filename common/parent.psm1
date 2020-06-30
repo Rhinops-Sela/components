@@ -4,20 +4,25 @@ class Parent {
   $templatePath
   $debug=$false
   $kubeConfigFile
-  Parent([String]$workingFilePath){
+  $workingFolder
+  $outputFolder
+  Parent([String]$workingFolder){
     if ($Env:GLOBAL_CLUSTER_NAME){
         aws configure set aws_access_key_id $Env:AWS_ACCESS_KEY_ID
         aws configure set aws_secret_access_key $Env:AWS_SECRET_ACCESS_KEY
         aws configure set region $Env:GLOBAL_CLUSTER_REGION
         $this.clusterName = $Env:GLOBAL_CLUSTER_NAME
         $this.clusterRegion = $Env:GLOBAL_CLUSTER_REGION
+        $this.outputFolder = $Env:OUTPUT_FOLDER
     }
     else {
         $this.clusterName = "fennec"
         $this.clusterRegion = "eu-west-2"
         $this.debug = $true
+        $this.outputFolder = "$workingFolder/../outputs"
     }
-    $this.kubeConfigFile = "$workingFilePath/.kube"
+    $this.workingFolder = $workingFolder
+    $this.kubeConfigFile = "$($this.workingFolder)/.kube"
     aws eks update-kubeconfig --name $this.clusterName --region $this.clusterRegion --kubeconfig $this.kubeConfigFile
     $env:KUBECONFIG = $this.kubeConfigFile
   }

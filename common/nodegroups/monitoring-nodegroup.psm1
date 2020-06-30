@@ -6,6 +6,6 @@ class MonitoringNodeGroup : GenericNodeGroup {
       userLabelsStr = 'role=monitoring'
       instanceTypes = 't3.large,t2.large'
       taintsToAdd = 'monitoring=true:NoSchedule'
-    }, "monitoring-ng-template.json"){
+    },"$PSScriptRoot/templates", "monitoring-ng-template.json"){
   }
 }

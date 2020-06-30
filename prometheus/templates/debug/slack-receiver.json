@@ -2,7 +2,7 @@
   "name": "slack-alert",
   "slack_configs": [
     {
-      "api_url": "https://slack.fennec.io",
+      "api_url": "https://slack.fennec.ai",
       "send_resolved": true,
       "channel": "#alerts",
       "text": "{{ range .Alerts }}<!channel> {{ .Annotations.summary }}\n{{ .Annotations.description }}\n{{ end }}"

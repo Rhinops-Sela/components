@@ -19,8 +19,14 @@ data:
     }
 kind: ConfigMap
 metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+  creationTimestamp: "2020-06-23T13:43:33Z"
   labels:
     eks.amazonaws.com/component: coredns
     k8s-app: kube-dns
   name: coredns
   namespace: kube-system
+  resourceVersion: "1439138"
+  selfLink: /api/v1/namespaces/kube-system/configmaps/coredns
+  uid: d2313b24-7407-439f-9c52-8ec57b9c7442

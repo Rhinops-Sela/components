@@ -13,13 +13,17 @@ $HelmChart = [HelmChart]::new(@{
   nodeGroup = [MonitoringNodeGroup]::new($workingFolder)
 })
 $HelmChart.UninstallHelmChart()
+$source = "${DNS_RECORD}"
+if($HelmChart.debug){
+ $source = "grafana.fennec.io"
+}
 
 $DNS = [CoreDNS]::new($workingFolder)
 $DNS.DeleteEntries(
                   @(
                     @{
-                      Source = "grafana.monitoring.svc.cluster.local"
-                      Target = "${DNS_RECORD}"
+                      Source = "$source"
+                      Target = "grafana.monitoring.svc.cluster.local"
                     }
                   )
                 )

@@ -4,7 +4,7 @@ tolerations:
   value: "true"
   effect: "NoSchedule"
 nodeSelector:
-  role: vpn-workers
+  role: vpn
 persistence:
   enabled: true
   accessMode: ReadWriteOnce

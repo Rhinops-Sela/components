@@ -13,33 +13,43 @@ class CoreDNS: Parent{
   }
 
   AddEntries([DNSRecord[]]$dnsRecords){
-    foreach($dnsRecord in $dnsRecords){
-      Write-Host "Adding record: Source: $($dnsRecord.Source) Target: $($dnsRecord.Target)"
-      $lineToReplace = "\n    rewrite name fennec.io fennec.io\n"
-      $newLine = "\n    rewrite name $($dnsRecord.Source) $($dnsRecord.Target)\n    rewrite name fennec.io fennec.io\n"
-      $this.ModifyEntry($lineToReplace, $newLine)
-    }
+    $configFile = $this.GetCoreDNSData()
+    $newConfig = @()
+    foreach($line in $configFile){
+        if($line -match "rewrite name fennec.ai fennec.ai"){
+          foreach($dnsRecord in $dnsRecords){
+            $newConfig+="        rewrite name $($dnsRecord.Source) $($dnsRecord.Target)"
+          }
+          $newConfig+="        rewrite name fennec.ai fennec.ai"
+        } else {
+          $newConfig+=$line
+        }
+      }
+      $this.Apply($newConfig)
   }
   DeleteEntries([DNSRecord[]]$dnsRecords){
+    $configFile = $this.GetCoreDNSData()
+    $newConfig = @()
     foreach($dnsRecord in $dnsRecords){
-      $lineToReplace = "    rewrite name $($dnsRecord.Source) $($dnsRecord.Target)\n"
-      $this.ModifyEntry($lineToReplace, "")
+      foreach($line in $configFile){
+        if($line -match "$($dnsRecord.Source) $($dnsRecord.Target)"){
+          Write-Host "Deleting $($dnsRecord.Source) $($dnsRecord.Target)"
+        } else {
+          $newConfig+=$line
+        }
+      }
     }
+    $this.Apply($newConfig)
   }
 
-  ModifyEntry([String]$lineToReplace,[String]$newLine){
-    $configFile = $this.GetCoreDNSData()
-    $configFile = $configFile.replace($lineToReplace, $newLine)
-    $configFile = $configFile | ConvertFrom-Json
-    $configFileTemplate = (Get-Content $this.templatePath | Out-String | ConvertFrom-Json)
-    $configFileTemplate.data.Corefile = $configFile.data.Corefile
-    $configFileTemplate | ConvertTo-Json -depth 100 | Out-File "$($this.workingFolder)/coredns-configmap-execute.json"
-    kubectl apply -f "$($this.workingFolder)/coredns-configmap-execute.json" -n $this.namespace
+  Apply([String[]]$newConfig){
+    Set-Content -Path "$($this.workingFolder)/coredns-configmap-execute.yaml" -Value "" -Force
+    Set-Content -Path "$($this.workingFolder)/coredns-configmap-execute.yaml" -Value $newConfig -Force
+    kubectl apply -f "$($this.workingFolder)/coredns-configmap-execute.yaml" -n $this.namespace
     kubectl delete pods -l  k8s-app=kube-dns -n $this.namespace
   }
-
   [psobject]GetCoreDNSData(){
-    $configMap = (kubectl get configmaps coredns -o json -n $this.namespace)
+    $configMap = (kubectl get configmaps coredns -o yaml -n $this.namespace)
     return $configMap
   }
 }

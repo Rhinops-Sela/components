@@ -73,22 +73,15 @@ $DNS = [CoreDNS]::new($workingFolder)
 $DNS.AddEntries(
                   @(
                     @{
-                      Source = "prometheus.monitoring.svc.cluster.local"
-                      Target = "${SERVER_DNS_RECORD}"
+                      Source = "${SERVER_DNS_RECORD}"
+                      Target = "prometheus.monitoring.svc.cluster.local"
                     },
                     @{
-                      Source = "prometheus-alertmanager.monitoring.svc.cluster.local"
-                      Target = "${ALERTMANAGER_RECORD}"
+                      Source = "${ALERTMANAGER_RECORD}"
+                      Target = "prometheus-alertmanager.monitoring.svc.cluster.local"
                     }
                   )
                 )
-
-
-
-
-
-
-
 #kubectl get secret --namespace grafana grafana -o jsonpath="{.data.admin-password}" | base64 --decode > ../../output/grafana-admin-secret
 
 

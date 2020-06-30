@@ -3,7 +3,7 @@
   "kind": "ClusterConfig",
   "nodeGroups": [
     {
-      "name": "monitoring",
+      "name": "vpn",
       "minSize": 1,
       "maxSize": 4,
       "desiredCapacity": 1,
