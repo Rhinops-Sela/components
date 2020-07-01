@@ -7,8 +7,6 @@ data:
         rewrite name grafana.fennec.io grafana.monitoring.svc.cluster.local
         rewrite name grafana.fennec.io grafana.monitoring.svc.cluster.local
         rewrite name grafana.fennec.io grafana.monitoring.svc.cluster.local
-        rewrite name  prometheus.monitoring.svc.cluster.local
-        rewrite name  prometheus-alertmanager.monitoring.svc.cluster.local
         rewrite name reddis.fennec.io redis.redis.svc.cluster.local
         rewrite name fennec.ai fennec.ai
         kubernetes cluster.local in-addr.arpa ip6.arpa {
@@ -35,6 +33,6 @@ metadata:
     k8s-app: kube-dns
   name: coredns
   namespace: kube-system
-  resourceVersion: "1469162"
+  resourceVersion: "1674131"
   selfLink: /api/v1/namespaces/kube-system/configmaps/coredns
   uid: d2313b24-7407-439f-9c52-8ec57b9c7442

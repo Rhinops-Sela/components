@@ -11,33 +11,22 @@ Write-Host "Redis - PSScriptRoot: $workingFolder"
 $debug='${NAME}'
 if ($debug -Match 'NAME'){
   $instanceTypes = 'm5.large,m5.xlarge'
-  $useSpot = 'true'
   $namespace = "redis"
-  $useSpot = 'true'
-  $spotAllocationStrategy = 'lowest-price'
-  $onDenmandInstances = 0
 } else
 {
   $instanceTypes = '${INSTANCE_TYPES}'
-  $useSpot = '${USE_SPOT}'
-  $onDenmandInstances = ${ON_DEMAND_INSTANCES}
-  $spotAllocationStrategy = '${SPOT_ALLOCATION_STRATEGY}'
   $namespace = '${NAMESPACE}'
 }
 
 $nodeProperties = @{
       nodeGroupName = "redis"
-      spotProperties = @{
-        onDemandBaseCapacity = $onDenmandInstances
-        onDemandPercentageAboveBaseCapacity = 0
-        spotAllocationStrategy = $spotAllocationStrategy
-        useSpot = $useSpot
-      }
       workingFilePath = "$workingFolder"
       userLabelsStr = 'role=redis'
       instanceTypes = "$instanceTypes"
       taintsToAdd = 'redis=true:NoSchedule'
     }
+
+
 
 $NodeGroup = [GenericNodeGroup]::new($nodeProperties,"$workingFolder/templates","redis-ng-template.json")
 

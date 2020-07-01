@@ -47,7 +47,7 @@ class GenericNodeGroup: Parent {
     $nodeProperties.region = $this.clusterRegion
     $nodeProperties.templatePath = $this.templatePath
     $this.nodeProperties = $nodeProperties
-    $this.nodeProperties.tagsToAdd = "k8s.io/cluster-autoscaler/node-template/label/role=$($nodeProperties.nodeGroupName);k8s.io/cluster-autoscaler/node-template/taint/$($nodeProperties.nodeGroupName)=`"true:NoSchedule`""
+    $this.nodeProperties.tagsToAdd = "k8s.io/cluster-autoscaler/node-template/label/role=$($nodeProperties.nodeGroupName);k8s.io/cluster-autoscaler/node-template/taint/$($nodeProperties.nodeGroupName)=true:NoSchedule"
   }
 
   DeleteNodeGroup(){

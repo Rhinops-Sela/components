@@ -14,7 +14,6 @@ if ($debug -Match 'NAME'){
   $instanceTypes = 'm5.large,m5.xlarge'
   $useSpot = 'true'
   $namespace = "redis"
-  $useSpot = 'true'
   $spotAllocationStrategy = 'lowest-price'
   $onDenmandInstances = 0
 } else
@@ -22,25 +21,38 @@ if ($debug -Match 'NAME'){
   $instanceTypes = '${INSTANCE_TYPES}'
   $useSpot = '${USE_SPOT}'
   $onDenmandInstances = ${ON_DEMAND_INSTANCES}
-  $spotAllocationStrategy = '${SPOT_ALLOCATION_STRATEGY}'
+  $spotAllocationStrategy = 'lowest-price'
   $namespace = '${NAMESPACE}'
 }
 
 $nodeProperties = @{
       nodeGroupName = "redis"
-      spotProperties = @{
-        onDemandBaseCapacity = $onDenmandInstances
-        onDemandPercentageAboveBaseCapacity = 0
-        spotAllocationStrategy = $spotAllocationStrategy
-        useSpot = $useSpot
-      }
       workingFilePath = "$workingFolder"
       userLabelsStr = 'role=redis'
       instanceTypes = "$instanceTypes"
       taintsToAdd = 'redis=true:NoSchedule'
     }
 
+if($useSpot -eq 'true'){
+$nodeProperties.spotProperties = @{
+      onDemandBaseCapacity = $onDenmandInstances
+      onDemandPercentageAboveBaseCapacity = 0
+      spotAllocationStrategy = $spotAllocationStrategy
+      useSpot = $useSpot
+    }
+}
 $NodeGroup = [GenericNodeGroup]::new($nodeProperties,"$workingFolder/templates","redis-ng-template.json")
+$valuesFile =  (Get-Content $valuesFilepath | Out-String | ConvertFrom-Json)
+if($Namespace.debug){
+ $source = "dynamodb-ui.fennec.io"
+} else {
+  $valuesFile.cluster.slaveCount = ${NUMBER_SLAVES}
+  $valuesFile.master.extraFlags = "${EXTRA_FLAGS}".Split(",")
+  $valuesFile.master.disableCommands = "${DISABLED_COMMANDS}".Split(",")
+  $valuesFile.slave.disableCommands = "${DISABLED_COMMANDS}".Split(",")
+  $source = "${DNS_RECORD}"
+}
+
 
 
 $HelmChart = [HelmChart]::new(@{
@@ -81,5 +93,5 @@ $ui="$workingFolder/ui"
 $deplouymentFile =  (Get-Content "$ui/deployment.json" | Out-String | ConvertFrom-Json)
 $deplouymentFile.spec.template.spec.containers.env.value = "redis.$namespace.svc.cluster.local"
 $deplouymentFile | ConvertTo-Json -depth 100 | Out-File "$executeDeploymentFilepath"
-kubectl apply -f "$ui/deployment.yaml" -n $namespace
+kubectl apply -f "$ui/deployment.json" -n $namespace
 kubectl apply -f "$ui/service.yaml" -n $namespace

@@ -24,7 +24,7 @@ function Retry-Command {
             } catch {
                 Write-Error $_.Exception.InnerException.Message -ErrorAction Continue
                 Start-Sleep -Milliseconds $Delay
-                
+
             }
         } while ($cnt -lt $Maximum)
 
@@ -40,9 +40,9 @@ function CreateNodegroup {
         $nodegroup,
         $filePostfix
     )
-    
+
     $nodegroupList = Retry-Command -ScriptBlock {
-        
+
         Write-Host "CreateNodegroup: eksctl get nodegroups --cluster $cluster -o json | ConvertFrom-Json | Select-Object -ExpandProperty Name"
         eksctl get nodegroups --cluster $cluster -o json | ConvertFrom-Json | Select-Object -ExpandProperty Name
         Write-Host "CreateNodegroup: success"
@@ -57,7 +57,7 @@ function CreateNodegroup {
     }
     else {
         Write-Information "nodegroup $nodeGroup was not found, creating it" -InformationAction Continue
-        Retry-Command -ScriptBlock { 
+        Retry-Command -ScriptBlock {
             Write-Host "CreateNodegroup: eksctl create nodegroup -f ./nodegroups/${nodegroup}_node_group.yaml$filepostfix | Out-Null"
             eksctl create nodegroup -f "./nodegroups/${nodegroup}_node_group.yaml$filepostfix" | Out-Null
             Write-Host "CreateNodegroup: success"
@@ -76,7 +76,7 @@ function ValidateK8SObject {
     $namespaceExists = ValidateK8sNamespace -namespace $namespace -kubePath $kubePath
     if ( $namespaceExists ) {
         $rawObject= ($Object -split "/")[1]
-        $results  = Retry-Command -ScriptBlock { 
+        $results  = Retry-Command -ScriptBlock {
             Write-Host "ValidateK8SObject: kubectl get $Object -n $namespace --kubeconfig $kubePath"
             kubectl get $Object -n $namespace --kubeconfig $kubePath
             Write-Host "ValidateK8SObject: success"
@@ -140,7 +140,7 @@ function CreateK8SNamespace {
     if (! $namespaceExists) {
         Retry-Command -ScriptBlock {
             Write-Host "CreateK8SNamespace: kubectl create namespace $namespace --kubeconfig $kubePath "
-            kubectl create namespace $namespace --kubeconfig $kubePath 
+            kubectl create namespace $namespace --kubeconfig $kubePath
             Write-Host "CreateK8SNamespace: success"
         } | Out-Null
         $namespaceExists = ValidateK8SNamespace -namespace $namespace -kubePath $kubePath
