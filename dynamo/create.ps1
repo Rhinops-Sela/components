@@ -54,7 +54,7 @@ if($Namespace.debug){
 }
 
 $uiDeployment = (Get-Content "$workingFolder/templates/admin/deployment.json" | Out-String | ConvertFrom-Json)
-$uiDeployment.spec.template.spec.containers.env.value = "$adminSource"
+$uiDeployment.spec.template.spec.containers.env.value = "dynamodb-local.$createdNamespace.svc.cluster.local"
 $uiDeployment | ConvertTo-Json -depth 100 | Out-File "$executeDeploymentFilepath"
 
 kubectl apply -f "$workingFolder/templates/admin" -n $createdNamespace

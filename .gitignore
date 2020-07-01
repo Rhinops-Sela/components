@@ -2,3 +2,4 @@ output/
 outputs/
 *.kube
 *-execute.json
+*-execute.yaml
