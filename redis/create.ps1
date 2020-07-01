@@ -9,8 +9,8 @@ $valuesFilepath= "$workingFolder/values.json"
 $executeDeploymentFilepath= "$workingFolder/deploymnet-execute.json"
 $executeValuesFilepath= "$workingFolder/values-execute.json"
 Write-Host "Redis - PSScriptRoot: $workingFolder"
-$debug='${NAME}'
-if ($debug -Match 'NAME'){
+$debug='${NAMESPACE}'
+if ($debug -Match 'NAMESPACE'){
   $instanceTypes = 'm5.large,m5.xlarge'
   $useSpot = 'true'
   $namespace = "redis"

@@ -7,8 +7,8 @@
       "ingest": "true",
       "data": "true"
    },
-   "replicas": 4,
-   "minimumMasterNodes": 2,
+   "replicas": 1,
+   "minimumMasterNodes": 1,
    "esMajorVersion": "6.8",
    "esConfig": {},
    "extraEnvs": [],
@@ -19,17 +19,7 @@
    "imagePullPolicy": "IfNotPresent",
    "podAnnotations": {},
    "labels": {},
-   "esJavaOpts": "-Xmx6g -Xms6g",
-   "resources": {
-      "requests": {
-         "cpu": "1000m",
-         "memory": "12Gi"
-      },
-      "limits": {
-         "cpu": "2000m",
-         "memory": "14Gi"
-      }
-   },
+   "esJavaOpts": "-Xmx2g -Xms2g",
    "initResources": {},
    "sidecarResources": {},
    "networkHost": "0.0.0.0",

@@ -5,49 +5,58 @@ Using module '$PSScriptRoot/../../common/helm/helm.psm1'
 Using module '$PSScriptRoot/../../common/core-dns/core-dns.psm1'
 
 $workingFolder= "$PSScriptRoot"
-$valuesFilepath= "$workingFolder/values.json"
+$valuesFilepath= "$workingFolder/helm/elasticsearch/values.json"
 $executeValuesFilepath= "$workingFolder/values-execute.json"
-Write-Host "Redis - PSScriptRoot: $workingFolder"
-$debug='${NAME}'
-if ($debug -Match 'NAME'){
-  $instanceTypes = 'm5.large,m5.xlarge'
-  $namespace = "redis"
+Write-Host "ElasticSearch - PSScriptRoot: $workingFolder"
+$debug='${NAMESPACE}'
+if ($debug -Match 'NAMESPACE'){
+  $instanceTypes = "m5.xlarge,m5.2xlarge"
+  $useSpot = 'true'
+  $namespace = "elk"
+  $spotAllocationStrategy = 'lowest-price'
+  $onDenmandInstances = 0
 } else
 {
   $instanceTypes = '${INSTANCE_TYPES}'
+  $useSpot = '${USE_SPOT}'
+  $onDenmandInstances = ${ON_DEMAND_INSTANCES}
+  $spotAllocationStrategy = 'lowest-price'
   $namespace = '${NAMESPACE}'
 }
 
 $nodeProperties = @{
-      nodeGroupName = "redis"
+      nodeGroupName = "elk"
       workingFilePath = "$workingFolder"
-      userLabelsStr = 'role=redis'
+      userLabelsStr = 'role=elk'
       instanceTypes = "$instanceTypes"
-      taintsToAdd = 'redis=true:NoSchedule'
+      taintsToAdd = 'elk=true:NoSchedule'
     }
 
-
-
-$NodeGroup = [GenericNodeGroup]::new($nodeProperties,"$workingFolder/templates","redis-ng-template.json")
-
+if($useSpot -eq 'true'){
+$nodeProperties.spotProperties = @{
+      onDemandBaseCapacity = $onDenmandInstances
+      onDemandPercentageAboveBaseCapacity = 0
+      spotAllocationStrategy = $spotAllocationStrategy
+      useSpot = $useSpot
+    }
+}
+$NodeGroup = [GenericNodeGroup]::new($nodeProperties,"$workingFolder/templates","es-ng-template.json")
+$valuesFile =  (Get-Content $valuesFilepath | Out-String | ConvertFrom-Json)
 
 $HelmChart = [HelmChart]::new(@{
-  name = "redis"
-  chart = "bitnami/redis"
+  name = "elasticsearch"
+  chart = "helm/elasticsearch"
   namespace = [Namespace]::new("$namespace", $workingFolder)
-  repoUrl = "https://charts.bitnami.com/bitnami"
   valuesFilepath = $executeValuesFilepath
   workingFolder = $workingFolder
   nodeGroup = $NodeGroup
-}, $true)
+})
 $valuesFile =  (Get-Content $valuesFilepath | Out-String | ConvertFrom-Json)
 if($HelmChart.debug){
- $source = "reddis.fennec.io"
+  $source = "elasticsearch.fennec.io"
 } else {
-  $valuesFile.cluster.slaveCount = ${NUMBER_SLAVES}
-  $valuesFile.master.extraFlags = "${EXTRA_FLAGS}".Split(",")
-  $valuesFile.master.disableCommands = "${DISABLED_COMMANDS}".Split(",")
-  $valuesFile.slave.disableCommands = "${DISABLED_COMMANDS}".Split(",")
+  $valuesFile.minimumMasterNodes = ${NUMBER_MASTERS}
+  $valuesFile.replicas = ${NUMBER_SLAVES}
   $source = "${DNS_RECORD}"
 }
 $valuesFile | ConvertTo-Json -depth 100 | Out-File "$executeValuesFilepath"
@@ -58,7 +67,7 @@ $DNS.DeleteEntries(
                   @(
                     @{
                       Source = "$source"
-                      Target = "redis.$namespace.svc.cluster.local"
+                      Target = "elasticsearch-master.$namespace.svc.cluster.local"
                     }
                   )
                 )
