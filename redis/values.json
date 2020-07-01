@@ -5,7 +5,7 @@
    "usePassword": false,
    "master": {
       "persistence": {
-         "size": "200Gi"
+         "size": "50Gi"
       },
       "command": "export ALLOW_EMPTY_PASSWORD=yes && /run.sh",
       "extraFlags": [
@@ -14,8 +14,8 @@
       "disableCommands": [],
       "resources": {
          "requests": {
-            "memory": "10G",
-            "cpu": 2
+            "memory": "2G",
+            "cpu": 1
          }
       },
       "tolerations": [
@@ -32,7 +32,7 @@
    },
    "slave": {
       "persistence": {
-         "size": "200Gi"
+         "size": "50Gi"
       },
       "command": "export ALLOW_EMPTY_PASSWORD=yes && /run.sh",
       "extraFlags": [
@@ -40,8 +40,8 @@
       ],
       "resources": {
          "requests": {
-            "memory": "10G",
-            "cpu": 2
+            "memory": "2G",
+            "cpu": 1
          }
       },
       "disableCommands": [],

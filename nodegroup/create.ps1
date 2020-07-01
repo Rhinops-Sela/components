@@ -21,6 +21,7 @@ else {
     $spotAllocationStrategy = '${SPOT_ALLOCATION_STRATEGY}'
     $taintsToAdd = '${TAINTS}'
     $nodeGroupName = '${NAME}'
+    
 }
 $nodeProperties = @{
     nodeGroupName = "$nodeGroupName"

@@ -17,6 +17,7 @@ class NodeProperties {
     [String]$instanceTypes
     [String]$additionalARNs
     [String]$taintsToAdd
+    [String]$tagsToAdd
 }
 class GenericNodeGroup: Parent {
   $BasePolicies = @(
@@ -46,6 +47,7 @@ class GenericNodeGroup: Parent {
     $nodeProperties.region = $this.clusterRegion
     $nodeProperties.templatePath = $this.templatePath
     $this.nodeProperties = $nodeProperties
+    $this.nodeProperties.tagsToAdd = "k8s.io/cluster-autoscaler/node-template/label/role=$($nodeProperties.nodeGroupName);k8s.io/cluster-autoscaler/node-template/taint/$($nodeProperties.nodeGroupName)=`"true:NoSchedule`""
   }
 
   DeleteNodeGroup(){
@@ -77,6 +79,7 @@ class GenericNodeGroup: Parent {
     $nodegroupTemplate = $this.CreateInstancesDistribution($nodegroupTemplate)
     $nodegroupTemplate = $this.AddARNsPolicies($nodegroupTemplate)
     $nodegroupTemplate = $this.AddTaints($nodegroupTemplate)
+    $nodegroupTemplate = $this.AddTags($nodegroupTemplate)
     $nodegroupTemplate | ConvertTo-Json -depth 100 | Out-File "$($this.nodeProperties.workingFilePath)/nodegroup-execute.json"
   }
 
@@ -89,7 +92,6 @@ class GenericNodeGroup: Parent {
       return $nodegroupTemplate
   }
 
- #$taintsToAdd = 'taint1=true:NoSchedule;taint2=true:NoSchedule'
   [psobject]AddTaints($nodegroupTemplate){
     if(!$this.nodeProperties.taintsToAdd){
       return $nodegroupTemplate
@@ -98,6 +100,17 @@ class GenericNodeGroup: Parent {
     $InnerDelimiter = '='
     $taints = $this.AddProperties($OuterDelimiter, $InnerDelimiter, $this.nodeProperties.taintsToAdd)
     $nodegroupTemplate.nodeGroups | Add-Member  -MemberType NoteProperty -Name 'taints' -Value $taints
+    return $nodegroupTemplate
+  }
+
+  [psobject]AddTags($nodegroupTemplate){
+    if(!$this.nodeProperties.taintsToAdd){
+      return $nodegroupTemplate
+    }
+    $OuterDelimiter = ';'
+    $InnerDelimiter = '='
+    $tags = $this.AddProperties($OuterDelimiter, $InnerDelimiter, $this.nodeProperties.tagsToAdd)
+    $nodegroupTemplate.nodeGroups | Add-Member  -MemberType NoteProperty -Name 'tags' -Value $tags
     return $nodegroupTemplate
   }
 

@@ -18,6 +18,14 @@ class HelmChart: Parent {
   [String]$verb
   [bool]$upgrade
   [HelmChartProperties]$helmChartProperties
+  HelmChart([HelmChartProperties]$HelmChartProperties, [bool]$Uninstall): base($HelmChartProperties.workingFolder){
+    if($Uninstall){
+      $this.helmChartProperties = $HelmChartProperties
+      if($this.helmChartProperties.repoUrl){
+        helm repo add stable $this.helmChartProperties.repoUrl
+      }
+    }
+  }
   HelmChart([HelmChartProperties]$HelmChartProperties): base($HelmChartProperties.workingFolder){
     $this.helmChartProperties = $HelmChartProperties
     $this.upgrade = $this.CheckIfHelmInstalled()
@@ -27,7 +35,7 @@ class HelmChart: Parent {
       } else {
         $this.verb = "install"
         Write-Host "Deploying Helm Chart: $($this.helmChartProperties.name)"
-        if($this.helmChartProperties.nodeGroup){
+        if($this.helmChartProperties.nodeGroup ){
           $this.helmChartProperties.nodeGroup.CreateNodeGroup()
         }
         if($this.helmChartProperties.namespace){

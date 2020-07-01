@@ -18,4 +18,4 @@ $HelmChart = [HelmChart]::new(@{
 })
 
 kubectl delete -f "$workingFolder/prerequisites/openvpn-pv-claim.yaml" -n vpn
-$HelmChart.DeleteHelmChart()
+$HelmChart.UninstallHelmChart()

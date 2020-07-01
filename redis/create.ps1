@@ -2,6 +2,7 @@
 Using module '$PSScriptRoot/../../common/nodegroups/nodegroup.psm1'
 Using module '$PSScriptRoot/../../common/namespace/namespace.psm1'
 Using module '$PSScriptRoot/../../common/helm/helm.psm1'
+Using module '$PSScriptRoot/../../common/core-dns/core-dns.psm1'
 
 $workingFolder= "$PSScriptRoot"
 $valuesFilepath= "$workingFolder/values.json"
@@ -10,18 +11,29 @@ $executeValuesFilepath= "$workingFolder/values-execute.json"
 Write-Host "Redis - PSScriptRoot: $workingFolder"
 $debug='${NAME}'
 if ($debug -Match 'NAME'){
-  $instanceTypes = 'c4.large,c4.xlarge'
+  $instanceTypes = 'm5.large,m5.xlarge'
   $useSpot = 'true'
   $namespace = "redis"
+  $useSpot = 'true'
+  $spotAllocationStrategy = 'lowest-price'
+  $onDenmandInstances = 0
 } else
 {
   $instanceTypes = '${INSTANCE_TYPES}'
   $useSpot = '${USE_SPOT}'
+  $onDenmandInstances = ${ON_DEMAND_INSTANCES}
+  $spotAllocationStrategy = '${SPOT_ALLOCATION_STRATEGY}'
   $namespace = '${NAMESPACE}'
 }
 
 $nodeProperties = @{
       nodeGroupName = "redis"
+      spotProperties = @{
+        onDemandBaseCapacity = $onDenmandInstances
+        onDemandPercentageAboveBaseCapacity = 0
+        spotAllocationStrategy = $spotAllocationStrategy
+        useSpot = $useSpot
+      }
       workingFilePath = "$workingFolder"
       userLabelsStr = 'role=redis'
       instanceTypes = "$instanceTypes"
@@ -48,11 +60,12 @@ if($HelmChart.debug){
   $valuesFile.master.extraFlags = "${EXTRA_FLAGS}".Split(",")
   $valuesFile.master.disableCommands = "${DISABLED_COMMANDS}".Split(",")
   $valuesFile.slave.disableCommands = "${DISABLED_COMMANDS}".Split(",")
+  $source = "${DNS_RECORD}"
 }
 $valuesFile | ConvertTo-Json -depth 100 | Out-File "$executeValuesFilepath"
 $HelmChart.InstallHelmChart()
 
-$source = "${DNS_RECORD}"
+
 
 
 $DNS = [CoreDNS]::new($workingFolder)

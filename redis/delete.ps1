@@ -1,21 +1,75 @@
 #!/bin/pwsh
-Using module '$PSScriptRoot/../../common/nodegroups/vpn-nodegroup.psm1'
+Using module '$PSScriptRoot/../../common/nodegroups/nodegroup.psm1'
 Using module '$PSScriptRoot/../../common/namespace/namespace.psm1'
 Using module '$PSScriptRoot/../../common/helm/helm.psm1'
 Using module '$PSScriptRoot/../../common/core-dns/core-dns.psm1'
 
 $workingFolder= "$PSScriptRoot"
-$name = "openvpn"
-Write-Host "OpenVPN - PSScriptRoot: $workingFolder"
-$HelmChart = [HelmChart]::new(@{
-  name = "$name"
-  chart = "stable/openvpn"
-  namespace = [Namespace]::new("$name", $workingFolder)
-  repoUrl = "http://storage.googleapis.com/kubernetes-charts"
-  valuesFilepath = "$workingFolder/values.yaml"
-  workingFolder = $workingFolder
-  nodeGroup = [VPNNodeGroup]::new($workingFolder)
-})
+$valuesFilepath= "$workingFolder/values.json"
+$executeValuesFilepath= "$workingFolder/values-execute.json"
+Write-Host "Redis - PSScriptRoot: $workingFolder"
+$debug='${NAME}'
+if ($debug -Match 'NAME'){
+  $instanceTypes = 'm5.large,m5.xlarge'
+  $useSpot = 'true'
+  $namespace = "redis"
+  $useSpot = 'true'
+  $spotAllocationStrategy = 'lowest-price'
+  $onDenmandInstances = 0
+} else
+{
+  $instanceTypes = '${INSTANCE_TYPES}'
+  $useSpot = '${USE_SPOT}'
+  $onDenmandInstances = ${ON_DEMAND_INSTANCES}
+  $spotAllocationStrategy = '${SPOT_ALLOCATION_STRATEGY}'
+  $namespace = '${NAMESPACE}'
+}
 
-kubectl delete -f "$workingFolder/prerequisites/openvpn-pv-claim.yaml" -n vpn
-$HelmChart.DeleteHelmChart()
+$nodeProperties = @{
+      nodeGroupName = "redis"
+      spotProperties = @{
+        onDemandBaseCapacity = $onDenmandInstances
+        onDemandPercentageAboveBaseCapacity = 0
+        spotAllocationStrategy = $spotAllocationStrategy
+        useSpot = $useSpot
+      }
+      workingFilePath = "$workingFolder"
+      userLabelsStr = 'role=redis'
+      instanceTypes = "$instanceTypes"
+      taintsToAdd = 'redis=true:NoSchedule'
+    }
+
+$NodeGroup = [GenericNodeGroup]::new($nodeProperties,"$workingFolder/templates","redis-ng-template.json")
+
+
+$HelmChart = [HelmChart]::new(@{
+  name = "redis"
+  chart = "bitnami/redis"
+  namespace = [Namespace]::new("$namespace", $workingFolder)
+  repoUrl = "https://charts.bitnami.com/bitnami"
+  valuesFilepath = $executeValuesFilepath
+  workingFolder = $workingFolder
+  nodeGroup = $NodeGroup
+}, $true)
+$valuesFile =  (Get-Content $valuesFilepath | Out-String | ConvertFrom-Json)
+if($HelmChart.debug){
+ $source = "reddis.fennec.io"
+} else {
+  $valuesFile.cluster.slaveCount = ${NUMBER_SLAVES}
+  $valuesFile.master.extraFlags = "${EXTRA_FLAGS}".Split(",")
+  $valuesFile.master.disableCommands = "${DISABLED_COMMANDS}".Split(",")
+  $valuesFile.slave.disableCommands = "${DISABLED_COMMANDS}".Split(",")
+  $source = "${DNS_RECORD}"
+}
+$valuesFile | ConvertTo-Json -depth 100 | Out-File "$executeValuesFilepath"
+$HelmChart.UninstallHelmChart()
+
+$DNS = [CoreDNS]::new($workingFolder)
+$DNS.DeleteEntries(
+                  @(
+                    @{
+                      Source = "$source"
+                      Target = "redis.$namespace.svc.cluster.local"
+                    }
+                  )
+                )
