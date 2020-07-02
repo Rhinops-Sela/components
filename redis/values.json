@@ -11,9 +11,6 @@
       "extraFlags": [
          "--maxmemory-policy allkeys-lru"
       ],
-      "disableCommands": [
-         "none"
-      ],
       "resources": {
          "requests": {
             "memory": "2G",
@@ -46,9 +43,6 @@
             "cpu": 1
          }
       },
-      "disableCommands": [
-         "none"
-      ],
       "tolerations": [
          {
             "key": "redis",

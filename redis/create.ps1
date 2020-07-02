@@ -69,8 +69,8 @@ if($HelmChart.debug){
   $disabledCommandsArr = "${DISABLED_COMMANDS}".Split(",")
   if($disabledCommandsArr.Length -gt 1){
     Write-Host "disabledCommandsArr $($disabledCommandsArr.Length)"
-    $valuesFile.master.disableCommands = $disabledCommandsArr
-    $valuesFile.slave.disableCommands = $disabledCommandsArr
+    $valuesFile.master | Add-Member -MemberType NoteProperty -Name "disableCommands" -Value $disabledCommandsArr -Force
+    $valuesFile.slave | Add-Member -MemberType NoteProperty -Name "disableCommands" -Value $disabledCommandsArr -Force
   }
   $source = "${REDIS_DNS_RECORD}"
 }
