@@ -46,14 +46,6 @@ $valuesFile =  (Get-Content $valuesFilepath | Out-String | ConvertFrom-Json)
 if($Namespace.debug){
  $source = "dynamodb-ui.fennec.io"
 } else {
-  $valuesFile.cluster.slaveCount = ${NUMBER_SLAVES}
-  $valuesFile.master.extraFlags = "${EXTRA_FLAGS}".Split(",")
-  $disabledCommandsArr = "${DISABLED_COMMANDS}".Split(",")
-  if($disabledCommandsArr.Length -gt 0){
-    $valuesFile.master.disableCommands = $disabledCommandsArr
-    $valuesFile.slave.disableCommands = $disabledCommandsArr
-  }
-  
   $source = "${REDIS_ADMIN_DNS_RECORD}"
 }
 
@@ -74,8 +66,12 @@ if($HelmChart.debug){
 } else {
   $valuesFile.cluster.slaveCount = ${NUMBER_SLAVES}
   $valuesFile.master.extraFlags = "${EXTRA_FLAGS}".Split(",")
-  $valuesFile.master.disableCommands = "${DISABLED_COMMANDS}".Split(",")
-  $valuesFile.slave.disableCommands = "${DISABLED_COMMANDS}".Split(",")
+  $disabledCommandsArr = "${DISABLED_COMMANDS}".Split(",")
+  if($disabledCommandsArr.Length -gt 1){
+    Write-Host "disabledCommandsArr $($disabledCommandsArr.Length)"
+    $valuesFile.master.disableCommands = $disabledCommandsArr
+    $valuesFile.slave.disableCommands = $disabledCommandsArr
+  }
   $source = "${REDIS_DNS_RECORD}"
 }
 $valuesFile | ConvertTo-Json -depth 100 | Out-File "$executeValuesFilepath"
