@@ -1,5 +1,6 @@
 #!/bin/pwsh
-Using module '$PSScriptRoot/../../common/nodegroups/monitoring-nodegroup.psm1'
+kubectl delete -f "$PSScriptRoot/aws/deploy.yaml" -n ingress-nginx
+<# Using module '$PSScriptRoot/../../common/nodegroups/monitoring-nodegroup.psm1'
 Using module '$PSScriptRoot/../../common/namespace/namespace.psm1'
 Using module '$PSScriptRoot/../../common/helm/helm.psm1'
 Using module '$PSScriptRoot/../../common/core-dns/core-dns.psm1'
@@ -31,3 +32,12 @@ $HelmChart.UninstallHelmChart()
 
 
 
+ #>
+
+
+<# kubectl delete clusterrole ingress-nginx  && \
+kubectl delete clusterrole ingress-nginx-admission  && \
+kubectl delete ClusterRoleBinding ingress-nginx && \
+kubectl delete ClusterRoleBinding ingress-nginx-admission && \
+kubectl delete ValidatingWebhookConfiguration ingress-nginx-admission
+ #>

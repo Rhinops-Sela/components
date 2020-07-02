@@ -43,11 +43,13 @@ class HelmChart: Parent {
         }
       }
       if($this.helmChartProperties.repoUrl){
+        Write-Host "helm repo add stable $($this.helmChartProperties.repoUrl)"
         helm repo add stable $this.helmChartProperties.repoUrl
       }
   }
 
   InstallHelmChart(){
+    Write-Host "helm repo update"
     helm repo update
     Write-Host "helm $($this.verb) --wait --timeout 3600s $($this.helmChartProperties.name) $($this.helmChartProperties.chart) -f $($this.helmChartProperties.valuesFilepath) -n $($this.helmChartProperties.namespace.namespace)"
     helm $this.verb --wait --timeout 3600s $this.helmChartProperties.name $this.helmChartProperties.chart -f $this.helmChartProperties.valuesFilepath -n $this.helmChartProperties.namespace.namespace

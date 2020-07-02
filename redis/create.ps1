@@ -48,8 +48,12 @@ if($Namespace.debug){
 } else {
   $valuesFile.cluster.slaveCount = ${NUMBER_SLAVES}
   $valuesFile.master.extraFlags = "${EXTRA_FLAGS}".Split(",")
-  $valuesFile.master.disableCommands = "${DISABLED_COMMANDS}".Split(",")
-  $valuesFile.slave.disableCommands = "${DISABLED_COMMANDS}".Split(",")
+  $disabledCommandsArr = "${DISABLED_COMMANDS}".Split(",")
+  if($disabledCommandsArr.Length -gt 0){
+    $valuesFile.master.disableCommands = "${DISABLED_COMMANDS}".Split(",")
+    $valuesFile.slave.disableCommands = "${DISABLED_COMMANDS}".Split(",")
+  }
+  
   $source = "${DNS_RECORD}"
 }
 
