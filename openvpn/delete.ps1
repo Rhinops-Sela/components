@@ -27,8 +27,5 @@ $HelmChart = [HelmChart]::new(@{
   workingFolder = $workingFolder
   nodeGroup = $NodeGroup
 }, $true)
-if(!$HelmChart.upgrade){
-  kubectl create -f "$workingFolder/prerequisites/openvpn-pv-claim.yaml" -n $name
-}
 $HelmChart.UninstallHelmChart()
 
