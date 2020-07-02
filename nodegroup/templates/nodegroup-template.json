@@ -3,6 +3,7 @@
   "kind": "ClusterConfig",
   "nodeGroups": [
     {
+      "name": "fennec-ng",
       "minSize": 0,
       "maxSize": 1,
       "desiredCapacity": 0,

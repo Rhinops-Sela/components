@@ -21,6 +21,9 @@ class Parent {
         $this.debug = $true
         $this.outputFolder = "$workingFolder/../outputs"
     }
+    if (!(Test-Path  $this.outputFolder -PathType Container)) {
+      New-Item -ItemType Directory -Force -Path  $this.outputFolder
+    }
     $this.workingFolder = $workingFolder
     $this.kubeConfigFile = "$($this.workingFolder)/.kube"
     aws eks update-kubeconfig --name $this.clusterName --region $this.clusterRegion --kubeconfig $this.kubeConfigFile
