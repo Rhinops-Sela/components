@@ -65,7 +65,7 @@ if($HelmChart.debug){
 $alertmanagerYAML.receivers = $HelmChart.AddArrayItems($receivers,$alertmanagerYAML.receivers)
 $alertmanagerYAML.route.routes = $HelmChart.AddArrayItems($routes,$alertmanagerYAML.route.routes)
 
-$valuesFile | Add-Member -MemberType NoteProperty -Name "alertmanagerFiles" -Value $alertManager.alertmanagerFiles
+$valuesFile | Add-Member -MemberType NoteProperty -Name "alertmanagerFiles" -Value $alertManager.alertmanagerFiles -Force
 $valuesFile | ConvertTo-Json -depth 100 | Out-File "$executeValuesFilepath"
 $HelmChart.InstallHelmChart()
 

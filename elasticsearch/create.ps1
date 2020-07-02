@@ -59,8 +59,8 @@ $HelmChart = [HelmChart]::new(@{
 if($HelmChart.debug){
   $source = "elasticsearch.fennec.io"
 } else {
-  $valuesFile.minimumMasterNodes = ${NUMBER_MASTERS}
-  $valuesFile.replicas = ${NUMBER_SLAVES}
+  $esValuesFile.minimumMasterNodes = ${NUMBER_MASTERS}
+  $esValuesFile.replicas = ${NUMBER_SLAVES}
   $source = "${ES_DNS_RECORD}"
 }
 $esValuesFile | ConvertTo-Json -depth 100 | Out-File "$ESExecuteValuesFilepath"

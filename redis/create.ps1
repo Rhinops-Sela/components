@@ -54,7 +54,7 @@ if($Namespace.debug){
     $valuesFile.slave.disableCommands = "${DISABLED_COMMANDS}".Split(",")
   }
   
-  $source = "${DNS_RECORD}"
+  $source = "${REDIS_ADMIN_DNS_RECORD}"
 }
 
 
@@ -76,7 +76,7 @@ if($HelmChart.debug){
   $valuesFile.master.extraFlags = "${EXTRA_FLAGS}".Split(",")
   $valuesFile.master.disableCommands = "${DISABLED_COMMANDS}".Split(",")
   $valuesFile.slave.disableCommands = "${DISABLED_COMMANDS}".Split(",")
-  $source = "${DNS_RECORD}"
+  $source = "${REDIS_DNS_RECORD}"
 }
 $valuesFile | ConvertTo-Json -depth 100 | Out-File "$executeValuesFilepath"
 $HelmChart.InstallHelmChart()

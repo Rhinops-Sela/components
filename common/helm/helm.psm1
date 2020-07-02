@@ -64,7 +64,7 @@ class HelmChart: Parent {
     }
     $this.helmChartProperties.namespace.DeleteNamespace()
     # Need to find the correct time to delete the node
-    $this.helmChartProperties.nodeGroup.DeleteNodeGroup()
+    #$this.helmChartProperties.nodeGroup.DeleteNodeGroup()
   }
 
   [bool]CheckIfHelmInstalled(){

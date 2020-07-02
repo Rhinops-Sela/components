@@ -89,7 +89,7 @@ class GenericNodeGroup: Parent {
       $InnerDelimiter = '='
       $MetadataToAdd = "name=$($this.nodeProperties.clusterName);region=$($this.nodeProperties.region)"
       $metadata = $this.AddProperties($OuterDelimiter, $InnerDelimiter, $MetadataToAdd)
-      $nodegroupTemplate | Add-Member  -MemberType NoteProperty -Name metadata -Value $metadata
+      $nodegroupTemplate | Add-Member  -MemberType NoteProperty -Name metadata -Value $metadata -Force
       return $nodegroupTemplate
   }
 
@@ -100,7 +100,7 @@ class GenericNodeGroup: Parent {
     $OuterDelimiter = ';'
     $InnerDelimiter = '='
     $taints = $this.AddProperties($OuterDelimiter, $InnerDelimiter, $this.nodeProperties.taintsToAdd)
-    $nodegroupTemplate.nodeGroups | Add-Member  -MemberType NoteProperty -Name 'taints' -Value $taints
+    $nodegroupTemplate.nodeGroups | Add-Member  -MemberType NoteProperty -Name 'taints' -Value $taints -Force
     return $nodegroupTemplate
   }
 
@@ -111,7 +111,7 @@ class GenericNodeGroup: Parent {
     $OuterDelimiter = ';'
     $InnerDelimiter = '='
     $tags = $this.AddProperties($OuterDelimiter, $InnerDelimiter, $this.nodeProperties.tagsToAdd)
-    $nodegroupTemplate.nodeGroups | Add-Member  -MemberType NoteProperty -Name 'tags' -Value $tags
+    $nodegroupTemplate.nodeGroups | Add-Member  -MemberType NoteProperty -Name 'tags' -Value $tags -Force
     return $nodegroupTemplate
   }
 
@@ -120,7 +120,7 @@ class GenericNodeGroup: Parent {
       return $nodegroupTemplate
     }
     $currentPolicies = $this.AddArrayItems($this.nodeProperties.additionalARNs, ';', $this.BasePolicies)
-    $nodegroupTemplate.nodeGroups.iam | Add-Member  -MemberType NoteProperty -Name 'attachPolicyARNs' -Value $currentPolicies
+    $nodegroupTemplate.nodeGroups.iam | Add-Member  -MemberType NoteProperty -Name 'attachPolicyARNs' -Value $currentPolicies -Force
     return $nodegroupTemplate
   }
 
@@ -128,24 +128,24 @@ class GenericNodeGroup: Parent {
     $InstanceDistribution =  New-Object PSObject
     $InstanceDistribution = $this.AddInstanceTypes($InstanceDistribution)
     if($this.nodeProperties.spotProperties.useSpot) {
-      $InstanceDistribution | Add-Member -MemberType NoteProperty -Name 'onDemandBaseCapacity' -Value $this.nodeProperties.spotProperties.onDemandBaseCapacity
-      $InstanceDistribution | Add-Member -MemberType NoteProperty -Name 'onDemandPercentageAboveBaseCapacity' -Value $this.nodeProperties.spotProperties.onDemandPercentageAboveBaseCapacity
-      $InstanceDistribution | Add-Member -MemberType NoteProperty -Name 'spotAllocationStrategy' -Value $this.nodeProperties.spotProperties.spotAllocationStrategy
+      $InstanceDistribution | Add-Member -MemberType NoteProperty -Name 'onDemandBaseCapacity' -Value $this.nodeProperties.spotProperties.onDemandBaseCapacity -Force
+      $InstanceDistribution | Add-Member -MemberType NoteProperty -Name 'onDemandPercentageAboveBaseCapacity' -Value $this.nodeProperties.spotProperties.onDemandPercentageAboveBaseCapacity -Force
+      $InstanceDistribution | Add-Member -MemberType NoteProperty -Name 'spotAllocationStrategy' -Value $this.nodeProperties.spotProperties.spotAllocationStrategy -Force
     }
-    $nodegroupTemplate.nodeGroups | Add-Member  -MemberType NoteProperty -Name 'instancesDistribution' -Value $InstanceDistribution
+    $nodegroupTemplate.nodeGroups | Add-Member  -MemberType NoteProperty -Name 'instancesDistribution' -Value $InstanceDistribution -Force
     return $nodegroupTemplate
   }
 
 
   [psobject]AddSpotConfiguration($InstanceDistribution){
     $InstanceTypesArr = $this.StrToArray(',', $this.nodeProperties.instanceTypes)
-    $InstanceDistribution | Add-Member -MemberType NoteProperty -Name 'instanceTypes' -Value $InstanceTypesArr
+    $InstanceDistribution | Add-Member -MemberType NoteProperty -Name 'instanceTypes' -Value $InstanceTypesArr -Force
     return $InstanceDistribution
   }
 
   [psobject]AddInstanceTypes($InstanceDistribution){
     $InstanceTypesArr = $this.StrToArray(',', $this.nodeProperties.instanceTypes)
-    $InstanceDistribution | Add-Member -MemberType NoteProperty -Name 'instanceTypes' -Value $InstanceTypesArr
+    $InstanceDistribution | Add-Member -MemberType NoteProperty -Name 'instanceTypes' -Value $InstanceTypesArr -Force
     return $InstanceDistribution
   }
 
@@ -156,7 +156,7 @@ class GenericNodeGroup: Parent {
     $OuterDelimiter = ';'
     $InnerDelimiter = '='
     $labels = $this.AddProperties($OuterDelimiter, $InnerDelimiter, $this.nodeProperties.userLabelsStr)
-    $nodegroupTemplate.nodeGroups | Add-Member  -MemberType NoteProperty -Name labels -Value $labels
+    $nodegroupTemplate.nodeGroups | Add-Member  -MemberType NoteProperty -Name labels -Value $labels -Force
     return $nodegroupTemplate
   }
 }

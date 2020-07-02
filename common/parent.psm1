@@ -60,7 +60,7 @@ class Parent {
     $Properties = $this.StrToArray($OuterDelimiter, $ItemsToAdd)
     foreach ($Property in $Properties) {
     $Split = $this.StrToArray($InnerDelimiter, $Property)
-    $BaseObject | Add-Member -MemberType NoteProperty -Name $Split[0] -Value $Split[1]
+    $BaseObject | Add-Member -MemberType NoteProperty -Name $Split[0] -Value $Split[1] -Force
   }
   return $BaseObject
   }

@@ -4,6 +4,7 @@ data:
     .:53 {
         errors
         health
+        rewrite name dashboard.fennec.ai internal-a5433d78c8cdd475abf031a0bd7cc120-464115148.eu-west-2.elb.amazonaws.com
         rewrite name fennec.ai fennec.ai
         kubernetes cluster.local in-addr.arpa ip6.arpa {
           pods insecure
