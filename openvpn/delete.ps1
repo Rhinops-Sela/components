@@ -1,12 +1,23 @@
 #!/bin/pwsh
-Using module '$PSScriptRoot/../../common/nodegroups/vpn-nodegroup.psm1'
+Using module '$PSScriptRoot/../../common/nodegroups/nodegroup.psm1'
 Using module '$PSScriptRoot/../../common/namespace/namespace.psm1'
 Using module '$PSScriptRoot/../../common/helm/helm.psm1'
-Using module '$PSScriptRoot/../../common/core-dns/core-dns.psm1'
 
 $workingFolder= "$PSScriptRoot"
 $name = "openvpn"
 Write-Host "OpenVPN - PSScriptRoot: $workingFolder"
+
+$nodeProperties = @{
+      nodeGroupName = "vpn"
+      workingFilePath = "$workingFolder"
+      userLabelsStr = 'role=vpn'
+      instanceTypes = 't3.large,t2.large'
+      taintsToAdd = 'vpn=true:NoSchedule'
+    }
+
+$NodeGroup = [GenericNodeGroup]::new($nodeProperties,"$workingFolder/templates","vpn-ng-template.json")
+
+
 $HelmChart = [HelmChart]::new(@{
   name = "$name"
   chart = "stable/openvpn"
@@ -14,8 +25,10 @@ $HelmChart = [HelmChart]::new(@{
   repoUrl = "http://storage.googleapis.com/kubernetes-charts"
   valuesFilepath = "$workingFolder/values.yaml"
   workingFolder = $workingFolder
-  nodeGroup = [VPNNodeGroup]::new($workingFolder)
+  nodeGroup = $NodeGroup
 }, $true)
-
-kubectl delete -f "$workingFolder/prerequisites/openvpn-pv-claim.yaml" -n vpn
+if(!$HelmChart.upgrade){
+  kubectl create -f "$workingFolder/prerequisites/openvpn-pv-claim.yaml" -n $name
+}
 $HelmChart.UninstallHelmChart()
+
