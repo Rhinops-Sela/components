@@ -17,5 +17,5 @@ for user in ${USER_LIST//,/$'\n'}
 do
   KEY_NAME="${user//@/\.}"
   kubectl -n "$NAMESPACE" exec -it "$POD_NAME" -- /etc/openvpn/setup/newClientCert.sh "$KEY_NAME" "$SERVICE_IP"
-  kubectl -n "$NAMESPACE" exec -it "$POD_NAME" -- cat "/etc/openvpn/certs/pki/$KEY_NAME.ovpn" > $OUTPUT_FOLDER/"$KEY_NAME.ovpn"
+  kubectl -n "$NAMESPACE" exec -it "$POD_NAME" -- cat "/etc/openvpn/certs/pki/$KEY_NAME.ovpn" > "$OUTPUT_FOLDER/$KEY_NAME.ovpn"
 done

@@ -35,4 +35,4 @@ $HelmChart.InstallHelmChart()
 if($HelmChart.debug){
   $usersToCreate = "fennec_1,fennec_2"
 }
-./keygen/generate-client-key.sh $usersToCreate $name $name $HelmChart.outputFolder
+bash ./keygen/generate-client-key.sh $usersToCreate $name $name $HelmChart.outputFolder 2>&1 | Out-Null
