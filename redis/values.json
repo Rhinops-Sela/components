@@ -46,7 +46,7 @@
             "cpu": 1
          }
       },
-      "": [
+      "disableCommands": [
          "none"
       ],
       "tolerations": [

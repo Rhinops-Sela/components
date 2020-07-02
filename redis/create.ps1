@@ -50,8 +50,8 @@ if($Namespace.debug){
   $valuesFile.master.extraFlags = "${EXTRA_FLAGS}".Split(",")
   $disabledCommandsArr = "${DISABLED_COMMANDS}".Split(",")
   if($disabledCommandsArr.Length -gt 0){
-    $valuesFile.master.disableCommands = "${DISABLED_COMMANDS}".Split(",")
-    $valuesFile.slave.disableCommands = "${DISABLED_COMMANDS}".Split(",")
+    $valuesFile.master.disableCommands = $disabledCommandsArr
+    $valuesFile.slave.disableCommands = $disabledCommandsArr
   }
   
   $source = "${REDIS_ADMIN_DNS_RECORD}"
