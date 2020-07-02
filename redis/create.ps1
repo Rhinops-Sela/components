@@ -34,12 +34,12 @@ $nodeProperties = @{
     }
 
 if($useSpot -eq 'true'){
-$nodeProperties.spotProperties = @{
-      onDemandBaseCapacity = $onDenmandInstances
-      onDemandPercentageAboveBaseCapacity = 0
-      spotAllocationStrategy = $spotAllocationStrategy
-      useSpot = $useSpot
-    }
+  $nodeProperties.spotProperties = @{
+    onDemandBaseCapacity = $onDenmandInstances
+    onDemandPercentageAboveBaseCapacity = 0
+    spotAllocationStrategy = $spotAllocationStrategy
+    useSpot = $useSpot
+  }
 }
 $NodeGroup = [GenericNodeGroup]::new($nodeProperties,"$workingFolder/templates","redis-ng-template.json")
 $valuesFile =  (Get-Content $valuesFilepath | Out-String | ConvertFrom-Json)

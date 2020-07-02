@@ -3,13 +3,12 @@
   "kind": "ClusterConfig",
   "nodeGroups": [
     {
-      "name": "${NAME}",
-      "minSize": ${MIN},
-      "maxSize": ${MAX},
-      "desiredCapacity": ${DESIRED},
+      "minSize": 0,
+      "maxSize": 1,
+      "desiredCapacity": 0,
       "volumeSize": 100,
       "volumeType": "gp2",
-      "privateNetworking": ${PRIVATE_NETWORK},
+      "privateNetworking": true,
       "iam": {
         "withAddonPolicies": {
           "autoScaler": true
