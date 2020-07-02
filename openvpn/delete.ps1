@@ -15,7 +15,7 @@ $HelmChart = [HelmChart]::new(@{
   valuesFilepath = "$workingFolder/values.yaml"
   workingFolder = $workingFolder
   nodeGroup = [VPNNodeGroup]::new($workingFolder)
-})
+}, $true)
 
 kubectl delete -f "$workingFolder/prerequisites/openvpn-pv-claim.yaml" -n vpn
 $HelmChart.UninstallHelmChart()

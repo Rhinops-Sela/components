@@ -16,7 +16,7 @@ $HelmChart = [HelmChart]::new(@{
   repoUrl = "https://kubernetes.github.io/ingress-nginx"
   valuesFilepath = "$executeValuesFilepath"
   workingFolder = $workingFolder
-})
+}, $true)
 $private = "true"
 if("${DNS_RECORD}" -eq "Public") {
   $private = "flase"

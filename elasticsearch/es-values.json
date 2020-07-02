@@ -1,0 +1,19 @@
+{
+   "clusterName": "elasticsearch",
+   "replicas": 1,
+   "minimumMasterNodes": 1,
+   "persistence": {
+      "enabled": true,
+      "annotations": {}
+   },
+   "nodeSelector": {
+      "role": "elk"
+   },
+   "tolerations": [
+      {
+         "key": "elk",
+         "operator": "Equal",
+         "value": "true"
+      }
+   ]
+}

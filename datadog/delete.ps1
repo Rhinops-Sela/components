@@ -17,7 +17,7 @@ $HelmChart = [HelmChart]::new(@{
       Target = "${DNS_RECORD}"
     }
   ),$workingFolder)
-})
+}, $true)
 $HelmChart.UninstallHelmChart()
 
 

@@ -11,7 +11,7 @@ $HelmChart = [HelmChart]::new(@{
   namespace = [Namespace]::new("monitoring", $workingFolder)
   workingFolder = $workingFolder
   nodeGroup = [MonitoringNodeGroup]::new($workingFolder)
-})
+}, $true)
 $HelmChart.UninstallHelmChart()
 $source = "${DNS_RECORD}"
 if($HelmChart.debug){

@@ -5,8 +5,11 @@ Using module '$PSScriptRoot/../../common/helm/helm.psm1'
 Using module '$PSScriptRoot/../../common/core-dns/core-dns.psm1'
 
 $workingFolder= "$PSScriptRoot"
-$valuesFilepath= "$workingFolder/helm/elasticsearch/values.json"
-$executeValuesFilepath= "$workingFolder/values-execute.json"
+$ESValuesFilepath= "$workingFolder/es-values.json"
+$KibanaValuesFilepath= "$workingFolder/kibana-values.json"
+$ESExecuteValuesFilepath= "$workingFolder/es-values-execute.json"
+$KibanaExecuteValuesFilepath= "$workingFolder/kibana-values-execute.json"
+
 Write-Host "ElasticSearch - PSScriptRoot: $workingFolder"
 $debug='${NAMESPACE}'
 if ($debug -Match 'NAMESPACE'){
@@ -41,25 +44,26 @@ $nodeProperties.spotProperties = @{
     }
 }
 $NodeGroup = [GenericNodeGroup]::new($nodeProperties,"$workingFolder/templates","es-ng-template.json")
-$valuesFile =  (Get-Content $valuesFilepath | Out-String | ConvertFrom-Json)
+$esValuesFile =  (Get-Content $ESValuesFilepath | Out-String | ConvertFrom-Json)
+
 
 $HelmChart = [HelmChart]::new(@{
   name = "elasticsearch"
-  chart = "helm/elasticsearch"
+  chart = "elastic/elasticsearch"
+  repoUrl = "https://helm.elastic.co"
   namespace = [Namespace]::new("$namespace", $workingFolder)
-  valuesFilepath = $executeValuesFilepath
+  valuesFilepath = $ESExecuteValuesFilepath
   workingFolder = $workingFolder
   nodeGroup = $NodeGroup
 })
-$valuesFile =  (Get-Content $valuesFilepath | Out-String | ConvertFrom-Json)
 if($HelmChart.debug){
   $source = "elasticsearch.fennec.io"
 } else {
   $valuesFile.minimumMasterNodes = ${NUMBER_MASTERS}
   $valuesFile.replicas = ${NUMBER_SLAVES}
-  $source = "${DNS_RECORD}"
+  $source = "${ES_DNS_RECORD}"
 }
-$valuesFile | ConvertTo-Json -depth 100 | Out-File "$executeValuesFilepath"
+$esValuesFile | ConvertTo-Json -depth 100 | Out-File "$ESExecuteValuesFilepath"
 $HelmChart.InstallHelmChart()
 
 $DNS = [CoreDNS]::new($workingFolder)
@@ -71,3 +75,37 @@ $DNS.AddEntries(
                     }
                   )
                 )
+$installKibana = 'true'
+if(!$HelmChart.debug){
+  $installKibana = '${INSTALL_KIBANA}'
+}
+if($installKibana -eq "true"){
+  $HelmChart = [HelmChart]::new(@{
+    name = "kibana"
+    chart = "elastic/kibana"
+    repoUrl = "https://helm.elastic.co"
+    namespace = [Namespace]::new("$namespace", $workingFolder)
+    valuesFilepath = $KibanaExecuteValuesFilepath
+    workingFolder = $workingFolder
+    nodeGroup = $NodeGroup
+  })
+  if($HelmChart.debug){
+    $source = "kibana.fennec.io"
+  } else {
+    $source = "${KIBANA_DNS_RECORD}"
+  }
+  $kibanaValuesFile =  (Get-Content $KibanaValuesFilepath | Out-String | ConvertFrom-Json)
+  $kibanaValuesFile.elasticsearchHosts = "http://elasticsearch-master.$namespace.svc.cluster.local:9200"
+  $kibanaValuesFile | ConvertTo-Json -depth 100 | Out-File "$KibanaExecuteValuesFilepath"
+  $HelmChart.InstallHelmChart()
+
+  $DNS = [CoreDNS]::new($workingFolder)
+  $DNS.AddEntries(
+                    @(
+                      @{
+                        Source = "$source"
+                        Target = "kibana-kibana.$namespace.svc.cluster.local"
+                      }
+                    )
+                  )
+}
