@@ -1,8 +1,8 @@
 #!/bin/pwsh
 Using module '$PSScriptRoot/../../common/nodegroups/nodegroup.psm1'
 
-$debug='${NAMESPACE}'
-if ($debug -Match 'NAMESPACE'){
+$debug='${NAME}'
+if ($debug -Match 'NAME'){
     $userLabelsStr = 'label1=value1;label2=value2'
     $instanceTypes = 't3.small,t2.small'
     $taintsToAdd = 'taint1=true:NoSchedule;taint2=true:NoSchedule'
