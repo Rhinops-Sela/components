@@ -20,7 +20,7 @@
     │    ├── Component2                # Top level folder component folder
     │    ├── Component2                # Top level folder component folder
     │    └── ...
-    └── domains.json
+    └── form.json
 
 ### Example for nodegroup.json:
 ```json
@@ -287,6 +287,66 @@ DNS().create_record(source = execution.local("DNS_RECORD") , target = f"redis.{e
 
 #Delete DNS record
 DNS().delete_record(source = execution.local("DNS_RECORD") , target = f"redis.{execution.local('NAMESPACE')}.svc.cluster.local")
+```
+## Form Page (form.json)
 
-
+This json objects groups the pages in the UI to display groups, i.e:
+```json
+[
+  {
+    "name": "global",
+    "displayName": "Global Parametes",
+    "description": "Global Parametes which will be avaliabel as environment variabels during the deployment",
+    "pages": [
+      "global-parameters-page"
+    ]
+  },
+  {
+    "name": "cluster",
+    "description": "EKS cluster configuration",
+    "displayName": "Cluster",
+    "pages": [
+      "cluster-page",
+      "nodegroup-page"
+    ]
+  },
+  {
+    "name": "monitoring",
+    "description": "Configuration & Parameters for monitoring the cluster",
+    "displayName": "Monitoring",
+    "pages": [
+      "grafana-page",
+      "prometheus-page",
+      "datadog-page"
+    ]
+  },
+  {
+    "name": "network",
+    "description": "Networking configuration for the cluster",
+    "displayName": "Networking",
+    "pages": [
+      "coredns-page",
+      "openvpn-page",
+      "nginx-page"
+    ]
+  },
+  {
+    "name": "databases",
+    "displayName": "Databases",
+    "description": "Selection of databases to available in the cluster",
+    "pages": [
+      "redis-page",
+      "dynamo-page"
+    ]
+  },
+  {
+    "name": "elk",
+    "displayName": "ELK",
+    "description": "Selection of ELK components to be available in the cluster",
+    "pages": [
+      "elasticsearch-page",
+      "kibana-page"
+    ]
+  }
+]
 ```
