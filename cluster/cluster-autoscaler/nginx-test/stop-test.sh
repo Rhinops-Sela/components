@@ -1,2 +1,0 @@
-
-kubectl delete namespace test

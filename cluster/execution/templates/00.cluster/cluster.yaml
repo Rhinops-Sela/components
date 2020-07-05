@@ -31,3 +31,21 @@ iam:
               - "autoscaling:SetDesiredCapacity"
               - "autoscaling:TerminateInstanceInAutoScalingGroup"
             Resource: "*"
+nodeGroups:
+  - name: general
+    labels:
+      role: general
+    instancesDistribution:
+      instanceTypes:
+        - "t3.small"
+    tags:
+      k8s.io/cluster-autoscaler/enabled: "true"
+    minSize: 0
+    maxSize: 8
+    desiredCapacity: 1
+    volumeSize: 100
+    volumeType: gp2
+    privateNetworking: true
+    iam:
+      withAddonPolicies:
+        autoScaler: true
