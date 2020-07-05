@@ -113,16 +113,15 @@
   ]
 }
 ```
-<pre>
-<b>name</b> - compopnent's name, will be used internaly
-<b>mandatory</b> - If true the user must fill values in this page
-<b>executer</b> - the executer to use when running create/delete scripts
-<b>displayName</b> - The display text in the ui
-<b>description</b> - sub header will be displayed in the component's page
-<b>image</b> - the image which will be displayed in the UI
-<b>inputs</b> - all the user inputs to be displayed in the component's page
-<b>template</b>: will load a pre-defined input type from inputs folder i.e:
-</pre>
+<b>name</b> - compopnent's name, will be used internaly<br />
+<b>mandatory</b> - If true the user must fill values in this page<br />
+<b>executer</b> - the executer to use when running create/delete scripts<br />
+<b>displayName</b> - The display text in the ui<br />
+<b>description</b> - sub header will be displayed in the component's page<br />
+<b>image</b> - the image which will be displayed in the UI<br />
+<b>inputs</b> - all the user inputs to be displayed in the component's page<br />
+<b>template</b>: will load a pre-defined input type from inputs folder
+<br />i.e:
   ```json
     {
       "controlType": "multi-select",
@@ -137,22 +136,21 @@
     }
  ```
 
-<pre>
-<b>controlType</b>: The control type to be displayed to the user, possible options:
+<b>controlType</b>: The control type to be displayed to the user, possible options:<br />
   * text
   * text-password
   * textarea
   * checkbox
   * select
   * multi-select
-<b>displayName</b> - The display text in the ui
-<b>options</b> - List of possible options for the select control
-<b>regexValidation</b> - Regex expressions used to validate the user input if set this field will become mandatory.
-<b>serverValue</b> - This will be the variable name during create/delete execution
-<b>group_enabler_master</b> - The contorl type must be checkbox, when selected all inputs with sub_group property which have the same vlue will be added to the form when spot is checked ON_DEMAND_INSTANCES will be also displayed.
 
-* When using pre-defined inputs it's possible to overwrite their value's by adding the to the input object:
-</pre>
+<br/><br/><b>displayName</b> - The display text in the ui<br />
+<b>options</b> - List of possible options for the select control<br />
+<b>regexValidation</b> - Regex expressions used to validate the user input if set this field will become mandatory.<br />
+<b>serverValue</b> - This will be the variable name during create/delete execution<br />
+<b>group_enabler_master</b> - The contorl type must be checkbox, when selected all inputs with sub_group property which have the same vlue will be added to the form when spot is checked ON_DEMAND_INSTANCES will be also displayed.<br />
+
+** When using pre-defined inputs it's possible to overwrite their value's by adding the to the input object:
   ```json
     {
       "template": "dns-entry",
@@ -239,11 +237,10 @@ Global page is a uniqe page, which allows to set global variables which will be 
 ```
 
 ## Create / Delete
-<pre>
-<b>create.py / create.py (or eny other selected execution environement such as powershell or bash)</b> - files will be triggered during installation / deletion process accordingly.
-</pre>
-```python
 
+<b>create.py / create.py (or eny other selected execution environement such as powershell or bash)</b> - files will be triggered during installation / deletion process accordingly.
+
+```python
 import os
 #Execution requries current working directory as parameter
 execution = Execution(os.getcwd())
@@ -267,6 +264,11 @@ ndoe_group.add_instances(execution.local["INSTANCES"])
 ndoe_group.add_arns(execution.local["ARNS"])
 #ndoe_group.set_intances_types("eu-west-2")
 ndoe_group.region(execution.local["REGION"])
+#Creates a new node grop
+ndoe_group.create()
+#Deletes node grop
+ndoe_group.delete()
+
 #if no namesapce was set localy use global namesapce
 namespace = Namespace.Create(execution.local["${NAMESPACE}"] or execution.global["${NAMESPACE}"])
 
@@ -290,7 +292,7 @@ DNS().delete_record(source = execution.local("DNS_RECORD") , target = f"redis.{e
 ```
 ## Form Page (form.json)
 
-This json objects groups the pages in the UI to display groups, i.e:
+This object controls the grouping of pages in the ui component
 ```json
 [
   {
