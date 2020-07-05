@@ -169,7 +169,8 @@
        "ON_DEMAND_INSTANCES": 5
      },
      {
-       "REDIS_DNS_RECORD": "redis.fennec.io"
+       "REDIS_DNS_RECORD": "redis.fennec.io",
+       "USE_AS_DEFAULT": true
      }
    ],
    "global": [
@@ -188,6 +189,7 @@
    ]
 }
 ```
+<b>USE_AS_DEFAULT</b> - Even if no input recieved from user the variable will be set with it's deafult value.
 ## Global Page
 ```
 Global page is a uniqe page, which allows to set global variables which will be avaliable for all pages in the installation.
@@ -244,7 +246,8 @@ Global page is a uniqe page, which allows to set global variables which will be 
 import os
 #Execution requries current working directory as parameter
 execution = Execution(os.getcwd())
-# access the variables defined in the ui with a fallback to default variables values
+# access the variables defined in the ui with a fallback to
+#default variables values (when USE_AS_DEFAULT is set to ture)
 masters = execution.local["NUMBER_OF_MASTER_NODES"]
 cluster_name = execution.global["CLUSTRE_NAME"]
 
