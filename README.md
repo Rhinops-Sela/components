@@ -245,7 +245,7 @@ Global page is a uniqe page, which allows to set global variables which will be 
 ```python
 import os
 #Execution requries current working directory as parameter
-execution = Execution(os.getcwd())
+execution = Execution(os.getcwd(), "grafana")
 # access the variables defined in the ui with a fallback to
 #default variables values (when USE_AS_DEFAULT is set to ture)
 masters = execution.local["NUMBER_OF_MASTER_NODES"]
