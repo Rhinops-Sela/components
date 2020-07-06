@@ -1,29 +1,30 @@
 {
   "local": {
     "ON_DEMAND_INSTANCES": {
-      "value": 5
+      "debug": 5,
+      "default": 0
     },
     "REDIS_DNS_RECORD": {
-      "value": "redis.fennec.io",
-      "use_as_default": true
+      "debug": "redis.fennec.io",
+      "default": "redis.fennec.io"
     }
   },
   "global": {
     "GLOBAL_CLUSTER_NAME": {
-      "value": "fennec",
-      "use_as_default": true
+      "debug": "fennec",
+      "default": "fennec"
     },
     "GLOBAL_CLUSTER_REGION": {
-      "value": "eu-west-2",
-      "use_as_default": true
+      "debug": "eu-west-2",
+      "default": "eu-west-2"
     },
     "GLOBAL_AWS_SECRET_ACCESS_KEY": {
-      "value": "xxxxxxx",
-      "use_as_default": true
+      "debug": "xxxxxxx",
+      "default": "xxxxxxx"
     },
     "GLOBAL_AWS_ACCESS_KEY_ID": {
-      "value": "xxxxxxx",
-      "use_as_default": true
+      "debug": "xxxxxxx",
+      "default": "xxxxxxx"
     }
   }
 }
