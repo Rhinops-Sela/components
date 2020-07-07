@@ -59,7 +59,7 @@ class Execution:
     def get_parameters(self):
         self.default_values = json.load(self.default_values_file)
 
-    def run_command(self, command: str, show_output=True):
+    def run_command(self, command: str, show_output=True, continue_on_error=False):
         output_str = ""
         command = command + f" --kubeconfig {self.kube_config_file}"
         process = subprocess.Popen(
@@ -75,6 +75,10 @@ class Execution:
                 break
         command_result = namedtuple("output", ["exit_code", "log"])
         rc = process.poll()
+
+        if rc != 0 and not continue_on_error:
+            Execution.exit(rc, output_str)
+
         return command_result(rc, output_str)
 
     def exit(exit_code: int, message: str):

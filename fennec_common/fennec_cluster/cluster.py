@@ -24,6 +24,5 @@ class Cluster:
         cluster_file = os.path.join(
             self.execution.templates_folder, "00.cluster", "cluster.json")
         command = f'eksctl create cluster -f "{cluster_file}"'
-        result = self.execution.run_command(command)
-        if not result:
-            Execution.exit(1, result.log)
+        self.execution.run_command(command)
+

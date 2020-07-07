@@ -10,6 +10,14 @@
     "INSTALL_HPA": {
       "debug": true,
       "default": false
+    },
+    "INSTALL_CLUSTER_AUTOSCALER": {
+      "debug": true,
+      "default": false
+    },
+    "INSTALL_CLUSTER_DASHBOARD": {
+      "debug": true,
+      "default": false
     }
   },
   "global": {
