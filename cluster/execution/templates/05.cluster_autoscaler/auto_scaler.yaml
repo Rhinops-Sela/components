@@ -1,0 +1,9 @@
+rbac:
+  create: true
+cloudProvider: aws
+awsRegion: GLOBAL_CLUSTER_REGION
+autoDiscovery:
+  enabled: "true"
+  clusterName: GLOBAL_CLUSTER_NAME
+nodeSelector:
+  role: general
