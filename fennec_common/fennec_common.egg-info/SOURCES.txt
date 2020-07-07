@@ -1,4 +1,6 @@
 setup.py
+fennec_cluster/__init__.py
+fennec_cluster/cluster.py
 fennec_common.egg-info/PKG-INFO
 fennec_common.egg-info/SOURCES.txt
 fennec_common.egg-info/dependency_links.txt
@@ -6,4 +8,3 @@ fennec_common.egg-info/not-zip-safe
 fennec_common.egg-info/top_level.txt
 fennec_execution/__init__.py
 fennec_execution/execution.py
-fennec_execution/tester.py

@@ -16,7 +16,7 @@
     },
     "GLOBAL_CLUSTER_REGION": {
       "debug": "eu-west-2",
-      "default": "eu-west-2"
+      "default": true
     },
     "GLOBAL_AWS_SECRET_ACCESS_KEY": {
       "debug": "xxxxxxx",

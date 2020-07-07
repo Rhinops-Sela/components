@@ -1,5 +1,5 @@
 import os
-from fennec_execution import *
+from fennec_execution import Execution
 
 # sets the working folder for the execution component
 execution = Execution(os.path.join(os.getcwd(), "grafana"))

@@ -1,8 +1,33 @@
 {
-  "local": [
-
-  ],
-  "global": [
-    
-  ]
+  "local": {
+    "CREATE_DASHBOARD": {
+      "debug": true,
+      "default": false
+    },
+    "ADMIN_ARN": {
+      "debug": "arn:aws:iam::027065296145:user/iliag"
+    },
+    "INSTALL_HPA": {
+      "debug": true,
+      "default": false
+    }
+  },
+  "global": {
+    "GLOBAL_CLUSTER_NAME": {
+      "debug": "fennec",
+      "default": "fennec"
+    },
+    "GLOBAL_CLUSTER_REGION": {
+      "debug": "eu-west-2",
+      "default": true
+    },
+    "GLOBAL_AWS_SECRET_ACCESS_KEY": {
+      "debug": "xxxxxxx",
+      "default": "xxxxxxx"
+    },
+    "GLOBAL_AWS_ACCESS_KEY_ID": {
+      "debug": "xxxxxxx",
+      "default": "xxxxxxx"
+    }
+  }
 }
