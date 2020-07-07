@@ -27,3 +27,14 @@ result = execution.run_command(
 install_HPA = execution.local_parameters['INSTALL_HPA']
 if install_HPA:
     execution.run_command(f"")
+
+
+#$release = "cluster-autoscaler"
+#helm repo add stable https: // kubernetes-charts.storage.googleapis.com
+#helm repo update
+#$result = CreateK8SNamespace - namespace $ns - kubePath ".kube"
+#if ($result) {
+#    # newer versions require kubernetes 1.17 https://hub.helm.sh/charts/stable/cluster-autoscaler/7.0.0
+#    helm install $release stable/cluster-autoscaler - f "./cluster-autoscaler/values.yaml$filepostfix" - -namespace $ns - -kubeconfig .kube - -version 7.0.0
+#    Write-Information "cluster-autoscaler installed" - InformationAction Continue
+
