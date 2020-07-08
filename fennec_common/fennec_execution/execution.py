@@ -8,6 +8,7 @@ from collections import namedtuple
 
 class Execution:
     def __init__(self, working_folder: str):
+        self.__kube_config_file = ""
         self.working_folder = working_folder
         self.execution_folder = os.path.join(self.working_folder, "execution")
         self.templates_folder = os.path.join(
@@ -18,7 +19,13 @@ class Execution:
         self.__load_parameters__()
         self.cluster_name = self.global_parameters["GLOBAL_CLUSTER_NAME"]
         self.cluster_region = self.global_parameters["GLOBAL_CLUSTER_REGION"]
-        self.create_kubernetes_client()
+        self.set_aws_credentials()
+
+    @property
+    def kube_config_file(self):
+        if not self.__kube_config_file:
+            self.create_kubernetes_client()
+        return self.__kube_config_file
 
     def __load_parameters__(self):
         default_values_file = os.path.join(
@@ -35,12 +42,14 @@ class Execution:
                 parameter_name, parameter_value)
             working_dictionary[parameter_name] = calculated_value
 
-    def create_kubernetes_client(self):
+    def set_aws_credentials(self):
         if not self.debug:
             os.environ['AWS_ACCESS_KEY_ID'] = f'{self.global_parameters["GLOBAL_AWS_ACCESS_KEY_ID"]}'
             os.environ['AWS_SECRET_ACCESS_KEY'] = f'{self.global_parameters["GLOBAL_AWS_SECRET_ACCESS_KEY"]}'
         os.environ['AWS_DEFAULT_REGION'] = self.cluster_region
-        self.kube_config_file = os.path.join(self.working_folder, '.kube')
+
+    def create_kubernetes_client(self):
+        self.__kube_config_file = os.path.join(self.working_folder, '.kube')
         os.system(
             f'aws eks update-kubeconfig --name {self.cluster_name} --kubeconfig {self.kube_config_file}')
 
@@ -59,9 +68,10 @@ class Execution:
     def get_parameters(self):
         self.default_values = json.load(self.default_values_file)
 
-    def run_command(self, command: str, show_output=True, continue_on_error=False):
+    def run_command(self, command: str, show_output=True, continue_on_error=False, kubeconfig=True):
         output_str = ""
-        command = command + f" --kubeconfig {self.kube_config_file}"
+        if kubeconfig:
+            command = command + f" --kubeconfig {self.kube_config_file}"
         process = subprocess.Popen(
             shlex.split(command), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         while True:

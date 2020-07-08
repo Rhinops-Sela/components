@@ -9,7 +9,7 @@ class Cluster:
 
     def check_if_cluster_exists(self) -> bool:
         command = 'eksctl get clusters -o json'
-        clusters = self.execution.run_command(command, show_output=False).log
+        clusters = self.execution.run_command(command, show_output=False, kubeconfig=False).log
         clusters_object = Execution.json_to_object(clusters)
         for cluster in clusters_object:
             if cluster['name'] == self.execution.cluster_name and cluster['region'] == self.execution.cluster_region:
@@ -24,5 +24,6 @@ class Cluster:
         cluster_file = os.path.join(
             self.execution.templates_folder, "00.cluster", "cluster.json")
         command = f'eksctl create cluster -f "{cluster_file}"'
-        self.execution.run_command(command)
+        self.execution.run_command(command, kubeconfig=False)
+        self.execution.create_kubernetes_client()
 
