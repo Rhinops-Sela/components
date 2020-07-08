@@ -51,9 +51,6 @@ if(install_cluster_autoscaler):
                         f"--set awsRegion={execution.cluster_region}",
                         f"--version 7.0.0"])
 
-helm = Helm(execution, "cluster-autoscaler", "stable/cluster-autoscaler")
-helm.delete_chart("cluster-autoscaler")
-
 # Install Nginx Controller
 install_ingress_controller = execution.local_parameters['INSTALL_INGRESS_CONTROLER']
 if(install_ingress_controller):
