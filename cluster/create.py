@@ -33,8 +33,10 @@ install_HPA = execution.local_parameters['INSTALL_CLUSTER_HPA']
 if install_HPA:
     hpa_instsllation = os.path.join(
         execution.templates_folder, "04.hpa", "hpa.yaml")
-    result = Namespace.create(execution, "horizontal-pod-scaler")
-    result = execution.run_command(f"kubectl apply -f {hpa_instsllation}")
+    Namespace.create(execution, "horizontal-pod-scaler")
+    execution.run_command(f"kubectl apply -f {hpa_instsllation}")
+
+
 
 # Install Cluster auto scaler
 install_cluster_autoscaler = execution.local_parameters['INSTALL_CLUSTER_AUTOSCALER']
@@ -45,20 +47,22 @@ if(install_cluster_autoscaler):
         execution.templates_folder, "05.cluster_autoscaler", "auto_scaler.yaml")
     helm.install_chart("cluster-autoscaler",
                        [values_file_path],
-                       [f"autoDiscovery.clusterName={execution.cluster_name}",
-                        f"awsRegion={execution.cluster_region}"])
+                       [f"--set autoDiscovery.clusterName={execution.cluster_name}",
+                        f"--set awsRegion={execution.cluster_region}",
+                        f"--version 7.0.0"])
+
+helm = Helm(execution, "cluster-autoscaler", "stable/cluster-autoscaler")
+helm.delete_chart("cluster-autoscaler")
+
+# Install Nginx Controller
+install_ingress_controller = execution.local_parameters['INSTALL_INGRESS_CONTROLER']
+if(install_ingress_controller):
+    helm = Helm(execution, "nginx-ingress", "stable/nginx-ingress")
+    values_file_path = os.path.join(
+        execution.templates_folder, "06.nginx", "values.yaml")
+    helm.install_chart("nginx-ingress", [values_file_path])
 
 # Install Cluster dashboard
 install_cluster_dashboard = execution.local_parameters['INSTALL_CLUSTER_DASHBOARD']
 if(install_cluster_dashboard):
     pass
-
-
-# $release = "cluster-autoscaler"
-# helm repo add stable https: // kubernetes-charts.storage.googleapis.com
-# helm repo update
-# $result = CreateK8SNamespace - namespace $ns - kubePath ".kube"
-# if ($result) {
-#    # newer versions require kubernetes 1.17 https://hub.helm.sh/charts/stable/cluster-autoscaler/7.0.0
-#    helm install $release stable/cluster-autoscaler - f "./cluster-autoscaler/values.yaml$filepostfix" - -namespace $ns - -kubeconfig .kube - -version 7.0.0
-#    Write-Information "cluster-autoscaler installed" - InformationAction Continue

@@ -100,7 +100,7 @@ class Execution:
             converted = json.loads(string_to_convert)
             return converted
         except:
-            print("unable to parse output")
+            print(string_to_convert)
 
     def replace_in_file(source_file: str, output_file: str, strings_to_replace: dict, max=1):
         fin = open(source_file, "rt")

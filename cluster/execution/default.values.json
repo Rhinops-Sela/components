@@ -14,6 +14,10 @@
     "INSTALL_CLUSTER_DASHBOARD": {
       "debug": true,
       "default": false
+    },
+    "INSTALL_INGRESS_CONTROLER": {
+      "debug": true,
+      "default": false
     }
   },
   "global": {
