@@ -40,7 +40,7 @@ if install_HPA:
 install_cluster_autoscaler = execution.local_parameters['INSTALL_CLUSTER_AUTOSCALER']
 if(install_cluster_autoscaler):
     helm = Helm(execution, "cluster-autoscaler", "stable/cluster-autoscaler",
-                "https://hub.helm.sh/charts/stable/cluster-autoscaler/7.0.0")
+                "https://kubernetes-charts.storage.googleapis.com")
     values_file_path = os.path.join(
         execution.templates_folder, "05.cluster_autoscaler", "auto_scaler.yaml")
     helm.install_chart("cluster-autoscaler",
