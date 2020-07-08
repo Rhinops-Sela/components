@@ -1,14 +1,10 @@
 {
   "local": {
-    "CREATE_DASHBOARD": {
-      "debug": true,
-      "default": false
-    },
     "ADMIN_ARN": {
       "debug": "arn:aws:iam::027065296145:user/iliag"
     },
-    "INSTALL_HPA": {
-      "debug": true,
+    "INSTALL_CLUSTER_HPA": {
+      "debug": false,
       "default": false
     },
     "INSTALL_CLUSTER_AUTOSCALER": {

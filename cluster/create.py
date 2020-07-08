@@ -3,6 +3,7 @@ import os
 from fennec_cluster.cluster import Cluster
 from fennec_core_dns.core_dns import CoreDNS
 from fennec_execution import Execution
+from fennec_helm.helm import Helm
 from fennec_namespace import Namespace
 
 execution = Execution(os.path.join(os.getcwd(), "cluster"))
@@ -28,12 +29,24 @@ result = execution.run_command(
     f"kubectl patch configmap/aws-auth -n kube-system --patch '{content}'")
 
 # Install HPA
-install_HPA = execution.local_parameters['INSTALL_HPA']
+install_HPA = execution.local_parameters['INSTALL_CLUSTER_HPA']
 if install_HPA:
     hpa_instsllation = os.path.join(
         execution.templates_folder, "04.hpa", "hpa.yaml")
     result = Namespace.create(execution, "horizontal-pod-scaler")
     result = execution.run_command(f"kubectl apply -f {hpa_instsllation}")
+
+# Install Cluster auto scaler
+install_cluster_autoscaler = execution.local_parameters['INSTALL_CLUSTER_AUTOSCALER']
+if(install_cluster_autoscaler):
+    helm = Helm(execution, "cluster-autoscaler", "stable/cluster-autoscaler",
+                "https://hub.helm.sh/charts/stable/cluster-autoscaler/7.0.0")
+    values_file_path = os.path.join(
+        execution.templates_folder, "05.cluster_autoscaler", "auto_scaler.yaml")
+    helm.install_chart("cluster-autoscaler",
+                       [values_file_path],
+                       [f"autoDiscovery.clusterName={execution.cluster_name}",
+                        f"awsRegion={execution.cluster_region}"])
 
 # Install Cluster dashboard
 install_cluster_dashboard = execution.local_parameters['INSTALL_CLUSTER_DASHBOARD']
@@ -41,10 +54,6 @@ if(install_cluster_dashboard):
     pass
 
 
-# Install Cluster auto scaler
-install_cluster_autoscaler = execution.local_parameters['INSTALL_CLUSTER_AUTOSCALER']
-if(install_cluster_autoscaler):
-    pass
 # $release = "cluster-autoscaler"
 # helm repo add stable https: // kubernetes-charts.storage.googleapis.com
 # helm repo update
