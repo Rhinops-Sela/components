@@ -9,7 +9,7 @@ class Helm:
         self.chart_tag = chart_tag
         self.chart_url = chart_url
 
-    def install_chart(self, namespace: str, values_files=[], additional_values=[]):
+    def install_chart(self, namespace: str, additional_values=[]):
         verb = "install"
         if self.check_if_chart_installed(namespace):
             print(
@@ -23,7 +23,7 @@ class Helm:
                 f"helm repo add stable {self.chart_url}")
         self.execution.run_command("helm repo update")
         Namespace.create(self.execution, namespace)
-        install_command = f"helm {verb} --wait --timeout 3600s {self.chart_name} {self.chart_tag} {self.combine_values_files(values_files)} -n {namespace} {self.combine_set_values(additional_values)}"
+        install_command = f"helm {verb} --wait --timeout 3600s {self.chart_name} {self.chart_tag} -n {namespace} {self.combine_set_values(additional_values)}"
         self.execution.run_command(install_command)
 
     def delete_chart(self, namespace: str):
@@ -36,12 +36,6 @@ class Helm:
         else:
             print(
                 f"chart: {self.chart_name} in namespace: {namespace} not installed, skipping...")
-
-    def combine_values_files(self, values_files) -> str:
-        values_files_str = ""
-        for values_file in values_files:
-            values_files_str = f"{values_files_str} --values {values_file}"
-        return values_files_str
 
     def combine_set_values(self, set_values) -> str:
         set_values_str = ""

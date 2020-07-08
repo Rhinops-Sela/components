@@ -37,7 +37,6 @@ if install_HPA:
     execution.run_command(f"kubectl apply -f {hpa_instsllation}")
 
 
-
 # Install Cluster auto scaler
 install_cluster_autoscaler = execution.local_parameters['INSTALL_CLUSTER_AUTOSCALER']
 if(install_cluster_autoscaler):
@@ -46,10 +45,12 @@ if(install_cluster_autoscaler):
     values_file_path = os.path.join(
         execution.templates_folder, "05.cluster_autoscaler", "auto_scaler.yaml")
     helm.install_chart("cluster-autoscaler",
-                       [values_file_path],
-                       [f"--set autoDiscovery.clusterName={execution.cluster_name}",
-                        f"--set awsRegion={execution.cluster_region}",
-                        f"--version 7.0.0"])
+                       [
+                           f"--values {values_file_path}",
+                           f"--set autoDiscovery.clusterName={execution.cluster_name}",
+                           f"--set awsRegion={execution.cluster_region}",
+                           f"--version 7.0.0"
+                       ])
 
 # Install Nginx Controller
 install_ingress_controller = execution.local_parameters['INSTALL_INGRESS_CONTROLER']
@@ -57,7 +58,7 @@ if(install_ingress_controller):
     helm = Helm(execution, "nginx-ingress", "stable/nginx-ingress")
     values_file_path = os.path.join(
         execution.templates_folder, "06.nginx", "values.yaml")
-    helm.install_chart("nginx-ingress", [values_file_path])
+    helm.install_chart("nginx-ingress", [f"--values {values_file_path}"])
 
 # Install Cluster dashboard
 install_cluster_dashboard = execution.local_parameters['INSTALL_CLUSTER_DASHBOARD']
