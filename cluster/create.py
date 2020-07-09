@@ -1,9 +1,10 @@
-# pip3 install -e /Users/iliagerman/Work/Sela/env_creator/components/fennec_common
+# pip3 install -e /Users/iliagerman/Work/Sela/env_creator/components/fennec
 import os
 from fennec_cluster.cluster import Cluster
 from fennec_core_dns.core_dns import CoreDNS
 from fennec_execution import Execution
 from fennec_helm.helm import Helm
+from fennec_helpers import helper
 from fennec_namespace import Namespace
 
 execution = Execution(os.path.join(os.getcwd(), "cluster"))
@@ -23,7 +24,7 @@ admin_arn = execution.local_parameters['ADMIN_ARN']
 username = admin_arn.split('/')[1]
 values_to_replace = {'ADMIN_USER': f'{admin_arn}',
                      'ADMIN_USERNAME': f'{username}'}
-content = Execution.replace_in_file(
+content = helper.replace_in_file(
     arn_template, arn_output, values_to_replace)
 result = execution.run_command(
     f"kubectl patch configmap/aws-auth -n kube-system --patch '{content}'")

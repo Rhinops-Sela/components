@@ -1,4 +1,3 @@
-# pip3 install -e /Users/iliagerman/Work/Sela/env_creator/components/fennec_common
 import os
 from fennec_cluster.cluster import Cluster
 from fennec_core_dns.core_dns import CoreDNS

@@ -1,41 +1,21 @@
 {
-  "local": {
-    "ADMIN_ARN": {
-      "debug": "arn:aws:iam::027065296145:user/iliag"
-    },
-    "INSTALL_CLUSTER_HPA": {
-      "debug": false,
-      "default": false
-    },
-    "INSTALL_CLUSTER_AUTOSCALER": {
-      "debug": true,
-      "default": false
-    },
-    "INSTALL_CLUSTER_DASHBOARD": {
-      "debug": true,
-      "default": false
-    },
-    "INSTALL_INGRESS_CONTROLER": {
-      "debug": true,
-      "default": false
-    }
+  "ADMIN_ARN": {
+    "debug": "arn:aws:iam::027065296145:user/iliag"
   },
-  "global": {
-    "GLOBAL_CLUSTER_NAME": {
-      "debug": "fennec",
-      "default": "fennec"
-    },
-    "GLOBAL_CLUSTER_REGION": {
-      "debug": "eu-west-2",
-      "default": true
-    },
-    "GLOBAL_AWS_SECRET_ACCESS_KEY": {
-      "debug": "xxxxxxx",
-      "default": "xxxxxxx"
-    },
-    "GLOBAL_AWS_ACCESS_KEY_ID": {
-      "debug": "xxxxxxx",
-      "default": "xxxxxxx"
-    }
+  "INSTALL_CLUSTER_HPA": {
+    "debug": false,
+    "default": false
+  },
+  "INSTALL_CLUSTER_AUTOSCALER": {
+    "debug": true,
+    "default": false
+  },
+  "INSTALL_CLUSTER_DASHBOARD": {
+    "debug": true,
+    "default": false
+  },
+  "INSTALL_INGRESS_CONTROLER": {
+    "debug": true,
+    "default": false
   }
 }
