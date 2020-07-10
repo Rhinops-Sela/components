@@ -35,5 +35,3 @@ $DNS.AddEntries(
 kubectl get secret --namespace monitoring grafana -o jsonpath="{.data.admin-password}" | base64 --decode > "$($HelmChart.outputFolder)/grafana.out"
 
 
-
-
