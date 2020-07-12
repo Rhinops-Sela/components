@@ -1,0 +1,10 @@
+createCustomResource: true
+installCRDs: true
+nodeSelector:
+  role: system-workers
+webhook:
+  nodeSelector:
+    role: general
+cainjector:
+  nodeSelector:
+    role: general

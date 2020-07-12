@@ -17,6 +17,12 @@
     },
     {
       "controlType": "checkbox",
+      "tooltip": "Will ebable ingress and ELB creation for the cluster",
+      "displayName": "Install Nginx?",
+      "serverValue": "INSTALL_CLUSTER_NGINX"
+    },
+    {
+      "controlType": "checkbox",
       "group_enabler_master": "dashboard_installer",
       "tooltip": "Install Dashboard?",
       "displayName": "Install Dashboard?",
@@ -24,6 +30,7 @@
     },
     {
       "template": "dns-entry",
+      "tooltip": "Will only be avaliable if nginx component was installed",
       "sub_group": "dashboard_installer",
       "serverValue": "CLUSTER_DASHBOARD_URL"
     },

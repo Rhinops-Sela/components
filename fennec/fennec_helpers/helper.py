@@ -1,24 +1,23 @@
 import json
-import os
 import sys
-import subprocess
-import shlex
-from collections import namedtuple
 
 
 class Helper:
 
+    @staticmethod
     def exit(exit_code: int, message: str):
         print(message)
         sys.exit(exit_code)
 
+    @staticmethod
     def json_to_object(string_to_convert: str):
         try:
-            converted = json.loads(string_to_convert)
+            converted = json.loads(string_to_convert.replace('\n', ''))
             return converted
-        except:
+        except ValueError:
             print(string_to_convert)
 
+    @staticmethod
     def replace_in_file(source_file: str, output_file: str, strings_to_replace: dict, max=1):
         fin = open(source_file, "rt")
         fout = open(output_file, "wt")

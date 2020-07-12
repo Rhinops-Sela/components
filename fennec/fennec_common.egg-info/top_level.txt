@@ -1,2 +1,0 @@
-fennec_cluster
-fennec_execution

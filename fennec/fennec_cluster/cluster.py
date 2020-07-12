@@ -1,6 +1,6 @@
-from fennec_execution.execution import Execution
 import os
-
+from fennec_helpers import Helper
+from fennec_execution import Execution
 
 class Cluster:
     def __init__(self, execution: Execution) -> None:
@@ -20,7 +20,7 @@ class Cluster:
         if self.check_if_cluster_exists():
             print(
                 f"Cluster {self.execution.cluster_name} already exists in region {self.execution.cluster_region}")
-            return True
+            return
         cluster_file = os.path.join(
             self.execution.templates_folder, "00.cluster", "cluster.json")
         command = f'eksctl create cluster -f "{cluster_file}"'
@@ -31,7 +31,7 @@ class Cluster:
         if not self.check_if_cluster_exists():
             print(
                 f"Cluster {self.execution.cluster_name} doesn't exist in region {self.execution.cluster_region}")
-            return True
+            return
         cluster_file = os.path.join(
             self.execution.templates_folder, "00.cluster", "cluster.json")
         command = f'eksctl delete cluster -f "{cluster_file}"'

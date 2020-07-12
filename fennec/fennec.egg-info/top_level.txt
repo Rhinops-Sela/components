@@ -5,3 +5,4 @@ fennec_global_parameters
 fennec_helm
 fennec_helpers
 fennec_namespace
+fennec_ui_components
