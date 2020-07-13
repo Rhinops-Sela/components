@@ -79,7 +79,7 @@ class Kubectl():
         self.__execute_folder(folder, namespace, True)
 
     def install_file(self, file: str, namespace: str):
-        self.__execute_file(file, namespace, 'install')
+        self.__execute_file(file, namespace, 'apply')
 
     def patch_file(self, content: str, namespace: str, entity_type: str):
         self.run_command(
