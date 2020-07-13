@@ -1,41 +1,35 @@
-from fennec_execution import Execution
-from fennec_helpers import Helper
+from fennec_executers.kubectl_executer import Kubectl
 
 
 class Namespace:
-    @staticmethod
-    def create(execution: Execution, name: str):
-        if Namespace.check_if_exists(execution, name):
+
+    def __init__(self, kubectl: Kubectl) -> None:
+        self.kubectl = kubectl
+
+    def create(self, name: str):
+        if self.check_if_exists(name):
             print(f"namespace: {name} already exsits, skipping")
             return
-        execution.run_command(f"kubectl create ns {name}")
+        self.kubectl.create_namespace(name)
 
-    @staticmethod
-    def delete(execution: Execution, name: str, force=True):
-        if not Namespace.check_if_exists(execution, name):
+    def delete(self, name: str, force=True):
+        if not self.check_if_exists(name):
             print(f"namespace: {name} doesn't exsit, skipping")
             return
         delete = force
         if not force:
-            delete = Namespace.verify_empty_before_delete(execution, name)
+            delete = self.verify_empty_before_delete(name)
         if delete:
-            execution.run_command(f"kubectl delete ns {name}")
+            self.kubectl.delete_namespace(name)
         else:
             print(f"Namespace {name} contains resources, skipp deleting")
 
-    @staticmethod
-    def verify_empty_before_delete(execution: Execution, name: str) -> bool:
-        command = f"kubectl get all -n {name}"
-        results = execution.run_command(command).log
-        objects_in_namespace = Helper.json_to_object(results)
+    def verify_empty_before_delete(self, name: str) -> bool:
+        objects_in_namespace = self.kubectl.get_all(name)
         return True if not objects_in_namespace else False
 
-    @staticmethod
-    def check_if_exists(execution: Execution, name: str) -> bool:
-        get_ns_command = "kubectl get namespaces -o json"
-        namespaces_str = execution.run_command(
-            get_ns_command, show_output=False)
-        namespaces = Helper.json_to_object(namespaces_str.log)
+    def check_if_exists(self, name: str) -> bool:
+        namespaces = self.kubectl.get_object("namespace")
         for namespace in namespaces['items']:
             if namespace['metadata']['name'] == name:
                 return True

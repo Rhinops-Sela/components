@@ -82,13 +82,16 @@ class Execution:
             return parameter_value['debug']
         if os.getenv(parameter_name):
             return os.getenv(parameter_name)
-        if parameter_value['default']:
-            return parameter_value['default']
         return ''
 
     def get_global_parameter(self):
         return self.default_values['global']
 
+    def exeport_secret(self, file_name: str, content: str):
+        full_path = os.path.join(self.output_folder, file_name)
+        file = open(full_path, 'w+')
+        file.write(content)
+        file.close()
     # def get_parameters(self):
     #    self.default_values = json.load(self.default_values_file)
 

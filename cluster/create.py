@@ -6,13 +6,12 @@ from fennec_executers.helm_executer import Helm
 from fennec_executers.kubectl_executer import Kubectl
 from fennec_execution.execution import Execution
 from fennec_helpers.helper import Helper
-from fennec_namespace.namespace import Namespace
 
 
 execution = Execution(os.path.join(os.getcwd(), "cluster"))
 kubectl = Kubectl(execution)
 
-""" cluster = Cluster(execution)
+cluster = Cluster(execution)
 cluster.create()
 core_dns = CoreDNS(execution)
 core_dns.reset(os.path.join(execution.templates_folder,
@@ -37,7 +36,7 @@ install_HPA = execution.local_parameters['INSTALL_CLUSTER_HPA']
 if install_HPA:
     hpa_instsllation = os.path.join(
         execution.templates_folder, "04.hpa", "hpa.yaml")
-    Namespace.create(execution, "horizontal-pod-scaler")
+    kubectl.create("horizontal-pod-scaler")
     kubectl.install_file(hpa_instsllation, "horizontal-pod-scaler")
 
 
@@ -87,5 +86,7 @@ if install_cluster_dashboard:
         values_file_path, values_file_path_execution, values_to_replace)
     deployment_folder = os.path.join(
         execution.templates_folder, "07.dashboard")
-    kubectl.install_folder(deployment_folder, "dashaboard") """
-kubectl.export_secret("admin-user", "kube-system")
+    kubectl.install_folder(deployment_folder) 
+kubectl.export_secret(secret_name="admin-user",
+                      namespace="kube-system",
+                      output_file_name="dashboard")

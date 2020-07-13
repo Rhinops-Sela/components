@@ -1,12 +1,12 @@
 
-from fennec_core_dns.dns_record import DNSRecord
+from fennec_executers.base_executer import Kubectl
 from fennec_execution.execution import Execution
 import os
 
 
-class CoreDNS:
+class CoreDNS(Kubectl):
     def __init__(self, execution: Execution):
-        self.execution = execution
+        Kubectl.__init__(self, execution)
         self.namespace = "kube-system"
         self.anchor_str = "        rewrite name fennec.ai fennec.ai"
 
@@ -52,12 +52,12 @@ class CoreDNS:
             except:
                 print("skipping line")
         outF.close()
-        self.execution.run_command(
+        self.run_command(
             f"kubectl apply -f {output_file} -n {self.namespace }")
-        self.execution.run_command(
+        self.run_command(
             f"kubectl delete pods -l k8s-app=kube-dns -n {self.namespace }")
 
     def get_current_config(self) -> str:
         command = f"kubectl get configmaps coredns -o yaml -n {self.namespace}"
-        config_map = self.execution.run_command(command, show_output=False)
+        config_map = self.run_command(command, show_output=False)
         return config_map.log
