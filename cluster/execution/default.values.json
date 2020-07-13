@@ -3,11 +3,11 @@
     "debug": "arn:aws:iam::027065296145:user/iliag"
   },
   "INSTALL_CLUSTER_HPA": {
-    "debug": false,
+    "debug": true,
     "default": false
   },
   "INSTALL_CLUSTER_AUTOSCALER": {
-    "debug": false,
+    "debug": true,
     "default": false
   },
   "INSTALL_CLUSTER_DASHBOARD": {
@@ -19,7 +19,7 @@
     "default": ""
   },
   "INSTALL_INGRESS_CONTROLER": {
-    "debug": false,
+    "debug": true,
     "default": false
   }
 }
