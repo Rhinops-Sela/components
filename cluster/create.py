@@ -35,7 +35,7 @@ kubectl.patch_file(content, "kube-system", "configmap/aws-auth")
 install_HPA = execution.local_parameters['INSTALL_CLUSTER_HPA']
 if install_HPA:
     hpa_instsllation = os.path.join(
-        execution.templates_folder, "04.hpa", "hpa.yaml")
+        execution.templates_folder, "03.hpa", "hpa.yaml")
     kubectl.create_namespace("horizontal-pod-scaler")
     kubectl.install_file(hpa_instsllation, "horizontal-pod-scaler")
 
