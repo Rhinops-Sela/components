@@ -1,5 +1,5 @@
 import os
-from fennec_executers.base_executer import Kubectl
+from fennec_executers.kubectl_executer import Kubectl
 from fennec_helpers import Helper
 from fennec_execution import Execution
 
