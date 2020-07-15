@@ -1,5 +1,9 @@
 import json
+import subprocess
+from collections import namedtuple
 import os
+
+from fennec_helpers.helper import Helper
 
 class Execution:
     def __init__(self, working_folder: str):
@@ -92,6 +96,30 @@ class Execution:
         file = open(full_path, 'w+')
         file.write(content)
         file.close()
+
+    def run_command(self, command: str, show_output=True, continue_on_error=False, kubeconfig=True):
+        output_str = ""
+        if kubeconfig:
+            command = command + \
+                f" --kubeconfig {self.kube_config_file}"
+        process = subprocess.Popen(
+            ['/bin/bash', '-c', f'{command}'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        while True:
+            output = process.stdout.readline()
+            poll = process.poll()
+            if output:
+                output_str = output_str + output.decode('utf8')
+                if show_output:
+                    print(output.decode('utf8'))
+            if poll is not None:
+                break
+        command_result = namedtuple("output", ["exit_code", "log"])
+        rc = process.poll()
+
+        if rc != 0 and not continue_on_error:
+            Helper.exit(rc, output_str)
+
+        return command_result(rc, output_str)
     # def get_parameters(self):
     #    self.default_values = json.load(self.default_values_file)
 

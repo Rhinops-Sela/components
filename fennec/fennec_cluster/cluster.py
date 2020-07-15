@@ -9,7 +9,7 @@ class Cluster(Kubectl):
 
     def check_if_cluster_exists(self) -> bool:
         command = 'eksctl get clusters -o json'
-        clusters = self.run_command(
+        clusters = self.execution.run_command(
             command, show_output=False, kubeconfig=False).log
         clusters_object = Helper.json_to_object(clusters)
         for cluster in clusters_object:
@@ -25,7 +25,7 @@ class Cluster(Kubectl):
         cluster_file = os.path.join(
             self.execution.templates_folder, "00.cluster", "cluster.json")
         command = f'eksctl create cluster -f "{cluster_file}"'
-        self.run_command(command, kubeconfig=False)
+        self.execution.run_command(command, kubeconfig=False)
         self.execution.create_kubernetes_client()
 
     def delete(self):
@@ -36,4 +36,4 @@ class Cluster(Kubectl):
         cluster_file = os.path.join(
             self.execution.templates_folder, "00.cluster", "cluster.json")
         command = f'eksctl delete cluster -f "{cluster_file}"'
-        self.run_command(command, kubeconfig=False)
+        self.execution.run_command(command, kubeconfig=False)

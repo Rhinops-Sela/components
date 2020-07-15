@@ -4,8 +4,7 @@ from fennec_execution import Execution
 from fennec_helpers import Helper
 from fennec_execution.execution import Execution
 from fennec_helpers.helper import Helper
-import subprocess
-from collections import namedtuple
+
 
 
 class Kubectl():
@@ -14,13 +13,13 @@ class Kubectl():
 
     def export_secret(self, secret_name: str, namespace: str, output_file_name: str):
         command = f'kubectl get secret -n {namespace} --kubeconfig {self.execution.kube_config_file} | grep "{secret_name}"'
-        all_secrets_str = self.run_command(
+        all_secrets_str = self.execution.run_command(
             command, show_output=False, kubeconfig=False).log.split("\n")
         for secret in all_secrets_str:
             if not secret.rstrip(' '):
                 return
             secret_name = secret.split(' ')[0]
-            secret_content = self.run_command(
+            secret_content = self.execution.run_command(
                 f"kubectl get secret '{secret_name}' -o json -n {namespace}").log
             token = Helper.json_to_object(secret_content)[
                 'data']['token']
@@ -35,41 +34,16 @@ class Kubectl():
             set_values_str = f"{set_values_str} {set_value}"
         return set_values_str
 
-    def run_command(self, command: str, show_output=True, continue_on_error=False, kubeconfig=True):
-        output_str = ""
-        if kubeconfig:
-            command = command + \
-                f" --kubeconfig {self.execution.kube_config_file}"
-        process = subprocess.Popen(
-            ['/bin/bash', '-c', f'{command}'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        while True:
-            output = process.stdout.readline()
-            poll = process.poll()
-            if output:
-                output_str = output_str + output.decode('utf8')
-                if show_output:
-                    print(output.decode('utf8'))
-            if poll is not None:
-                break
-        command_result = namedtuple("output", ["exit_code", "log"])
-        rc = process.poll()
-
-        if rc != 0 and not continue_on_error:
-            Helper.exit(rc, output_str)
-
-        return command_result(rc, output_str)
-
-
     def get_all(self, namespace: str, output="json"):
         command = f"kubectl get all -n {namespace}"
-        result = self.run_command(command).log
+        result = self.execution.run_command(command).log
         return Helper.json_to_object(result) if output == "json" else result
 
     def get_object(self, object_kind: str, namespace: str = "all", output="json"):
         command = f"kubectl get {object_kind} -n {namespace}"
         if output == 'json':
             command += " -o json"
-        result = self.run_command(command, show_output=False).log
+        result = self.execution.run_command(command, show_output=False).log
         return Helper.json_to_object(result) if output == "json" else result
 
     def uninstall_folder(self, folder: str, namespace: str):
@@ -82,7 +56,7 @@ class Kubectl():
         self.__execute_file(file, namespace, 'apply')
 
     def patch_file(self, content: str, namespace: str, entity_type: str):
-        self.run_command(
+        self.execution.run_command(
             f"kubectl patch {entity_type} -n {namespace} --patch '{content}'")
 
     def uninstall_file(self, file: str, namespace: str):
@@ -90,7 +64,7 @@ class Kubectl():
 
     def __execute_file(self, file: str, namespace: str, verb: str):
         command = f"kubectl {verb} -f {file} -n {namespace}" if namespace else f"kubectl {verb} -f {file}"
-        self.run_command(command) 
+        self.execution.run_command(command) 
 
     def __execute_folder(self, folder: str, namespace: str, install: bool):
         files_execute = dict()
@@ -106,7 +80,7 @@ class Kubectl():
         if self.check_if_exists(name):
             print(f"namespace: {name} already exsits, skipping")
             return
-        self.run_command(f"kubectl create namespace {name}")
+        self.execution.run_command(f"kubectl create namespace {name}")
 
     def delete_namespace(self, name: str, force=True):
         if not self.check_if_exists(name):
@@ -116,7 +90,7 @@ class Kubectl():
         if not force:
             delete = self.verify_empty_before_delete(name)
         if delete:
-            self.run_command(f"kubectl delete namespace {name}")
+            self.execution.run_command(f"kubectl delete namespace {name}")
         else:
             print(f"Namespace {name} contains resources, skipp deleting")
 

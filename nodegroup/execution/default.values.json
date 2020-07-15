@@ -1,0 +1,48 @@
+{
+  "TAINTS": {
+    "debug": "fennec=true:NoSchedule;fennec1=true:NoSchedule"
+  },
+  "LABELS": {
+    "debug": "label1=fennec;label2=super_fennec"
+  },
+  "ADDITIONAL_ARNS": {
+    "debug": "label1=fennec;label2=super_fennec"
+  },
+  "TAGS": {
+    "debug": "fennec_tag=the best fennec;super_fennec_tag=super best fennec"
+  },
+  "NAME": {
+    "debug": "fennec-ng"
+  },
+  "MIN": {
+    "debug": 0,
+    "default": 0
+  },
+  "MAX": {
+    "debug": 2,
+    "default": 2
+  },
+  "DESIRED": {
+    "debug": 0,
+    "default": 0
+  },
+  "INSTANCE_TYPES": {
+    "debug": "t3.small,t2.small",
+    "default": "t3.small,t2.small"
+  },
+  "USE_PRIVATE_NETWROK": {
+    "debug": true
+  },
+  "SPOT": {
+    "debug": true
+  },
+  "ALLOCATION_STRATEGY": {
+    "debug": "lowest-price"
+  },
+  "ON_DEMEND_BASE_CAPACITY": {
+    "debug": 0
+  },
+  "ON_DEMEND_ABOCE_BASE_PERCENTAGE": {
+    "debug": 0
+  }
+}

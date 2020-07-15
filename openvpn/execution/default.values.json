@@ -1,0 +1,35 @@
+{
+  "TAINTS": {
+    "debug": "fennec=true:NoSchedule;fennec1=true:NoSchedule"
+  },
+  "LABELS": {
+    "debug": "label1=fennec;label2=super_fennec"
+  },
+  "ADDITIONAL_ARNS": {
+    "debug": "label1=fennec;label2=super_fennec"
+  },
+  "NAME": {
+    "debug": "fennec"
+  },
+  "MIN": {
+    "debug": 0,
+    "default": 0
+  },
+  "MAX": {
+    "debug": 2,
+    "default": 2
+  },
+  "DESIRED": {
+    "debug": 0,
+    "default": 0
+  },
+  "INSTANCE_TYPES": {
+    "debug": "t3.small,t2.small",
+    "default": "t3.small,t2.small"
+  },
+  "USE_PRIVATE_NETWROK": {
+    "debug": "t3.small,t2.small",
+    "default": "t3.small,t2.small"
+  }
+}
+

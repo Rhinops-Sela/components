@@ -1,5 +1,5 @@
 
-from fennec_executers.base_executer import Kubectl
+from fennec_executers.kubectl_executer import Kubectl
 from fennec_execution.execution import Execution
 import os
 
@@ -52,12 +52,12 @@ class CoreDNS(Kubectl):
             except:
                 print("skipping line")
         outF.close()
-        self.run_command(
+        self.execution.run_command(
             f"kubectl apply -f {output_file} -n {self.namespace }")
-        self.run_command(
+        self.execution.run_command(
             f"kubectl delete pods -l k8s-app=kube-dns -n {self.namespace }")
 
     def get_current_config(self) -> str:
         command = f"kubectl get configmaps coredns -o yaml -n {self.namespace}"
-        config_map = self.run_command(command, show_output=False)
+        config_map = self.execution.run_command(command, show_output=False)
         return config_map.log

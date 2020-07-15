@@ -1,4 +1,5 @@
 import json
+import os
 import sys
 
 
@@ -8,6 +9,26 @@ class Helper:
     def exit(exit_code: int, message: str):
         print(message)
         sys.exit(exit_code)
+
+    @staticmethod
+    def file_to_object(file_to_convert: str):
+        try:
+            file = open(file_to_convert)
+            converted = Helper.json_to_object(file.read())
+            return converted
+        except ValueError:
+            print(file_to_convert)
+
+    @staticmethod
+    def str_to_file(content: str, file_path: str):
+        try:
+            file = open(file_path, 'w')
+            file.write(content)
+            file.close()
+            Helper.replace_in_file(source_file = file_path, output_file = file_path, strings_to_replace = {"'": '"'}, max = 99999)
+            Helper.replace_in_file(source_file = file_path, output_file = file_path, strings_to_replace = {"True": "true"}, max = 99999)
+        except ValueError:
+            print(file_path)
 
     @staticmethod
     def json_to_object(string_to_convert: str):
@@ -20,7 +41,7 @@ class Helper:
     @staticmethod
     def replace_in_file(source_file: str, output_file: str, strings_to_replace: dict, max=1):
         fin = open(source_file, "rt")
-        fout = open(output_file, "wt")
+        fout =  open(output_file + "_temp", "wt") if source_file == output_file else open(output_file, "wt")
         file_content = ""
         for line in fin:
             file_content += line
@@ -31,4 +52,6 @@ class Helper:
         fout.write(file_content)
         fin.close()
         fout.close()
+        if source_file == output_file:
+            os.rename(output_file + "_temp", output_file)
         return file_content

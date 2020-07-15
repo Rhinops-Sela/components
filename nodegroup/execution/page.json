@@ -1,0 +1,50 @@
+{
+  "name": "cluster",
+  "stderrFail": true,
+  "executer": "pwsh",
+  "deletable": false,
+  "mandatory": false,
+  "displayName": "Cluster Definition",
+  "image": "assets/component_logos/k8s.png",
+  "description": "Please provide cluster information, if cluster doesn't exists it will be created",
+  "inputs": [
+    {
+      "controlType": "text",
+      "tooltip": "Admin ARN",
+      "displayName": "Admin ARN",
+      "regexValidation": ".*",
+      "serverValue": "AWS_ADMIN_USER"
+    },
+    {
+      "controlType": "checkbox",
+      "tooltip": "Will ebable ingress and ELB creation for the cluster",
+      "displayName": "Install Nginx?",
+      "serverValue": "INSTALL_CLUSTER_NGINX"
+    },
+    {
+      "controlType": "checkbox",
+      "group_enabler_master": "dashboard_installer",
+      "tooltip": "Install Dashboard?",
+      "displayName": "Install Dashboard?",
+      "serverValue": "INSTALL_CLUSTER_DASHBOARD"
+    },
+    {
+      "template": "dns-entry",
+      "tooltip": "Will only be avaliable if nginx component was installed",
+      "sub_group": "dashboard_installer",
+      "serverValue": "CLUSTER_DASHBOARD_URL"
+    },
+    {
+      "controlType": "checkbox",
+      "tooltip": "Cluster autoscaler automatically scales the nodes in a nodegroup",
+      "displayName": "Install Cluster Autoscaler?",
+      "serverValue": "INSTALL_CLUSTER_AUTOSCALER"
+    },
+    {
+      "controlType": "checkbox",
+      "tooltip": "Pods will be able to scale horizontally (more/less pods)",
+      "displayName": "Install Pod horizontal autoscaling (HPA)?",
+      "serverValue": "INSTALL_CLUSTER_HPA"
+    }
+  ]
+}
