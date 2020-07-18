@@ -6,18 +6,24 @@ from fennec_helpers.helper import Helper
 
 
 class Nodegroup():
-    def __init__(self, execution: Execution, node_group_name: str = "", template_path=""):
+    def __init__(self, working_folder: str, template_path=""):
+        self.execution = Execution(working_folder)
         self.template_path = template_path if template_path else os.path.join(os.path.dirname(
             os.path.realpath(__file__)), "templates", "generic-nodegrpup.json")
         self.template = Helper.file_to_object(self.template_path)
         self.nodegroup = self.template['nodeGroups'][0]
-        self.execution = execution
-        if node_group_name:
-            self.nodegroup['name'] = node_group_name
-        self.template['metadata']['name'] = execution.cluster_name
-        self.template['metadata']['region'] = execution.cluster_region
+        if "NODEGROUP_NAME" in self.execution.local_parameters:
+            self.nodegroup['name'] = self.execution.local_parameters["NODEGROUP_NAME"]
+        self.template['metadata']['name'] = self.execution.cluster_name
+        self.template['metadata']['region'] = self.execution.cluster_region
+        self.__add_instance_types__()
 
     def create(self):
+        self.add_tags()
+        self.__add_labels__()
+        self.__add_taints__()
+        if "SPOT" in self.execution.local_parameters and self.execution.local_parameters['SPOT']:
+            self.__set_spot_properties__()
         self.execution.run_command(
             f"eksctl create nodegroup -f {self.__create_execution_file__()}", kubeconfig=False)
 
@@ -32,12 +38,18 @@ class Nodegroup():
         Helper.str_to_file(str(self.template), execution_file)
         return execution_file
 
-    def add_instance_types(self, instance_types: str):
+    def __add_instance_types__(self):
+        if not "INSTANCE_TYPES" in self.execution.local_parameters:
+            return
+        instance_types = self.execution.local_parameters['INSTANCE_TYPES']
         for instance_type in instance_types.split(','):
             self.nodegroup['instancesDistribution']['instanceTypes'].append(
                 instance_type)
 
-    def add_taints(self, taints: str):
+    def __add_taints__(self):
+        if not "TAINTS" in self.execution.local_parameters:
+            return
+        taints = self.execution.local_parameters['TAINTS']
         if not taints:
             return
         modified_nodegroup = Nodegroup.add_properties(
@@ -47,7 +59,10 @@ class Nodegroup():
                 f'k8s.io/cluster-autoscaler/node-template/taint/{taint.split("=")[0]}=true:NoSchedule')
         self.nodegroup = modified_nodegroup
 
-    def add_labels(self, labels: str):
+    def __add_labels__(self):
+        if not "LABELS" in self.execution.local_parameters:
+            return
+        labels = self.execution.local_parameters['LABELS']
         if not labels:
             return
         modified_nodegroup = Nodegroup.add_properties(
@@ -57,14 +72,19 @@ class Nodegroup():
                 f'k8s.io/cluster-autoscaler/node-template/{label.split("=")[0]}={label.split("=")[1]}')
         self.nodegroup = modified_nodegroup
 
-    def add_tags(self, tags: str):
+    def add_tags(self, tags_custom: str = ""):
+        tags = tags_custom if tags_custom else ("TAGS" in self.execution.local_parameters and self.execution.local_parameters['TAGS'])
         if not tags:
             return
         modified_nodegroup = Nodegroup.add_properties(
             "tags", tags, self.nodegroup)
         self.nodegroup = modified_nodegroup
 
-    def set_spot_properties(self, on_demand_base_capacity='0', on_demand_percentage_above_base_capacity='0', spot_allocation_strategy="lowest-price"):
+    def __set_spot_properties__(self):
+        spot_allocation_strategy = self.execution.local_parameters['ALLOCATION_STRATEGY']
+        on_demand_base_capacity = self.execution.local_parameters['ON_DEMEND_BASE_CAPACITY']
+        on_demand_percentage_above_base_capacity = self.execution.local_parameters[
+            'ON_DEMEND_ABOCE_BASE_PERCENTAGE']
         instances_distribution = self.nodegroup['instancesDistribution']
         instances_distribution = self.add_properties('onDemandBaseCapacity',
                                                      on_demand_base_capacity, instances_distribution)

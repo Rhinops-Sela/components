@@ -1,11 +1,10 @@
 from fennec_executers.kubectl_executer import Kubectl
-from fennec_execution import Execution
 from fennec_helpers import Helper
 
 
 class Helm(Kubectl):
-    def __init__(self, execution: Execution, namespace: str, chart_name: str = "") -> None:
-        Kubectl.__init__(self, execution)
+    def __init__(self, working_folder: str, namespace: str, chart_name: str = "") -> None:
+        Kubectl.__init__(self, working_folder)
         self.namespace_name = namespace
         self.chart_name = chart_name if chart_name else self.namespace_name
 

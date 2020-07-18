@@ -1,13 +1,22 @@
 {
   "apiVersion": "eksctl.io/v1alpha5",
   "kind": "ClusterConfig",
+  "metadata": {
+    "name": "fennec-cluster",
+    "region": "eu-west-2"
+  },
   "nodeGroups": [
     {
       "name": "vpn",
+      "instancesDistribution": {
+        "instanceTypes": [
+          "t3.small"
+        ]
+      },
       "minSize": 1,
       "maxSize": 4,
       "desiredCapacity": 1,
-      "volumeSize": 100,
+      "volumeSize": 10,
       "volumeType": "gp2",
       "privateNetworking": true,
       "iam": {

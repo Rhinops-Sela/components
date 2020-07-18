@@ -1,16 +1,18 @@
 
-from fennec_executers.kubectl_executer import Kubectl
-from fennec_execution.execution import Execution
+import sys
+from fennec_core_dns.dns_record import DNSRecord
 import os
+from fennec_execution.execution import Execution
 
 
-class CoreDNS(Kubectl):
-    def __init__(self, execution: Execution):
-        Kubectl.__init__(self, execution)
+class CoreDNS():
+    def __init__(self, working_folder: str):
+        self.execution = Execution(working_folder)
         self.namespace = "kube-system"
         self.anchor_str = "        rewrite name fennec.ai fennec.ai"
 
-    def add_records(self, dns_records):
+    def add_records(self):
+        dns_records = self.__init_dns_recotds()
         consfig_map = self.get_current_config()
         new_config = [str]
         for config_line in consfig_map.splitlines():
@@ -23,19 +25,38 @@ class CoreDNS(Kubectl):
                 new_config.append(config_line)
         self.apply_changes(new_config)
 
-    def delete_records(self, dns_records):
+    def delete_records(self):
+        dns_records = self.__init_dns_recotds()
         consfig_map = self.get_current_config()
         new_config = [str]
-        for dns_record in dns_records:
-            for config_line in consfig_map.splitlines():
-                if self.anchor_str in f"{dns_record.source} {dns_record.target}":
+        for config_line in consfig_map.splitlines():
+            delete_line = False
+            for dns_record in dns_records:
+                if f"{dns_record.source} {dns_record.target}" in config_line:
                     print(
                         f"deleting dns record: source: {dns_record.source} target: {dns_record.target}")
-                else:
-                    new_config.append(config_line)
+                    delete_line = True   
+            if not delete_line:
+                new_config.append(config_line)
+
         self.apply_changes(new_config)
 
-    def reset(self, file_path: str):
+    def __init_dns_recotds(self, delimiter=";", inner_delimiter="="):
+        try:
+            dns_records_str = self.execution.local_parameters["DNS_RECORDS"]
+            dns_records = []
+            for dns_record in dns_records_str.split(delimiter):
+                source = dns_record.split(inner_delimiter)[0]
+                target = dns_record.split(inner_delimiter)[1]
+                dns_records.append(DNSRecord(source, target))
+            return dns_records
+        except:
+            sys.exit(
+                f"failed to parse dns_records_str, acceptable format: source{inner_delimiter}target{delimiter}source{inner_delimiter}target")
+
+    def reset(self, file_path_custom: str = ""):
+        file_path = file_path_custom if file_path_custom else os.path.join(self.execution.templates_folder,
+                                                                           "01.coredns", "configmap.yaml")
         with open(file_path) as f:
             content = f.readlines()
         return self.apply_changes(content, False)
@@ -52,10 +73,11 @@ class CoreDNS(Kubectl):
             except:
                 print("skipping line")
         outF.close()
+
         self.execution.run_command(
-            f"kubectl apply -f {output_file} -n {self.namespace }")
+            f"kubectl apply -f {output_file} -n {self.namespace}")
         self.execution.run_command(
-            f"kubectl delete pods -l k8s-app=kube-dns -n {self.namespace }")
+            f"kubectl delete pods -l k8s-app=kube-dns -n {self.namespace }", show_output=False)
 
     def get_current_config(self) -> str:
         command = f"kubectl get configmaps coredns -o yaml -n {self.namespace}"

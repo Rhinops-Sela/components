@@ -1,11 +1,10 @@
 import os
 from fennec_executers.kubectl_executer import Kubectl
 from fennec_helpers import Helper
-from fennec_execution import Execution
 
 class Cluster(Kubectl):
-    def __init__(self, execution: Execution) -> None:
-        Kubectl.__init__(self, execution)
+    def __init__(self, working_folder: str) -> None:
+        Kubectl.__init__(self, working_folder)
 
     def check_if_cluster_exists(self) -> bool:
         command = 'eksctl get clusters -o json'

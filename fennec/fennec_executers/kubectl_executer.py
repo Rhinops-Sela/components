@@ -8,8 +8,8 @@ from fennec_helpers.helper import Helper
 
 
 class Kubectl():
-    def __init__(self, execution: Execution) -> None:
-        self.execution = execution
+    def __init__(self, working_folder: str) -> None:
+        self.execution = Execution(working_folder)
 
     def export_secret(self, secret_name: str, namespace: str, output_file_name: str):
         command = f'kubectl get secret -n {namespace} --kubeconfig {self.execution.kube_config_file} | grep "{secret_name}"'

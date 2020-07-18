@@ -1,50 +1,67 @@
 {
-  "name": "cluster",
-  "stderrFail": true,
+  "name": "nodegroup",
   "executer": "pwsh",
-  "deletable": false,
+  "displayName": "NodeGroup",
   "mandatory": false,
-  "displayName": "Cluster Definition",
   "image": "assets/component_logos/k8s.png",
-  "description": "Please provide cluster information, if cluster doesn't exists it will be created",
+  "description": "Please Provide Information Regarding The NodGroup",
+  "repeatable": true,
   "inputs": [
     {
       "controlType": "text",
-      "tooltip": "Admin ARN",
-      "displayName": "Admin ARN",
+      "tooltip": "Node Group Name",
+      "displayName": "Name",
       "regexValidation": ".*",
-      "serverValue": "AWS_ADMIN_USER"
+      "serverValue": "NODEGROUP_NAME"
     },
     {
-      "controlType": "checkbox",
-      "tooltip": "Will ebable ingress and ELB creation for the cluster",
-      "displayName": "Install Nginx?",
-      "serverValue": "INSTALL_CLUSTER_NGINX"
+      "template": "autoscaling-maximum"
     },
     {
-      "controlType": "checkbox",
-      "group_enabler_master": "dashboard_installer",
-      "tooltip": "Install Dashboard?",
-      "displayName": "Install Dashboard?",
-      "serverValue": "INSTALL_CLUSTER_DASHBOARD"
+      "template": "autoscaling-minimum"
     },
     {
-      "template": "dns-entry",
-      "tooltip": "Will only be avaliable if nginx component was installed",
-      "sub_group": "dashboard_installer",
-      "serverValue": "CLUSTER_DASHBOARD_URL"
+      "template": "autoscaling-desired"
     },
     {
-      "controlType": "checkbox",
-      "tooltip": "Cluster autoscaler automatically scales the nodes in a nodegroup",
-      "displayName": "Install Cluster Autoscaler?",
-      "serverValue": "INSTALL_CLUSTER_AUTOSCALER"
+      "template": "instance-select",
+      "options": [
+        "t3.small",
+        "t2.small",
+        "t3.large",
+        "t2.large"
+      ]
     },
     {
-      "controlType": "checkbox",
-      "tooltip": "Pods will be able to scale horizontally (more/less pods)",
-      "displayName": "Install Pod horizontal autoscaling (HPA)?",
-      "serverValue": "INSTALL_CLUSTER_HPA"
-    }
+      "template": "private-network"
+    },
+    {
+      "template": "spot"
+    },
+    {
+      "template": "spot-allocation"
+    },
+    {
+      "controlType": "text",
+      "tooltip": "Number of instances",
+      "displayName": "On-Demand Instances",
+      "regexValidation": "^[0-9]*$",
+      "serverValue": "ON_DEMEND_BASE_CAPACITY"
+    },
+    {
+      "template": "taints"
+    },
+    {
+      "controlType": "textarea",
+      "tooltip": "Please provide list ARN's polices to attach ; seperated",
+      "displayName": "ARN's",
+      "serverValue": "ADDITIONAL_ARNS"
+    },
+      {
+        "controlType": "textarea",
+        "tooltip": "Labels to be added to the node i.e label1=value1;label2=value2",
+        "displayName": "Labels",
+        "serverValue": "LABELS"
+      }
   ]
 }

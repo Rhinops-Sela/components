@@ -11,7 +11,7 @@
   "TAGS": {
     "debug": "fennec_tag=the best fennec;super_fennec_tag=super best fennec"
   },
-  "NAME": {
+  "NODEGROUP_NAME": {
     "debug": "fennec-ng"
   },
   "MIN": {
