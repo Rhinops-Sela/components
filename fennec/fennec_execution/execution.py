@@ -80,6 +80,8 @@ class Execution:
         self.__kube_config_file = os.path.join(self.working_folder, '.kube')
         os.system(
             f'aws eks update-kubeconfig --name {self.cluster_name} --kubeconfig {self.kube_config_file}')
+        Helper.copy_file(self.kube_config_file, os.path.join(self.output_folder, ".kube"))
+
 
     def calculate_variable_value(self, parameter_name, parameter_value) -> str:
         if self.debug:
@@ -100,8 +102,7 @@ class Execution:
     def run_command(self, command: str, show_output=True, continue_on_error=False, kubeconfig=True):
         output_str = ""
         if kubeconfig:
-            command = command + \
-                f" --kubeconfig {self.kube_config_file}"
+            os.environ['KUBECONFIG'] = self.kube_config_file
         process = subprocess.Popen(
             ['/bin/bash', '-c', f'{command}'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         while True:

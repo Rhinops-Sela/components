@@ -1,5 +1,6 @@
 import json
 import os
+import shutil
 import sys
 
 
@@ -33,10 +34,15 @@ class Helper:
     @staticmethod
     def json_to_object(string_to_convert: str):
         try:
-            converted = json.loads(string_to_convert.replace('\n', ''))
+            fixed_str = string_to_convert.replace('\n', '')            
+            converted = json.loads(fixed_str)
             return converted
         except ValueError:
             print(string_to_convert)
+
+    @staticmethod
+    def copy_file(source: str, target: str):
+        shutil.copy(source, target)
 
     @staticmethod
     def replace_in_file(source_file: str, output_file: str, strings_to_replace: dict, max=1):

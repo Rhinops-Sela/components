@@ -6,7 +6,6 @@ from fennec_execution.execution import Execution
 from fennec_helpers.helper import Helper
 
 
-
 class Kubectl():
     def __init__(self, working_folder: str) -> None:
         self.execution = Execution(working_folder)
@@ -64,7 +63,7 @@ class Kubectl():
 
     def __execute_file(self, file: str, namespace: str, verb: str):
         command = f"kubectl {verb} -f {file} -n {namespace}" if namespace else f"kubectl {verb} -f {file}"
-        self.execution.run_command(command) 
+        self.execution.run_command(command)
 
     def __execute_folder(self, folder: str, namespace: str, install: bool):
         files_execute = dict()
@@ -74,7 +73,8 @@ class Kubectl():
             if not original_name in files_execute or '-execute' in path.name:
                 files_execute[original_name] = os.path.join(folder, path.name)
         for file_to_execute in files_execute.keys():
-            self.__execute_file(files_execute[file_to_execute], namespace, verb)
+            self.__execute_file(
+                files_execute[file_to_execute], namespace, verb)
 
     def create_namespace(self, name: str):
         if self.check_if_exists(name):
@@ -99,8 +99,8 @@ class Kubectl():
         return True if not objects_in_namespace else False
 
     def check_if_exists(self, name: str) -> bool:
-        namespaces = self.get_object("namespace")
-        for namespace in namespaces['items']:
-            if namespace['metadata']['name'] == name:
+        namespaces = self.execution.run_command("kubectl get namespace -n all").log
+        for namespace in namespaces.split('\n'):
+            if name in namespace:
                 return True
         return False

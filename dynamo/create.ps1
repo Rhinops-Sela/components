@@ -18,7 +18,7 @@ if ($debug -Match 'NAME'){
 {
   $instanceTypes = '${INSTANCE_TYPES}'
   $useSpot = '${USE_SPOT}'
-  $onDenmandInstances = ${ON_DEMAND_INSTANCES}
+  $onDenmandInstances = ${ON_DEMEND_BASE_CAPACITY}
   $spotAllocationStrategy = 'lowest-price'
   $createdNamespace = '${NAMESPACE}'
 }

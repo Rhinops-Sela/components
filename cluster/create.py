@@ -43,7 +43,7 @@ if install_cluster_autoscaler:
     cluster_auto_scaler_chart = Helm(working_folder, "cluster-autoscaler")
     values_file_path = os.path.join(
         execution.templates_folder, "04.cluster-autoscaler", "auto_scaler.yaml")
-    cluster_auto_scaler_chart.install(release_name="stable", chart_url="https://kubernetes-charts.storage.googleapis.com",
+    cluster_auto_scaler_chart.install_chart(release_name="stable", chart_url="https://kubernetes-charts.storage.googleapis.com",
                  additional_values=[
                      f"--values {values_file_path}",
                      f"--set autoDiscovery.clusterName={execution.cluster_name}",
@@ -57,14 +57,14 @@ if install_ingress_controller:
     nginx_chart = Helm(working_folder, "nginx-ingress")
     values_file_path = os.path.join(
         execution.templates_folder, "06.nginx", "nginx_values.yaml")
-    nginx_chart.install(release_name="stable", additional_values=[
+    nginx_chart.install_chart(release_name="stable", additional_values=[
                  f"--values {values_file_path}"])
 
  # Install cert-manager
 cert_manater_chart = Helm(working_folder, "cert-manager")
 values_file_path = os.path.join(
     execution.templates_folder, "05.cert-manager", "cert-manager_values.yaml")
-cert_manater_chart.install(release_name="jetstack",  chart_url="https://charts.jetstack.io",
+cert_manater_chart.install_chart(release_name="jetstack",  chart_url="https://charts.jetstack.io",
              additional_values=[f"--values {values_file_path}"])
 
 cluster.install_folder(folder = os.path.join(

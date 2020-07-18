@@ -22,7 +22,7 @@ class Helm(Kubectl):
             f"chart: {self.chart_name} in namespace: {self.namespace_name} not installed")
         return False
 
-    def install(self, release_name: str, chart_url: str = "", additional_values=[]):
+    def install_chart(self, release_name: str, chart_url: str = "", additional_values=[]):
         verb = "upgrade" if self.installed else "install"
         if chart_url:
             self.execution.run_command(
@@ -32,7 +32,7 @@ class Helm(Kubectl):
         install_command = f"helm {verb} --wait --timeout 3600s {self.chart_name} {release_name}/{self.chart_name} -n {self.namespace_name} {self.combine_additoinal_values(additional_values)}"
         self.execution.run_command(install_command)
 
-    def uninstall(self):
+    def uninstall_chart(self):
         if self.installed:
             print("uninstalling...")
             uninstall_command = f"helm uninstall {self.chart_name} -n {self.namespace_name}"

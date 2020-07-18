@@ -7,5 +7,5 @@
   ],
   "value": "lowest-price",
   "regexValidation": ".*",
-  "serverValue": "SPOT_ALLOCATION_STRATEGY"
+  "serverValue": "ALLOCATION_STRATEGY"
 }

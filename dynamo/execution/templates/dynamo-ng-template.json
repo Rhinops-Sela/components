@@ -7,15 +7,12 @@
   },
   "nodeGroups": [
     {
-      "name": "openvpn",
+      "name": "dynamo",
       "labels":{
-        "role": "openvpn"
+        "role": "dynamodb"
       },
       "instancesDistribution": {
-        "instanceTypes": [
-          "t3.small",
-          "t2.small"
-        ]
+        "instanceTypes": []
       },
       "minSize": 1,
       "maxSize": 4,
@@ -29,10 +26,10 @@
         }
       },
       "tags": {
-        "k8s.io/cluster-autoscaler/node-template/role": "openvpn",
-        "k8s.io/cluster-autoscaler/node-template/taint/openvpn": "true:NoSchedule"
+        "k8s.io/cluster-autoscaler/node-template/role": "dynamodb",
+        "k8s.io/cluster-autoscaler/node-template/taint/dynamodb": "true:NoSchedule"
       },
-      "taints": { "openvpn": "true:NoSchedule"}
+      "taints": { "dynamodb": "true:NoSchedule"}
     }
   ]
 }

@@ -94,7 +94,7 @@
       "sub_group": "use_spot",
       "tooltip": "How many on demand instances will be created",
       "displayName": "# of On Demand Instances to Use",
-      "serverValue": "ON_DEMAND_INSTANCES",
+      "serverValue": "ON_DEMEND_BASE_CAPACITY",
       "regexValidation": ".*"
     }
     {
@@ -148,7 +148,7 @@
 <b>options</b> - List of possible options for the select control<br />
 <b>regexValidation</b> - Regex expressions used to validate the user input if set this field will become mandatory.<br />
 <b>serverValue</b> - This will be the variable name during create/delete execution<br />
-<b>group_enabler_master</b> - The contorl type must be checkbox, when selected all inputs with sub_group property which have the same vlue will be added to the form when spot is checked ON_DEMAND_INSTANCES will be also displayed.<br />
+<b>group_enabler_master</b> - The contorl type must be checkbox, when selected all inputs with sub_group property which have the same vlue will be added to the form when spot is checked ON_DEMEND_BASE_CAPACITY will be also displayed.<br />
 
 ** When using pre-defined inputs it's possible to overwrite their value's by adding the to the input object:
   ```json
@@ -166,7 +166,7 @@
 {
    "local": [
      {
-       "ON_DEMAND_INSTANCES": 5
+       "ON_DEMEND_BASE_CAPACITY": 5
      },
      {
        "REDIS_DNS_RECORD": "redis.fennec.io",

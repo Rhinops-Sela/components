@@ -1,10 +1,10 @@
 tolerations:
-- key: "vpn"
+- key: "openvpn"
   operator: "Equal"
   value: "true"
   effect: "NoSchedule"
 nodeSelector:
-  role: vpn
+  role: openvpn
 persistence:
   enabled: true
   accessMode: ReadWriteOnce

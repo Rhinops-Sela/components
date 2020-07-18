@@ -1,5 +1,5 @@
 {
-  "ON_DEMAND_INSTANCES": {
+  "ON_DEMEND_BASE_CAPACITY": {
     "debug": 5,
     "default": 0
   },

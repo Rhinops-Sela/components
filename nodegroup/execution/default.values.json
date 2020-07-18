@@ -12,7 +12,7 @@
     "debug": "fennec_tag=the best fennec;super_fennec_tag=super best fennec"
   },
   "NODEGROUP_NAME": {
-    "debug": "fennec-ng"
+    "debug": "fennec-demo-ng"
   },
   "MIN": {
     "debug": 0,
@@ -33,7 +33,7 @@
   "USE_PRIVATE_NETWROK": {
     "debug": true
   },
-  "SPOT": {
+  "USE_SPOT": {
     "debug": true
   },
   "ALLOCATION_STRATEGY": {
@@ -42,7 +42,13 @@
   "ON_DEMEND_BASE_CAPACITY": {
     "debug": 0
   },
-  "ON_DEMEND_ABOCE_BASE_PERCENTAGE": {
+  "ON_DEMEND_ABOVE_BASE_PERCENTAGE": {
     "debug": 0
+  },
+  "NODE_VOLUME_SIZE": {
+    "debug": 10
+  },
+  "NODE_ROLE": {
+    "debug": "general"
   }
 }

@@ -20,9 +20,15 @@ class Nodegroup():
 
     def create(self):
         self.add_tags()
+        self.__add_node_role()
         self.__add_labels__()
         self.__add_taints__()
-        if "SPOT" in self.execution.local_parameters and self.execution.local_parameters['SPOT']:
+        self.__set_volume_size()
+        self.__set_initial_scale()
+        self.__set_min_scale()
+        self.__set_max_scale()
+
+        if "USE_SPOT" in self.execution.local_parameters and self.execution.local_parameters['USE_SPOT']:
             self.__set_spot_properties__()
         self.execution.run_command(
             f"eksctl create nodegroup -f {self.__create_execution_file__()}", kubeconfig=False)
@@ -50,8 +56,6 @@ class Nodegroup():
         if not "TAINTS" in self.execution.local_parameters:
             return
         taints = self.execution.local_parameters['TAINTS']
-        if not taints:
-            return
         modified_nodegroup = Nodegroup.add_properties(
             "taints", taints, self.nodegroup)
         for taint in taints.split(';'):
@@ -59,21 +63,51 @@ class Nodegroup():
                 f'k8s.io/cluster-autoscaler/node-template/taint/{taint.split("=")[0]}=true:NoSchedule')
         self.nodegroup = modified_nodegroup
 
+    def __add_node_role(self):
+        if not "NODE_ROLE" in self.execution.local_parameters:
+            return
+        labels = f"role={self.execution.local_parameters['NODE_ROLE']}"
+        modified_nodegroup = Nodegroup.add_properties(
+            "labels", labels, self.nodegroup)
+        self.add_tags(
+            f'k8s.io/cluster-autoscaler/node-template/{labels.split("=")[0]}={labels.split("=")[1]}')
+        self.nodegroup = modified_nodegroup
+
     def __add_labels__(self):
         if not "LABELS" in self.execution.local_parameters:
             return
         labels = self.execution.local_parameters['LABELS']
-        if not labels:
-            return
         modified_nodegroup = Nodegroup.add_properties(
             "labels", labels, self.nodegroup)
-        for label in labels.split(';'):
-            self.add_tags(
-                f'k8s.io/cluster-autoscaler/node-template/{label.split("=")[0]}={label.split("=")[1]}')
         self.nodegroup = modified_nodegroup
 
+    def __set_volume_size(self):
+        if not "NODE_VOLUME_SIZE" in self.execution.local_parameters:
+            return
+        volume_size = self.execution.local_parameters['NODE_VOLUME_SIZE']
+        self.nodegroup["volumeSize"] = volume_size
+
+    def __set_initial_scale(self):
+        if not "DESIRED" in self.execution.local_parameters:
+            return
+        volume_size = self.execution.local_parameters['DESIRED']
+        self.nodegroup["desiredCapacity"] = volume_size
+
+    def __set_min_scale(self):
+        if not "MIN" in self.execution.local_parameters:
+            return
+        volume_size = self.execution.local_parameters['MIN']
+        self.nodegroup["minSize"] = volume_size
+
+    def __set_max_scale(self):
+        if not "MAX" in self.execution.local_parameters:
+            return
+        volume_size = self.execution.local_parameters['MAX']
+        self.nodegroup["maxSize"] = volume_size
+
     def add_tags(self, tags_custom: str = ""):
-        tags = tags_custom if tags_custom else ("TAGS" in self.execution.local_parameters and self.execution.local_parameters['TAGS'])
+        tags = tags_custom if tags_custom else (
+            "TAGS" in self.execution.local_parameters and self.execution.local_parameters['TAGS'])
         if not tags:
             return
         modified_nodegroup = Nodegroup.add_properties(
@@ -84,7 +118,7 @@ class Nodegroup():
         spot_allocation_strategy = self.execution.local_parameters['ALLOCATION_STRATEGY']
         on_demand_base_capacity = self.execution.local_parameters['ON_DEMEND_BASE_CAPACITY']
         on_demand_percentage_above_base_capacity = self.execution.local_parameters[
-            'ON_DEMEND_ABOCE_BASE_PERCENTAGE']
+            'ON_DEMEND_ABOVE_BASE_PERCENTAGE']
         instances_distribution = self.nodegroup['instancesDistribution']
         instances_distribution = self.add_properties('onDemandBaseCapacity',
                                                      on_demand_base_capacity, instances_distribution)
