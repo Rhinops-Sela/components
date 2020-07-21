@@ -11,8 +11,9 @@ class CoreDNS():
         self.namespace = "kube-system"
         self.anchor_str = "        rewrite name fennec.ai fennec.ai"
 
-    def add_records(self):
-        dns_records = self.__init_dns_recotds()
+
+    def add_records(self, dns_records: str, delimiter=";", inner_delimiter="="):
+        dns_records = self.__init_dns_recotds(dns_records, delimiter, inner_delimiter)
         consfig_map = self.get_current_config()
         new_config = [str]
         for config_line in consfig_map.splitlines():
@@ -25,8 +26,8 @@ class CoreDNS():
                 new_config.append(config_line)
         self.apply_changes(new_config)
 
-    def delete_records(self):
-        dns_records = self.__init_dns_recotds()
+    def delete_records(self, dns_records: str, delimiter=";", inner_delimiter="="):
+        dns_records = self.__init_dns_recotds(dns_records, delimiter, inner_delimiter)
         consfig_map = self.get_current_config()
         new_config = [str]
         for config_line in consfig_map.splitlines():
@@ -35,15 +36,14 @@ class CoreDNS():
                 if f"{dns_record.source} {dns_record.target}" in config_line:
                     print(
                         f"deleting dns record: source: {dns_record.source} target: {dns_record.target}")
-                    delete_line = True   
+                    delete_line = True
             if not delete_line:
                 new_config.append(config_line)
 
         self.apply_changes(new_config)
 
-    def __init_dns_recotds(self, delimiter=";", inner_delimiter="="):
+    def __init_dns_recotds(self, dns_records_str: str, delimiter: str, inner_delimiter: str):
         try:
-            dns_records_str = self.execution.local_parameters["DNS_RECORDS"]
             dns_records = []
             for dns_record in dns_records_str.split(delimiter):
                 source = dns_record.split(inner_delimiter)[0]

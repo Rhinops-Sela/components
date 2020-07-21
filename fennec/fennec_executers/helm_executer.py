@@ -3,9 +3,9 @@ from fennec_helpers import Helper
 
 
 class Helm(Kubectl):
-    def __init__(self, working_folder: str, namespace: str, chart_name: str = "") -> None:
+    def __init__(self, working_folder: str, namespace: str = "NAMESPACE", chart_name: str = "") -> None:
         Kubectl.__init__(self, working_folder)
-        self.namespace_name = namespace
+        self.namespace_name = self.execution.local_parameters[namespace] if namespace in self.execution.local_parameters else namespace
         self.chart_name = chart_name if chart_name else self.namespace_name
 
     @property
