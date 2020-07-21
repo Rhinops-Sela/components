@@ -1,9 +1,11 @@
 import os
 from fennec_executers.kubectl_executer import Kubectl
 from fennec_helpers import Helper
+from fennec_core_dns.core_dns import CoreDNS
 
 class Cluster(Kubectl):
     def __init__(self, working_folder: str) -> None:
+        self.working_folder = working_folder
         Kubectl.__init__(self, working_folder)
 
     def check_if_cluster_exists(self) -> bool:
@@ -26,6 +28,7 @@ class Cluster(Kubectl):
         command = f'eksctl create cluster -f "{cluster_file}"'
         self.execution.run_command(command, kubeconfig=False)
         self.execution.create_kubernetes_client()
+        CoreDNS(self.working_folder).reset()
 
     def delete(self):
         if not self.check_if_cluster_exists():
