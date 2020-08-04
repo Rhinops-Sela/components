@@ -1,0 +1,13 @@
+{
+  "name": "grafana",
+  "executer": "python",
+  "displayName": "Grafana",
+  "image": "assets/component_logos/grafana.png",
+  "description": "Grafana configuration & parameters",
+  "inputs": [
+    {
+      "template": "dns-entry",
+      "serverValue": "GRAFANA_DNS_RECORD"
+    }
+  ]
+}

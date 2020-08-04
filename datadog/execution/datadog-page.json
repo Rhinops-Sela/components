@@ -1,0 +1,19 @@
+{
+  "name": "datadog",
+  "executer": "python",
+  "displayName": "Datadog Logging",
+  "image": "assets/component_logos/datadog.png",
+  "description": "Datadog configuration & parameters",
+  "inputs": [
+    {
+      "template": "password",
+      "tooltip": "API Key",
+      "serverValue" :"DD_API_KEY"
+    },
+    {
+      "template": "password",
+      "tooltip": "APP Key",
+      "serverValue": "DD_APP_KEY"
+    }
+  ]
+}

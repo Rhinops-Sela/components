@@ -1,0 +1,35 @@
+{
+  "apiVersion": "eksctl.io/v1alpha5",
+  "kind": "ClusterConfig",
+  "metadata": {
+    "name": "fennec",
+    "region": "eu-west-2"
+  },
+  "nodeGroups": [
+    {
+      "name": "dynamo",
+      "labels": {
+        "role": "dynamodb"
+      },
+      "instancesDistribution": {
+        "instanceTypes": ["m5.large", "m5.xlarge", "m5.2xlarge"]
+      },
+      "minSize": 1,
+      "maxSize": 4,
+      "desiredCapacity": 1,
+      "volumeSize": 10,
+      "volumeType": "gp2",
+      "privateNetworking": true,
+      "iam": {
+        "withAddonPolicies": {
+          "autoScaler": true
+        }
+      },
+      "tags": {
+        "k8s.io/cluster-autoscaler/node-template/role": "dynamodb",
+        "k8s.io/cluster-autoscaler/node-template/taint/dynamodb": "true:NoSchedule"
+      },
+      "taints": { "dynamodb": "true:NoSchedule" }
+    }
+  ]
+}

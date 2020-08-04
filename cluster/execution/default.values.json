@@ -1,0 +1,25 @@
+{
+  "ADMIN_ARN": {
+    "debug": "arn:aws:iam::027065296145:user/iliag"
+  },
+  "INSTALL_CLUSTER_HPA": {
+    "debug": true,
+    "default": false
+  },
+  "INSTALL_CLUSTER_AUTOSCALER": {
+    "debug": true,
+    "default": false
+  },
+  "INSTALL_CLUSTER_DASHBOARD": {
+    "debug": true,
+    "default": false
+  },
+  "CLUSTER_DASHBOARD_URL": {
+    "debug": "dashboard.fennec.io",
+    "default": ""
+  },
+  "INSTALL_INGRESS_CONTROLER": {
+    "debug": true,
+    "default": false
+  }
+}

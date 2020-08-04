@@ -1,0 +1,12 @@
+{
+  "controlType": "select",
+  "tooltip": "Please select the region",
+  "displayName": "Region",
+  "options": [
+    "eu-west-1",
+    "eu-west-2"
+  ],
+  "regexValidation": ".*",
+  "serverValue": "REGION",
+  "global": true
+}

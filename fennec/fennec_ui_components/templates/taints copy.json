@@ -1,0 +1,6 @@
+{
+  "controlType": "textarea",
+  "tooltip": "List of node taints i.e taint1=true:NoSchedule;taint2=true:NoSchedule",
+  "displayName": "Node Taints",
+  "serverValue": "TAINTS"
+}

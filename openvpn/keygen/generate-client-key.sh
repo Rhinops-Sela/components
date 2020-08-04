@@ -2,7 +2,7 @@
 
 if [ $# -ne 4 ]
 then
-  echo "Usage: $0 <NAMESPACE> <HELM_RELEASE> <USER_LIST> <OUTPUT_FOLDER>"
+  echo "Usage: $0 <USER_LIST> <NAMESPACE> <HELM_RELEASE> <OUTPUT_FOLDER>"
   exit
 fi
 

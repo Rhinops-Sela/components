@@ -1,0 +1,54 @@
+{
+  "name": "dynamo",
+  "executer": "python",
+  "displayName": "DynamoDB",
+  "image": "assets/component_logos/dynamo.png",
+  "description": "DynamoDB configuration & parameters",
+  "inputs": [
+    {
+      "controlType": "text",
+      "tooltip": "Please select the namespace",
+      "displayName": "Namespace",
+      "regexValidation": ".*",
+      "serverValue": "NAMESPACE"
+    },
+    {
+      "template": "dns-entry",
+      "serverValue": "DYNAMO_DNS_RECORD",
+      "displayName": "DynamoDb DNS Record"
+    },
+    {
+      "template": "dns-entry",
+      "serverValue": "ADMIN_DNS_RECORD",
+      "displayName": "DynamoDb Admin DNS Record"
+    },
+    {
+      "template": "autoscaling-maximum"
+    },
+    {
+      "template": "autoscaling-minimum"
+    },
+    {
+      "template": "autoscaling-desired"
+    },
+    {
+      "template": "node-volume-size"
+    },
+    {
+      "template": "spot",
+      "group_enabler_master": "use_spot"
+    },
+    {
+      "template": "spot-on-demand-base-capacity",
+      "sub_group": "use_spot"
+    },
+    {
+      "template": "spot-on-demand-cpacity",
+      "sub_group": "use_spot"
+    },
+    {
+      "template": "spot-allocation",
+      "sub_group": "use_spot"
+    }
+  ]
+}

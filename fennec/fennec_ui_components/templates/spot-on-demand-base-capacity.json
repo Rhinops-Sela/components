@@ -1,0 +1,7 @@
+{
+  "controlType": "text",
+  "tooltip": "Number of instances",
+  "displayName": "On-Demand Instances",
+  "regexValidation": "^[0-9]*$",
+  "serverValue": "ON_DEMEND_BASE_CAPACITY"
+}

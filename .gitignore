@@ -1,5 +1,5 @@
 output/
 outputs/
 *.kube
-*-execute.json
-*-execute.yaml
+*-execute*.json
+*-execute*.yaml
