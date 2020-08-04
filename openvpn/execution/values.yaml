@@ -1,0 +1,11 @@
+tolerations:
+- key: "openvpn"
+  operator: "Equal"
+  value: "true"
+  effect: "NoSchedule"
+nodeSelector:
+  role: openvpn
+persistence:
+  enabled: true
+  accessMode: ReadWriteOnce
+  size: 1Gi

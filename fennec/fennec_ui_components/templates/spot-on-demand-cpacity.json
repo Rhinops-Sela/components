@@ -1,0 +1,7 @@
+{
+  "controlType": "text",
+  "tooltip": "How many on demand additonal instances will be created",
+  "displayName": "# of On Demand Additonal Instances to Use",
+  "serverValue": "ON_DEMEND_ABOVE_BASE_PERCENTAGE",
+  "regexValidation": ".*"
+}

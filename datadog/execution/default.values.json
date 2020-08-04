@@ -1,0 +1,9 @@
+{
+  "DD_API_KEY": {
+    "debug": "DD_API_KEY"
+  },
+  "DD_APP_KEY": {
+    "debug": "DD_APP_KEY"
+  }
+}
+

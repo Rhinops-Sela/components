@@ -1,0 +1,32 @@
+{
+  "USE_SPOT": {
+    "debug": true
+  },
+  "ALLOCATION_STRATEGY": {
+    "debug": "lowest-price"
+  },
+  "ON_DEMEND_BASE_CAPACITY": {
+    "debug": 0
+  },
+  "ON_DEMEND_ABOVE_BASE_PERCENTAGE": {
+    "debug": 0
+  },
+  "NAMESPACE": {
+    "debug": "redis"
+  },
+  "NUMBER_SLAVES":{
+    "debug": 1
+  },
+  "EXTRA_FLAGS":{
+    "debug": "--maxmemory-policy allkeys-lru"
+  },
+  "DISABLED_COMMANDS":{
+    "debug": "FLUSHDB"
+  },
+  "REDIS_DNS_RECORD":{
+    "debug": "redis.fennec.io"
+  },
+  "REDIS_ADMIN_DNS_RECORD":{
+    "debug": "redis-ui.fennec.io"
+  }
+}

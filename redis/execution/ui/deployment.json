@@ -1,0 +1,51 @@
+{
+  "apiVersion": "apps/v1",
+  "kind": "Deployment",
+  "metadata": {
+    "name": "redis-ui"
+  },
+  "spec": {
+    "selector": {
+      "matchLabels": {
+        "run": "redis-ui"
+      }
+    },
+    "replicas": 1,
+    "template": {
+      "metadata": {
+        "labels": {
+          "run": "redis-ui"
+        }
+      },
+      "spec": {
+        "tolerations": [
+          {
+            "key": "redis",
+            "operator": "Equal",
+            "value": "true"
+          }
+        ],
+        "containers": [
+          {
+            "name": "redisui",
+            "image": "rediscommander/redis-commander",
+            "env": [
+              {
+                "name": "REDIS_HOST",
+                "value": ""
+              }
+            ],
+            "ports": [
+              {
+                "containerPort": 8081
+              }
+            ]
+          }
+        ],
+        "nodeSelector": {
+          "role": "redis"
+        }
+      }
+    }
+  }
+}

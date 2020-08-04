@@ -1,0 +1,38 @@
+{
+  "apiVersion": "eksctl.io/v1alpha5",
+  "kind": "ClusterConfig",
+  "metadata": {
+    "name": "fennec",
+    "region": "eu-west-2"
+  },
+  "nodeGroups": [
+    {
+      "name": "openvpn",
+      "labels":{
+        "role": "openvpn"
+      },
+      "instancesDistribution": {
+        "instanceTypes": [
+          "t3.small",
+          "t2.small"
+        ]
+      },
+      "minSize": 1,
+      "maxSize": 4,
+      "desiredCapacity": 1,
+      "volumeSize": 10,
+      "volumeType": "gp2",
+      "privateNetworking": true,
+      "iam": {
+        "withAddonPolicies": {
+          "autoScaler": true
+        }
+      },
+      "tags": {
+        "k8s.io/cluster-autoscaler/node-template/role": "openvpn",
+        "k8s.io/cluster-autoscaler/node-template/taint/openvpn": "true:NoSchedule"
+      },
+      "taints": { "openvpn": "true:NoSchedule"}
+    }
+  ]
+}

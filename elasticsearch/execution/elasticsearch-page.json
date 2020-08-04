@@ -1,0 +1,56 @@
+{
+  "name": "elasticsearch",
+  "executer": "python",
+  "mandatory": false,
+  "displayName": "ES",
+  "image": "assets/component_logos/elasticsearch.png",
+  "description": "ES configuration & parameters",
+  "inputs": [
+    {
+      "template": "namespace"
+    },
+    {
+      "template": "master-nodes"
+    },
+    {
+      "template": "replicas"
+    },
+    {
+      "template": "spot",
+      "group_enabler_master": "use_spot"
+    },
+    {
+      "template": "spot-on-demand-base-capacity",
+      "sub_group": "use_spot"
+    },
+    {
+      "template": "spot-on-demand-cpacity",
+      "sub_group": "use_spot"
+    },
+    {
+      "template": "spot-allocation",
+      "sub_group": "use_spot"
+    },
+    {
+      "template": "dns-entry",
+      "tooltip": "Url to used for access to the ES",
+      "displayName": "ES DNS Record",
+      "serverValue": "ES_DNS_RECORD"
+    },
+    {
+      "controlType": "checkbox",
+      "group_enabler_master": "kibana_installer",
+      "tooltip": "Install Kibana",
+      "displayName": "Install Kibana?",
+      "serverValue": "INSTALL_KIBANA",
+      "value": false
+    },
+    {
+      "template": "dns-entry",
+      "sub_group": "kibana_installer",
+      "tooltip": "Url to used for access to the Kibana",
+      "displayName": "Kibana DNS Record",
+      "serverValue": "KIBANA_DNS_RECORD"
+    }
+  ]
+}

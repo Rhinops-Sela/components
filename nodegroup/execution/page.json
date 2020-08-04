@@ -1,0 +1,74 @@
+{
+  "name": "nodegroup",
+  "executer": "python",
+  "displayName": "NodeGroup",
+  "mandatory": false,
+  "image": "assets/component_logos/k8s.png",
+  "description": "Please Provide Information Regarding The NodGroup",
+  "repeatable": true,
+  "inputs": [
+    {
+      "controlType": "text",
+      "tooltip": "Node Group Name",
+      "displayName": "Name",
+      "regexValidation": ".*",
+      "serverValue": "NODEGROUP_NAME"
+    },
+    {
+      "template": "autoscaling-maximum"
+    },
+    {
+      "template": "autoscaling-minimum"
+    },
+    {
+      "template": "autoscaling-desired"
+    },
+    {
+      "template": "instance-select",
+      "options": ["t3.small", "t2.small", "t3.large", "t2.large"]
+    },
+    {
+      "template": "private-network"
+    },
+    {
+      "template": "spot"
+    },
+    {
+      "template": "spot-allocation"
+    },
+    {
+      "template": "spot-on-demand-base-capacity"
+    },
+    {
+      "template": "spot-on-demand-cpacity"
+    },
+    {
+      "template": "spot-allocation"
+    },
+    {
+      "template": "node-volume-size"
+    },
+    {
+      "template": "taints"
+    },
+    {
+      "controlType": "text",
+      "tooltip": "Node Group Role",
+      "displayName": "Node Group Role",
+      "regexValidation": ".*",
+      "serverValue": "NODE_ROLE"
+    },
+    {
+      "controlType": "textarea",
+      "tooltip": "Please provide list ARN's polices to attach ; seperated",
+      "displayName": "ARN's",
+      "serverValue": "ADDITIONAL_ARNS"
+    },
+    {
+      "controlType": "textarea",
+      "tooltip": "Labels to be added to the node i.e label1=value1;label2=value2",
+      "displayName": "Labels",
+      "serverValue": "LABELS"
+    }
+  ]
+}

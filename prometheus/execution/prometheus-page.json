@@ -1,0 +1,102 @@
+{
+  "name": "prometheus",
+  "executer": "pwsh",
+  "displayName": "Prometheus",
+  "image": "assets/component_logos/prometheus.png",
+  "description": "Prometheus configuration & parameters",
+  "inputs": [
+    {
+      "controlType": "select",
+      "displayName": "Default Receiver",
+      "options": [
+        "slack",
+        "email",
+        "webhooks"
+      ],
+      "regexValidation": ".*",
+      "serverValue": "DEFAULT_RECEIVER"
+    },
+    {
+      "template": "dns-entry",
+      "displayName": "Prometheus Server URL To Use",
+      "serverValue" : "PROMETHEUS_DNS_RECORD"
+    },
+    {
+      "template": "dns-entry",
+      "displayName": "Alert Manager URL To Use",
+      "serverValue": "ALERTMANAGER_DNS_RECORD"
+    },
+    {
+      "controlType": "checkbox",
+      "group_enabler_master": "email_notifier",
+      "tooltip": "Use Email Notifier",
+      "displayName": "Enable Email Notifier?",
+      "serverValue": "EMAIL_NOTIFER",
+      "value": false
+    },
+    {
+      "controlType": "text",
+      "sub_group": "email_notifier",
+      "tooltip": "Sender Address",
+      "displayName": "From Email",
+      "serverValue": "FROM",
+      "regexValidation": ".*"
+    },
+    {
+      "controlType": "text",
+      "sub_group": "email_notifier",
+      "tooltip": "Email address of the reciever",
+      "displayName": "To Email",
+      "serverValue": "TO",
+      "regexValidation": ".*"
+    },
+    {
+      "controlType": "text",
+      "sub_group": "email_notifier",
+      "tooltip": "SMTP",
+      "displayName": "SMTP",
+      "serverValue": "SMTP_SERVER",
+      "regexValidation": ".*"
+    },
+    {
+      "template": "username",
+      "sub_group": "email_notifier"
+    },
+    {
+      "template": "password",
+      "sub_group": "email_notifier"
+    },
+    {
+      "controlType": "checkbox",
+      "group_enabler_master": "slack_notifier",
+      "tooltip": "Use Slack Notifier",
+      "displayName": "Enable Slack Notifier?",
+      "serverValue": "SLACK_NOTIFER",
+      "value": false
+    },
+    {
+      "controlType": "text",
+      "sub_group": "slack_notifier",
+      "tooltip": "Slack API Url",
+      "displayName": "Slack API Url",
+      "serverValue": "SLACK_URL",
+      "regexValidation": "https?:\\\/\\\/(www\\.)??[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&=]*)"
+    },
+    {
+      "controlType": "checkbox",
+      "group_enabler_master": "webhook_notifier",
+      "tooltip": "Use Webhook Notifier",
+      "displayName": "Enable Webhook Notifier?",
+      "serverValue": "WEBHOOK_NOTIFER",
+      "value": false
+    },
+    {
+      "controlType": "text",
+      "sub_group": "webhook_notifier",
+      "tooltip": "Webhook API Url",
+      "displayName": "Webhook API Url",
+      "serverValue": "WEBHOOK_URL",
+      "regexValidation": "https?:\\\/\\\/(www\\.)??[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&=]*)"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "NAMESPACE": {
+    "debug": "elk"
+  },
+  "NUMBER_MASTERS": {
+    "debug": "1"
+  },
+  "REPLICAS": {
+    "debug": "1"
+  },
+  "USE_SPOT": {
+    "debug": true
+  },
+  "ALLOCATION_STRATEGY": {
+    "debug": "lowest-price"
+  },
+  "ON_DEMEND_BASE_CAPACITY": {
+    "debug": 0
+  },
+  "ON_DEMEND_ABOVE_BASE_PERCENTAGE": {
+    "debug": 0
+  },
+  "ES_DNS_RECORD": {
+    "debug": "elasticsearch.fennec.io"
+  },
+  "INSTALL_KIBANA": {
+    "debug": true
+  },
+  "KIBANA_DNS_RECORD": {
+    "debug": "kibana.fennec.io"
+  }
+}
+

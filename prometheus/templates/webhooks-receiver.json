@@ -1,9 +1,0 @@
-
-{
-  "name": "webhooks-alert",
-  "webhook_configs": [
-    {
-      "url": "${WEBHOOK_URL}"
-    }
-  ]
-}

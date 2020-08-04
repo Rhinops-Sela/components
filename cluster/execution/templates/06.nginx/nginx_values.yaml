@@ -1,0 +1,7 @@
+controller:
+  kind: DaemonSet
+  tolerations:
+  - operator: "Exists"
+defaultBackend:
+  tolerations:
+  - operator: "Exists"

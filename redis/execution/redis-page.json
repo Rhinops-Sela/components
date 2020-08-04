@@ -1,0 +1,53 @@
+{
+  "name": "redis",
+  "executer": "pwsh",
+  "displayName": "Redis",
+  "image": "assets/component_logos/redis.png",
+  "description": "Redis configuration & parameters",
+  "inputs": [
+    {
+      "template": "spot",
+      "group_enabler_master": "use_spot"
+    },
+    {
+      "template": "spot-on-demand-base-capacity",
+      "sub_group": "use_spot"
+    },
+    {
+      "template": "spot-on-demand-cpacity",
+      "sub_group": "use_spot"
+    },
+    {
+      "template": "spot-allocation",
+      "sub_group": "use_spot"
+    },
+    {
+      "template": "namespace"
+    },
+    {
+      "template": "slave-nodes"
+    },
+    {
+      "controlType": "multi-select",
+      "displayName": "Extra ARGS?",
+      "options": ["--maxmemory-policy allkeys-lru"],
+      "serverValue": "EXTRA_FLAGS"
+    },
+    {
+      "controlType": "text",
+      "tooltip": "Disabled commands (,) seperated i.e. FLUSHDB,FLUSHALL",
+      "displayName": "Disabled Commands",
+      "serverValue": "DISABLED_COMMANDS"
+    },
+    {
+      "template": "dns-entry",
+      "displayName": "Redis DNS Record",
+      "serverValue": "REDIS_DNS_RECORD"
+    },
+    {
+      "template": "dns-entry",
+      "displayName": "Redis Admin DNS Record",
+      "serverValue": "REDIS_ADMIN_DNS_RECORD"
+    }
+  ]
+}

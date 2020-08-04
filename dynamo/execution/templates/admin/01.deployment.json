@@ -1,0 +1,51 @@
+{
+   "apiVersion": "apps/v1",
+   "kind": "Deployment",
+   "metadata": {
+      "name": "dynamodb-local-admin"
+   },
+   "spec": {
+      "selector": {
+         "matchLabels": {
+            "run": "dynamodb-local-admin"
+         }
+      },
+      "replicas": 1,
+      "template": {
+         "metadata": {
+            "labels": {
+               "run": "dynamodb-local-admin"
+            }
+         },
+         "spec": {
+            "tolerations": [
+               {
+                  "key": "dynamodb",
+                  "operator": "Equal",
+                  "value": "true"
+               }
+            ],
+            "containers": [
+               {
+                  "name": "dynamodb-local-admin",
+                  "image": "aaronshaf/dynamodb-admin",
+                  "env": [
+                     {
+                        "name": "DYNAMO_ENDPOINT",
+                        "value": "dynamodb.fennec.io"
+                     }
+                  ],
+                  "ports": [
+                     {
+                        "containerPort": 8001
+                     }
+                  ]
+               }
+            ],
+            "nodeSelector": {
+               "role": "dynamodb"
+            }
+         }
+      }
+   }
+}

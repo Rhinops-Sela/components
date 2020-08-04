@@ -1,0 +1,5 @@
+{
+  "GRAFANA_DNS_RECORD": {
+    "debug": "grafana.fennec.io"
+  }
+}

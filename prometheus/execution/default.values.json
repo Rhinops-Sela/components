@@ -1,0 +1,42 @@
+{
+  "DEFAULT_RECEIVER": {
+    "debug": "slack"
+  },
+  "PROMETHEUS_DNS_RECORD": {
+    "debug": "prometheus.fennec.io"
+  },
+  "ALERTMANAGER_DNS_RECORD": {
+    "debug": "alertmanager.fennec.io"
+  },
+  "EMAIL_NOTIFER": {
+    "debug": true
+  },
+  "FROM": {
+    "debug": "from@fennec.io"
+  },
+  "TO": {
+    "debug": "to@fennec.io"
+  },
+  "SMTP_SERVER": {
+    "debug": "smtpserver"
+  },
+  "PASSWORD": {
+    "debug": "password"
+  },
+  "USERNAME": {
+    "debug": "password"
+  },
+  "SLACK_NOTIFER": {
+    "debug": true
+  },
+  "SLACK_URL": {
+    "debug": "fennec.slack.io"
+  },
+  "WEBHOOK_NOTIFER": {
+    "debug": true
+  },
+  "WEBHOOK_URL": {
+    "debug": "fennec.slack.io"
+  }
+}
+
