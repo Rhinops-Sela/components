@@ -1,50 +1,19 @@
 {
-  "name": "dynamo",
-  "executer": "pwsh",
-  "displayName": "DynamoDB",
-  "image": "assets/component_logos/dynamo.png",
-  "description": "DynamoDB configuration & parameters",
+  "name": "elasticsearch",
+  "executer": "python",
+  "mandatory": false,
+  "displayName": "ES",
+  "image": "assets/component_logos/elasticsearch.png",
+  "description": "ES configuration & parameters",
   "inputs": [
     {
-      "controlType": "text",
-      "tooltip": "Please select the namespace",
-      "displayName": "Namespace",
-      "regexValidation": ".*",
-      "serverValue": "NAMESPACE"
+      "template": "namespace"
     },
     {
-      "template": "dns-entry",
-      "serverValue": "DYNAMO_DNS_RECORD",
-      "displayName": "DynamoDb DNS Record"
+      "template": "master-nodes"
     },
     {
-      "template": "dns-entry",
-      "serverValue": "ADMIN_DNS_RECORD",
-      "displayName": "DynamoDb Admin DNS Record"
-    },
-    {
-      "template": "instance-select",
-      "tooltip": "Selecte Redis cluster instance type",
-      "options": [
-        "m5.large",
-        "m5.xlarge",
-        "m5.2xlarge",
-        "r4.large",
-        "r4.xlarge",
-        "r4.2xlarge"
-      ]
-    },
-    {
-      "template": "autoscaling-maximum"
-    },
-    {
-      "template": "autoscaling-minimum"
-    },
-    {
-      "template": "autoscaling-desired"
-    },
-    {
-      "template": "node-volume-size"
+      "template": "replicas"
     },
     {
       "template": "spot",
@@ -61,6 +30,27 @@
     {
       "template": "spot-allocation",
       "sub_group": "use_spot"
+    },
+    {
+      "template": "dns-entry",
+      "tooltip": "Url to used for access to the ES",
+      "displayName": "ES DNS Record",
+      "serverValue": "ES_DNS_RECORD"
+    },
+    {
+      "controlType": "checkbox",
+      "group_enabler_master": "kibana_installer",
+      "tooltip": "Install Kibana",
+      "displayName": "Install Kibana?",
+      "serverValue": "INSTALL_KIBANA",
+      "value": false
+    },
+    {
+      "template": "dns-entry",
+      "sub_group": "kibana_installer",
+      "tooltip": "Url to used for access to the Kibana",
+      "displayName": "Kibana DNS Record",
+      "serverValue": "KIBANA_DNS_RECORD"
     }
   ]
 }

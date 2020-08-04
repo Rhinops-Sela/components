@@ -1,15 +1,12 @@
 {
   "NAMESPACE": {
-    "debug": "dynamodb"
+    "debug": "elk"
   },
-  "DYNAMO_DNS_RECORD": {
-    "debug": "dynamodb.fennec.io"
+  "NUMBER_MASTERS": {
+    "debug": "1"
   },
-  "ADMIN_DNS_RECORD": {
-    "debug": "dynamodb-ui.fennec.io"
-  },
-  "INSTANCE_TYPES": {
-    "debug": "t3.small,t2.small"
+  "REPLICAS": {
+    "debug": "1"
   },
   "USE_SPOT": {
     "debug": true
@@ -22,6 +19,15 @@
   },
   "ON_DEMEND_ABOVE_BASE_PERCENTAGE": {
     "debug": 0
+  },
+  "ES_DNS_RECORD": {
+    "debug": "elasticsearch.fennec.io"
+  },
+  "INSTALL_KIBANA": {
+    "debug": true
+  },
+  "KIBANA_DNS_RECORD": {
+    "debug": "kibana.fennec.io"
   }
 }
 

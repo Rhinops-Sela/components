@@ -12,7 +12,7 @@ openvpn_chart = Helm(working_folder, "openvpn")
 values_file_path = os.path.join(
     execution.execution_folder, "values.yaml")
 openvpn_chart.create_namespace("openvpn")
-openvpn_chart.install_file(os.path.join(working_folder, "prerequisites", "openvpn-pv-claim.yaml"), "openvpn")
+openvpn_chart.install_file(file = os.path.join(working_folder, "prerequisites", "openvpn-pv-claim.yaml"), namespace = "openvpn")
 openvpn_chart.install_chart(release_name="stable",  chart_url="http://storage.googleapis.com/kubernetes-charts",
              additional_values=[f"--values {values_file_path}"])
 keygen_script_path = os.path.join(working_folder, "keygen", "generate-client-key.sh")

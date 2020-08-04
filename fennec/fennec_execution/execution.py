@@ -2,8 +2,10 @@ import json
 import subprocess
 from collections import namedtuple
 import os
+import fcntl
 
 from fennec_helpers.helper import Helper
+
 
 class Execution:
     def __init__(self, working_folder: str):
@@ -39,7 +41,7 @@ class Execution:
     @property
     def cluster_region(self):
         return self.global_parameters["GLOBAL_CLUSTER_REGION"]
-
+    
     @property
     def kube_config_file(self):
         if not self.__kube_config_file:
@@ -80,8 +82,8 @@ class Execution:
         self.__kube_config_file = os.path.join(self.working_folder, '.kube')
         os.system(
             f'aws eks update-kubeconfig --name {self.cluster_name} --kubeconfig {self.kube_config_file}')
-        Helper.copy_file(self.kube_config_file, os.path.join(self.output_folder, ".kube"))
-
+        Helper.copy_file(self.kube_config_file,
+                         os.path.join(self.output_folder, ".kube"))
 
     def calculate_variable_value(self, parameter_name, parameter_value) -> str:
         if self.debug:
@@ -99,12 +101,21 @@ class Execution:
         file.write(content)
         file.close()
 
+    def nonBlockRead(self, output):
+        fd = output.fileno()
+        fl = fcntl.fcntl(fd, fcntl.F_GETFL)
+        fcntl.fcntl(fd, fcntl.F_SETFL, fl | os.O_NONBLOCK)
+        try:
+            return output.read()
+        except:
+            return ''
+
     def run_command(self, command: str, show_output=True, continue_on_error=False, kubeconfig=True):
         output_str = ""
         if kubeconfig:
             os.environ['KUBECONFIG'] = self.kube_config_file
         process = subprocess.Popen(
-            ['/bin/bash', '-c', f'{command}'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            ['/bin/bash', '-c', f'{command}'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT,)
         while True:
             output = process.stdout.readline()
             poll = process.poll()
@@ -123,5 +134,3 @@ class Execution:
         return command_result(rc, output_str)
     # def get_parameters(self):
     #    self.default_values = json.load(self.default_values_file)
-
-    

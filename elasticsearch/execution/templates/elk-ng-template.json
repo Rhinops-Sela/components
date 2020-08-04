@@ -7,20 +7,21 @@
   },
   "nodeGroups": [
     {
-      "name": "openvpn",
+      "name": "elk",
       "labels":{
-        "role": "openvpn"
+        "role": "elk"
       },
       "instancesDistribution": {
         "instanceTypes": [
-          "t3.small",
-          "t2.small"
+          "m5.xlarge",
+          "m5.large",
+          "m5.2xlarge"
         ]
       },
       "minSize": 1,
-      "maxSize": 4,
+      "maxSize": 20,
       "desiredCapacity": 1,
-      "volumeSize": 10,
+      "volumeSize": 50,
       "volumeType": "gp2",
       "privateNetworking": true,
       "iam": {
@@ -29,10 +30,10 @@
         }
       },
       "tags": {
-        "k8s.io/cluster-autoscaler/node-template/role": "openvpn",
-        "k8s.io/cluster-autoscaler/node-template/taint/openvpn": "true:NoSchedule"
+        "k8s.io/cluster-autoscaler/node-template/role": "elk",
+        "k8s.io/cluster-autoscaler/node-template/taint/elk": "true:NoSchedule"
       },
-      "taints": { "openvpn": "true:NoSchedule"}
+      "taints": { "elk": "true:NoSchedule"}
     }
   ]
 }

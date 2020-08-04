@@ -1,10 +1,5 @@
 {
-  "ON_DEMEND_BASE_CAPACITY": {
-    "debug": 5,
-    "default": 0
-  },
-  "REDIS_DNS_RECORD": {
-    "debug": "redis.fennec.io",
-    "default": "redis.fennec.io"
+  "GRAFANA_DNS_RECORD": {
+    "debug": "grafana.fennec.io"
   }
 }

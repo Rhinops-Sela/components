@@ -21,13 +21,11 @@ class Helper:
             print(file_to_convert)
 
     @staticmethod
-    def str_to_file(content: str, file_path: str):
+    def to_json_file(content: any, file_path: str):
         try:
             file = open(file_path, 'w')
-            file.write(content)
+            file.write(json.dumps(content))
             file.close()
-            Helper.replace_in_file(source_file = file_path, output_file = file_path, strings_to_replace = {"'": '"'}, max = 99999)
-            Helper.replace_in_file(source_file = file_path, output_file = file_path, strings_to_replace = {"True": "true"}, max = 99999)
         except ValueError:
             print(file_path)
 

@@ -11,9 +11,9 @@ class CoreDNS():
         self.namespace = "kube-system"
         self.anchor_str = "        rewrite name fennec.ai fennec.ai"
 
-
     def add_records(self, dns_records: str, delimiter=";", inner_delimiter="="):
-        dns_records = self.__init_dns_recotds(dns_records, delimiter, inner_delimiter)
+        dns_records = self.__init_dns_recotds(
+            dns_records, delimiter, inner_delimiter)
         consfig_map = self.get_current_config()
         new_config = [str]
         for config_line in consfig_map.splitlines():
@@ -27,7 +27,8 @@ class CoreDNS():
         self.apply_changes(new_config)
 
     def delete_records(self, dns_records: str, delimiter=";", inner_delimiter="="):
-        dns_records = self.__init_dns_recotds(dns_records, delimiter, inner_delimiter)
+        dns_records = self.__init_dns_recotds(
+            dns_records, delimiter, inner_delimiter)
         consfig_map = self.get_current_config()
         new_config = [str]
         for config_line in consfig_map.splitlines():

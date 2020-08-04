@@ -41,7 +41,7 @@ class Nodegroup():
         self.template['nodeGroups'][0] = self.nodegroup
         execution_file = os.path.join(
             self.execution.working_folder, "nodegroup-execute.json")
-        Helper.str_to_file(str(self.template), execution_file)
+        Helper.to_json_file(str(self.template), execution_file)
         return execution_file
 
     def __add_instance_types__(self):

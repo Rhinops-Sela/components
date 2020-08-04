@@ -1,11 +1,10 @@
-{
+  {
   "GLOBAL_CLUSTER_NAME": {
     "debug": "fennec",
     "default": "fennec"
   },
   "GLOBAL_CLUSTER_REGION": {
-    "debug": "eu-west-2",
-    "default": true
+    "debug": "eu-west-2"
   },
   "GLOBAL_AWS_SECRET_ACCESS_KEY": {
     "debug": "xxxxxxx",

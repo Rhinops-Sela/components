@@ -1,6 +1,6 @@
 {
   "name": "nodegroup",
-  "executer": "pwsh",
+  "executer": "python",
   "displayName": "NodeGroup",
   "mandatory": false,
   "image": "assets/component_logos/k8s.png",

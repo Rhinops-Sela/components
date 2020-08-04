@@ -1,6 +1,6 @@
 {
   "name": "dynamo",
-  "executer": "pwsh",
+  "executer": "python",
   "displayName": "DynamoDB",
   "image": "assets/component_logos/dynamo.png",
   "description": "DynamoDB configuration & parameters",

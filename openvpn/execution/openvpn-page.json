@@ -1,6 +1,6 @@
 {
   "name": "openvpn",
-  "executer": "pwsh",
+  "executer": "python",
   "displayName": "VPN",
   "image": "assets/component_logos/openvpn.png",
   "description": "Please provide a list of users to be able to access the network",

@@ -1,7 +1,7 @@
 {
   "name": "cluster",
   "stderrFail": true,
-  "executer": "pwsh",
+  "executer": "python",
   "deletable": false,
   "mandatory": false,
   "displayName": "Cluster Definition",
