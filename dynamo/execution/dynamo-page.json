@@ -23,18 +23,6 @@
       "displayName": "DynamoDb Admin DNS Record"
     },
     {
-      "template": "instance-select",
-      "tooltip": "Selecte Redis cluster instance type",
-      "options": [
-        "m5.large",
-        "m5.xlarge",
-        "m5.2xlarge",
-        "r4.large",
-        "r4.xlarge",
-        "r4.2xlarge"
-      ]
-    },
-    {
       "template": "autoscaling-maximum"
     },
     {

@@ -22,7 +22,7 @@ values_file_object['replicas'] = execution.local_parameters['REPLICAS']
 values_file_object['minimumMasterNodes'] = execution.local_parameters['NUMBER_MASTERS']
 execution_file = os.path.join(
     execution.working_folder, "elasticsearch-execute.values.json")
-Helper.to_json_file(str(values_file_object), execution_file)
+Helper.to_json_file(values_file_object, execution_file)
 elasticsearch_chart.install_chart(release_name="elastic",
                                   chart_url="https://helm.elastic.co",
                                   additional_values=[f"--values {execution_file}"], 
@@ -40,7 +40,7 @@ if execution.local_parameters['INSTALL_KIBANA']:
         'elasticsearchHosts'] = f"http://{es_url}:9200"
     execution_file = os.path.join(
         execution.working_folder, "kibana-execute.values.json")
-    Helper.to_json_file(str(values_file_object), execution_file)
+    Helper.to_json_file(values_file_object, execution_file)
     kibana_chart.install_chart(release_name="elastic",
                                       chart_url="https://helm.elastic.co",
                                       additional_values=[f"--values {execution_file}"])

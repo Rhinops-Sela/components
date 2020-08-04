@@ -13,6 +13,6 @@ values_file_object['datadog']['apiKey'] = execution.local_parameters['DD_API_KEY
 values_file_object['datadog']['appKey'] = execution.local_parameters['DD_APP_KEY']
 execution_file = os.path.join(
     execution.working_folder, "datadog-execute.values.json")
-Helper.to_json_file(str(values_file_object), execution_file)
+Helper.to_json_file(values_file_object, execution_file)
 datadog_chart.install_chart(release_name="stable",
                             additional_values=[f"--values {execution_file}"])

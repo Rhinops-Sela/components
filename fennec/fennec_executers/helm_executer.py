@@ -22,7 +22,7 @@ class Helm(Kubectl):
             f"chart: {self.chart_name} in namespace: {self.namespace_name} not installed")
         return False
 
-    def install_chart(self, release_name: str, chart_url: str = "", additional_values=[], timeout = 180):
+    def install_chart(self, release_name: str, chart_url: str = "", additional_values=[], timeout = 300):
         verb = "upgrade" if self.installed else "install"
         if chart_url:
             self.execution.run_command(

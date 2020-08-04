@@ -8,9 +8,6 @@
   "ADMIN_DNS_RECORD": {
     "debug": "dynamodb-ui.fennec.io"
   },
-  "INSTANCE_TYPES": {
-    "debug": "t3.small,t2.small"
-  },
   "USE_SPOT": {
     "debug": true
   },

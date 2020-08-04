@@ -12,7 +12,7 @@ alertmanager_url = execution.local_parameters['ALERTMANAGER_DNS_RECORD']
 template_path = os.path.join(
     execution.templates_folder, "monitoring-ng-template.json")
 nodegroup = Nodegroup(working_folder, template_path)
-#nodegroup.create()
+nodegroup.create()
 
 values_file_path = os.path.join(
     execution.execution_folder, "values.json")

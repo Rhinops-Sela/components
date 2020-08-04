@@ -8,11 +8,11 @@
   "nodeGroups": [
     {
       "name": "dynamo",
-      "labels":{
+      "labels": {
         "role": "dynamodb"
       },
       "instancesDistribution": {
-        "instanceTypes": []
+        "instanceTypes": ["m5.large", "m5.xlarge", "m5.2xlarge"]
       },
       "minSize": 1,
       "maxSize": 4,
@@ -29,7 +29,7 @@
         "k8s.io/cluster-autoscaler/node-template/role": "dynamodb",
         "k8s.io/cluster-autoscaler/node-template/taint/dynamodb": "true:NoSchedule"
       },
-      "taints": { "dynamodb": "true:NoSchedule"}
+      "taints": { "dynamodb": "true:NoSchedule" }
     }
   ]
 }
