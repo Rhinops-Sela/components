@@ -245,7 +245,7 @@ Global page is a uniqe page, which allows to set global variables which will be 
 ```python
 import os
 #Execution requries current working directory as parameter
-execution = Execution(os.getcwd())
+execution = Execution(os.getcwd(), "grafana")
 # access the variables defined in the ui with a fallback to
 #default variables values (when USE_AS_DEFAULT is set to ture)
 masters = execution.local["NUMBER_OF_MASTER_NODES"]
@@ -254,23 +254,23 @@ cluster_name = execution.global["CLUSTRE_NAME"]
 # template_path is optional, by default nodegroup.json  will be used
 node_group = NodeGroup(cluster_name, template_path)
 # add optional parameters according to user input
-ndoe_group.use_spot(0,0,"lowest-first")
-#ndoe_group.set_limits(min,max,desired)
-ndoe_group.set_limits(execution.local["MIN"], execution.local["MAX"], execution.local["DESIRED"])
-#ndoe_group.add_taints("fennec=true:NoSchedule")
-ndoe_group.add_taints(execution.local["TAINTS"])
-#ndoe_group.add_labels("role=fennec")
-ndoe_group.add_labels(execution.local["LABELS"])
-#ndoe_group.set_intances_types("t3.large,t2.large")
-ndoe_group.add_instances(execution.local["INSTANCES"])
-#ndoe_group.set_intances_types("arn****")
-ndoe_group.add_arns(execution.local["ARNS"])
-#ndoe_group.set_intances_types("eu-west-2")
-ndoe_group.region(execution.local["REGION"])
-#Creates a new node grop
-ndoe_group.create()
-#Deletes node grop
-ndoe_group.delete()
+node_group.use_spot(0,0,"lowest-first")
+#node_group.set_limits(min,max,desired)
+node_group.set_limits(execution.local["MIN"], execution.local["MAX"], execution.local["DESIRED"])
+#node_group.add_taints("fennec=true:NoSchedule")
+node_group.add_taints(execution.local["TAINTS"])
+#node_group.add_labels("role=fennec")
+node_group.add_labels(execution.local["LABELS"])
+#node_group.set_intances_types("t3.large,t2.large")
+node_group.add_instances(execution.local["INSTANCES"])
+#node_group.set_intances_types("arn****")
+node_group.add_arns(execution.local["ARNS"])
+#node_group.set_intances_types("eu-west-2")
+node_group.region(execution.local["REGION"])
+#Creates a new node group
+node_group.create()
+#Deletes node group
+node_group.delete()
 
 #if no namesapce was set localy use global namesapce
 namespace = Namespace.Create(execution.local["${NAMESPACE}"] or execution.global["${NAMESPACE}"])
