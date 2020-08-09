@@ -32,8 +32,7 @@
     "displayName": "Networking",
     "pages": [
       "coredns-page",
-      "openvpn-page",
-      "nginx-page"
+      "openvpn-page"
     ]
   },
   {
@@ -50,8 +49,7 @@
     "displayName": "ELK",
     "description": "Selection of ELK components to be available in the cluster",
     "pages": [
-      "elasticsearch-page",
-      "kibana-page"
+      "elasticsearch-page"
     ]
   }
 ]
