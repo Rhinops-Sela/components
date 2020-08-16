@@ -32,6 +32,13 @@
     },
     {
       "controlType": "checkbox",
+      "tooltip": "If true will attempt to create the cluster",
+      "displayName": "Create Cluster?",
+      "serverValue": "CREATE_CLUSTER",
+      "value": true
+    },
+    {
+      "controlType": "checkbox",
       "tooltip": "Will ebable ingress and ELB creation for the cluster",
       "displayName": "Install Nginx?",
       "serverValue": "INSTALL_INGRESS_CONTROLER"

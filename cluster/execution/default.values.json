@@ -7,6 +7,9 @@
     "debug": "eu-west-2",
     "global": true
   },
+  "CREATE_CLUSTER": {
+    "debug": true
+  },
   "ADMIN_ARN": {
     "debug": "arn:aws:iam::027065296145:user/iliag"
   },

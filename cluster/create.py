@@ -1,10 +1,17 @@
 import os
+import sys
 from fennec_cluster.cluster import Cluster
 from fennec_executers.helm_executer import Helm
 from fennec_helpers.helper import Helper
 
 
+
+
 cluster = Cluster(os.path.dirname(__file__))
+
+if not cluster.execution.local_parameters['CREATE_CLUSTER']:
+    sys.exit()
+
 cluster.create()
 
 # Add admin ARN
@@ -59,12 +66,15 @@ if install_cluster_autoscaler:
 # Install Nginx Controller
 install_ingress_controller = cluster.execution.local_parameters['INSTALL_INGRESS_CONTROLER']
 if install_ingress_controller:
+    deployment_folder = os.path.join(
+        cluster.execution.templates_folder, "06.nginx")
+    """ cluster.install_folder(deployment_folder)
     nginx_chart = Helm(os.path.dirname(__file__), "nginx-ingress", "nginx-ingress-controller")
     values_file_path = os.path.join(
         cluster.execution.templates_folder, "06.nginx", "nginx_values.yaml")
     nginx_chart.install_chart(release_name="bitnami", chart_url="https://charts.bitnami.com/bitnami", additional_values=[
         f"--values {values_file_path}"])
-
+ """
 # Install Cluster dashboard
 install_cluster_dashboard = cluster.execution.local_parameters['INSTALL_CLUSTER_DASHBOARD']
 if install_cluster_dashboard:

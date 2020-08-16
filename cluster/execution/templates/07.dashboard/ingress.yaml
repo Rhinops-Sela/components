@@ -4,6 +4,7 @@ metadata:
   name: kubernetes-dashboard-ingress
   namespace: kubernetes-dashboard
   annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/use-regex: "true"
     kubernetes.io/ingress.class: nginx
     kubernetes.io/tls-acme: "true"
@@ -13,7 +14,7 @@ spec:
   - host: dashboard.fennec.io
     http:
       paths:
-      - path: 
+      - path: /
         backend:
           serviceName: kubernetes-dashboard
           servicePort: 443

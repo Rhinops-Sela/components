@@ -1,8 +1,0 @@
-kind: DaemonSet
-tolerations:
-- operator: "Exists"
-service:
-  annotations:
-   service.beta.kubernetes.io/aws-load-balancer-internal: 0.0.0.0/0
-   service.beta.kubernetes.io/aws-load-balancer-type: nlb
-# helm install nginx-ingress -f /Users/iliagerman/Work/Sela/env_creator/components/cluster/execution/templates/06.nginx/nginx_values_test.yaml bitnami/nginx-ingress-controller
