@@ -1,6 +1,6 @@
 {
   "name": "prometheus",
-  "executer": "pwsh",
+  "executer": "python",
   "displayName": "Prometheus",
   "image": "assets/component_logos/prometheus.png",
   "description": "Prometheus configuration & parameters",

@@ -4,4 +4,4 @@ outputs/
 *__pycache__*
 *-execute*.json
 *-execute*.yaml
-fennec/fennec_cluster/__pycache__/*
+*.pyc

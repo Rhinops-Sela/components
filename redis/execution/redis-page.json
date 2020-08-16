@@ -1,6 +1,6 @@
 {
   "name": "redis",
-  "executer": "pwsh",
+  "executer": "python",
   "displayName": "Redis",
   "image": "assets/component_logos/redis.png",
   "description": "Redis configuration & parameters",

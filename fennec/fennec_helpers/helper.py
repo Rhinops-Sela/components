@@ -2,6 +2,7 @@ import json
 import os
 import shutil
 import sys
+from pathlib import Path
 
 
 class Helper:
@@ -40,6 +41,7 @@ class Helper:
 
     @staticmethod
     def copy_file(source: str, target: str):
+        Path(os.path.dirname(target)).mkdir(parents=True, exist_ok=True)
         shutil.copy(source, target)
 
     @staticmethod
@@ -59,3 +61,10 @@ class Helper:
         if source_file == output_file:
             os.rename(output_file + "_temp", output_file)
         return file_content
+
+    @staticmethod
+    def num(s):
+        try:
+            return int(s)
+        except:
+            return s

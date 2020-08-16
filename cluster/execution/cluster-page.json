@@ -10,16 +10,31 @@
   "inputs": [
     {
       "controlType": "text",
+      "serverValue": "CLUSTER_NAME",
+      "regexValidation": ".*",
+      "global": true,
+      "tooltip": "Will be used as the cluster name for enire installation",
+      "displayName": "Cluster Name"
+    },
+    {
+      "template": "region",
+      "serverValue": "CLUSTER_REGION",
+      "global": true,
+      "tooltip": "Will be used as the cluster region for enire installation",
+      "displayName": "Cluster Region"
+    },
+    {
+      "controlType": "text",
       "tooltip": "Admin ARN",
       "displayName": "Admin ARN",
       "regexValidation": ".*",
-      "serverValue": "AWS_ADMIN_USER"
+      "serverValue": "ADMIN_ARN"
     },
     {
       "controlType": "checkbox",
       "tooltip": "Will ebable ingress and ELB creation for the cluster",
       "displayName": "Install Nginx?",
-      "serverValue": "INSTALL_CLUSTER_NGINX"
+      "serverValue": "INSTALL_INGRESS_CONTROLER"
     },
     {
       "controlType": "checkbox",

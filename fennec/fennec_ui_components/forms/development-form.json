@@ -1,10 +1,10 @@
 [
   {
-    "name": "global",
-    "displayName": "Global Parametes",
-    "description": "Global Parametes which will be avaliabel as environment variabels during the deployment",
+    "name": "aws_security",
+    "displayName": "AWS Security",
+    "description": "AWS Parametes which will be avaliabel as environment variabels during the deployment",
     "pages": [
-      "global-parameters-page"
+      "aws-security-parameters-page"
     ]
   },
   {

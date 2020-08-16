@@ -2,7 +2,7 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: kubernetes-dashboard-ingress
-  namespace: kubernetes-dashboard
+  namespace: kubernetes-dashboard1
   annotations:
     nginx.ingress.kubernetes.io/use-regex: "true"
     kubernetes.io/ingress.class: nginx
@@ -13,7 +13,7 @@ spec:
   - host: dashboard.fennec.io
     http:
       paths:
-      - path: /
+      - path: 
         backend:
           serviceName: kubernetes-dashboard
           servicePort: 443

@@ -11,7 +11,6 @@ fennec_core_dns/core_dns.py
 fennec_core_dns/dns_record.py
 fennec_execution/__init__.py
 fennec_execution/execution.py
-fennec_global_parameters/__init__.py
 fennec_helm/__init__.py
 fennec_helm/helm.py
 fennec_helpers/__init__.py

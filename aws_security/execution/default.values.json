@@ -1,0 +1,12 @@
+  {
+  "AWS_SECRET_ACCESS_KEY": {
+    "debug": "xxxxxxx",
+    "default": "xxxxxxx",
+    "global": true
+  },
+  "AWS_ACCESS_KEY_ID": {
+    "debug": "xxxxxxx",
+    "default": "xxxxxxx",
+    "global": true
+  }
+}

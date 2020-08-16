@@ -4,10 +4,9 @@ from fennec_executers.kubectl_executer import Kubectl
 from fennec_helpers.helper import Helper
 from fennec_nodegorup.nodegroup import Nodegroup
 
-working_folder = os.path.join(os.getcwd(), "dynamo")
 template_path = os.path.join(
-    working_folder, "execution/templates", "dynamo-ng-template.json")
-kubectl = Kubectl(working_folder)
+    os.path.dirname(__file__), "execution/templates", "dynamo-ng-template.json")
+kubectl = Kubectl(os.path.dirname(__file__))
 
 
 values_to_replace = {
@@ -24,7 +23,7 @@ kubectl.uninstall_folder(os.path.join(
 kubectl.uninstall_folder(os.path.join(
     kubectl.execution.templates_folder, "admin"), "dynamodb")
 
-core_dns = CoreDNS(working_folder)
+core_dns = CoreDNS(os.path.dirname(__file__))
 admin_record  = f"{core_dns.execution.local_parameters['ADMIN_DNS_RECORD']}=dynamodb-local-admin.{core_dns.execution.local_parameters['NAMESPACE']}.svc.cluster.local"
 dynamo_record  = f"{core_dns.execution.local_parameters['DYNAMO_DNS_RECORD']}=dynamodb-local.{core_dns.execution.local_parameters['NAMESPACE']}.svc.cluster.local"
 dns_records = f"{admin_record};{dynamo_record}"

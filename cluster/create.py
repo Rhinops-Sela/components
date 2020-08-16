@@ -3,9 +3,8 @@ from fennec_cluster.cluster import Cluster
 from fennec_executers.helm_executer import Helm
 from fennec_helpers.helper import Helper
 
-working_folder = os.path.join(os.getcwd(), "cluster")
 
-cluster = Cluster(working_folder)
+cluster = Cluster(os.path.dirname(__file__))
 cluster.create()
 
 # Add admin ARN
@@ -22,6 +21,17 @@ content = Helper.replace_in_file(
     arn_template, arn_output, values_to_replace)
 cluster.patch_file(content, "kube-system", "configmap/aws-auth")
 
+
+# Install cert-manager
+cert_manater_chart = Helm(os.path.dirname(__file__), "cert-manager")
+values_file_path = os.path.join(
+    cluster.execution.templates_folder, "05.cert-manager", "cert-manager_values.yaml")
+cert_manater_chart.install_chart(release_name="jetstack",  chart_url="https://charts.jetstack.io",
+                                 additional_values=[f"--values {values_file_path}"])
+
+cluster.install_folder(folder=os.path.join(
+    cluster.execution.templates_folder, '05.cert-manager', "kubectl"), namespace="cert-manager")
+
 # Install HPA
 install_HPA = cluster.execution.local_parameters['INSTALL_CLUSTER_HPA']
 if install_HPA:
@@ -34,7 +44,8 @@ if install_HPA:
 # Install Cluster auto scaler
 install_cluster_autoscaler = cluster.execution.local_parameters['INSTALL_CLUSTER_AUTOSCALER']
 if install_cluster_autoscaler:
-    cluster_auto_scaler_chart = Helm(working_folder, "cluster-autoscaler")
+    cluster_auto_scaler_chart = Helm(
+        os.path.dirname(__file__), "cluster-autoscaler")
     values_file_path = os.path.join(
         cluster.execution.templates_folder, "04.cluster-autoscaler", "auto_scaler.yaml")
     cluster_auto_scaler_chart.install_chart(release_name="stable", chart_url="https://kubernetes-charts.storage.googleapis.com",
@@ -48,21 +59,11 @@ if install_cluster_autoscaler:
 # Install Nginx Controller
 install_ingress_controller = cluster.execution.local_parameters['INSTALL_INGRESS_CONTROLER']
 if install_ingress_controller:
-    nginx_chart = Helm(working_folder, "nginx-ingress")
+    nginx_chart = Helm(os.path.dirname(__file__), "nginx-ingress", "nginx-ingress-controller")
     values_file_path = os.path.join(
         cluster.execution.templates_folder, "06.nginx", "nginx_values.yaml")
-    nginx_chart.install_chart(release_name="stable", additional_values=[
+    nginx_chart.install_chart(release_name="bitnami", chart_url="https://charts.bitnami.com/bitnami", additional_values=[
         f"--values {values_file_path}"])
-
- # Install cert-manager
-cert_manater_chart = Helm(working_folder, "cert-manager")
-values_file_path = os.path.join(
-    cluster.execution.templates_folder, "05.cert-manager", "cert-manager_values.yaml")
-cert_manater_chart.install_chart(release_name="jetstack",  chart_url="https://charts.jetstack.io",
-                                 additional_values=[f"--values {values_file_path}"])
-
-cluster.install_folder(folder=os.path.join(
-    cluster.execution.templates_folder, '05.cert-manager', "kubectl"), namespace="cert-manager")
 
 # Install Cluster dashboard
 install_cluster_dashboard = cluster.execution.local_parameters['INSTALL_CLUSTER_DASHBOARD']

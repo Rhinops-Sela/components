@@ -137,7 +137,10 @@ class Nodegroup():
         for tag in str(prop_values).split(';'):
             porp_holder = working_object[prop_to_add]
             if '=' in tag:
-                porp_holder[tag.split('=')[0]] = f"{tag.split('=')[1]}"
+                value_to_use = f"{tag.split('=')[1]}"
+                porp_holder[tag.split('=')[0]] = Helper.num(value_to_use)
             else:
-                working_object[prop_to_add] = prop_values
+                working_object[prop_to_add] = Helper.num(prop_values)
         return working_object
+    
+    

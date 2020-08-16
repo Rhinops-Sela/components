@@ -175,16 +175,16 @@
    ],
    "global": [
      {
-       "GLOBAL_CLUSTER_NAME": "fennec"
+       "CLUSTER_NAME": "fennec"
      },
      {
-       "GLOBAL_CLUSTER_REGION": "eu-west-2"
+       "CLUSTER_REGION": "eu-west-2"
      },
      {
-       "GLOBAL_AWS_SECRET_ACCESS_KEY": "xxxxxxx"
+       "AWS_SECRET_ACCESS_KEY": "xxxxxxx"
      },
      {
-       "GLOBAL_AWS_ACCESS_KEY_ID": "xxxxxxxxxxx"
+       "AWS_ACCESS_KEY_ID": "xxxxxxxxxxx"
      }
    ]
 }
@@ -221,7 +221,7 @@ Global page is a uniqe page, which allows to set global variables which will be 
     },
     {
       "controlType": "text",
-      "serverValue": "GLOBAL_CLUSTER_NAME",
+      "serverValue": "CLUSTER_NAME",
       "regexValidation": ".*",
       "tooltip": "Will be used as the cluster name for enire installation",
       "displayName": "Cluster Name",
@@ -229,7 +229,7 @@ Global page is a uniqe page, which allows to set global variables which will be 
     },
     {
       "template": "region",
-      "serverValue": "GLOBAL_CLUSTER_REGION",
+      "serverValue": "CLUSTER_REGION",
       "tooltip": "Will be used as the cluster region for enire installation",
       "displayName": "Cluster Region",
       "global": true

@@ -1,0 +1,27 @@
+{
+  "name": "aws_security",
+  "deletable": false,
+  "mandatory": true,
+  "executer": "python",
+  "displayName": "AWS Security",
+  "image": "assets/component_logos/aws.png",
+  "description": "AWS Security Parameters For The Deploymnet Process",
+  "inputs": [
+    {
+      "controlType": "text",
+      "tooltip": "AWS Access Key",
+      "displayName": "Access Key",
+      "global": true,
+      "regexValidation": ".*",
+      "serverValue": "AWS_ACCESS_KEY_ID"
+    },
+    {
+      "controlType": "text-password",
+      "tooltip": "AWS Secret Access Key",
+      "displayName": "Secret Access Key",
+      "global": true,
+      "regexValidation": ".*",
+      "serverValue": "AWS_SECRET_ACCESS_KEY"
+    }
+  ]
+}

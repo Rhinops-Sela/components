@@ -13,7 +13,7 @@
       ],
       "resources": {
          "requests": {
-            "memory": "2G",
+            "memory": "1G",
             "cpu": 1
          }
       },
@@ -39,7 +39,7 @@
       ],
       "resources": {
          "requests": {
-            "memory": "2G",
+            "memory": "1G",
             "cpu": 1
          }
       },
