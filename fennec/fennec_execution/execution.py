@@ -110,7 +110,7 @@ class Execution:
     def exeport_secret(self, file_name: str, content: str):
         full_path = os.path.join(self.output_folder, file_name)
         file = open(full_path, 'w+')
-        file.write(content)
+        file.write(content.decode('utf-8'))
         file.close()
 
     def nonBlockRead(self, output):

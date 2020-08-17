@@ -18,18 +18,17 @@ if cluster.execution.local_parameters['CREATE_CLUSTER']:
     admin_arn = cluster.execution.local_parameters['ADMIN_ARN']
     username = admin_arn.split('/')[1]
     values_to_replace = {'ADMIN_USER': f'{admin_arn}',
-                        'ADMIN_USERNAME': f'{username}'}
+                         'ADMIN_USERNAME': f'{username}'}
     content = Helper.replace_in_file(
         arn_template, arn_output, values_to_replace)
     cluster.patch_file(content, "kube-system", "configmap/aws-auth")
-
 
     # Install cert-manager
     cert_manater_chart = Helm(os.path.dirname(__file__), "cert-manager")
     values_file_path = os.path.join(
         cluster.execution.templates_folder, "05.cert-manager", "cert-manager_values.yaml")
     cert_manater_chart.install_chart(release_name="jetstack",  chart_url="https://charts.jetstack.io",
-                                    additional_values=[f"--values {values_file_path}"])
+                                     additional_values=[f"--values {values_file_path}"])
 
     cluster.install_folder(folder=os.path.join(
         cluster.execution.templates_folder, '05.cert-manager', "kubectl"), namespace="cert-manager")
@@ -62,7 +61,7 @@ install_ingress_controller = cluster.execution.local_parameters['INSTALL_INGRESS
 if install_ingress_controller:
     deployment_folder = os.path.join(
         cluster.execution.templates_folder, "06.nginx")
-    cluster.install_folder(deployment_folder)       
+    cluster.install_folder(deployment_folder)
     """ cluster.install_folder(deployment_folder)
     nginx_chart = Helm(os.path.dirname(__file__), "nginx-ingress", "nginx-ingress-controller")
     values_file_path = os.path.join(
@@ -86,8 +85,10 @@ if install_cluster_dashboard:
         cluster.execution.templates_folder, "07.dashboard")
     cluster.install_folder(deployment_folder)
     cluster.export_secret(secret_name="admin-user",
-                        namespace="kube-system",
-                        output_file_name="dashboard")
-    ingress_address = cluster.get_ingress_address('kubernetes-dashboard-ingress', 'kubernetes-dashboard')
+                          namespace="kube-system",
+                          output_file_name="dashboard",
+                          decode=True)
+    ingress_address = cluster.get_ingress_address(
+        'kubernetes-dashboard-ingress', 'kubernetes-dashboard')
     core_dns = CoreDNS(os.path.dirname(__file__))
     core_dns.add_records(f"{user_url}={ingress_address}")

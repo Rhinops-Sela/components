@@ -1,5 +1,6 @@
 from pathlib import Path
 import os
+import base64
 from fennec_execution import Execution
 from fennec_helpers import Helper
 from fennec_execution.execution import Execution
@@ -10,7 +11,7 @@ class Kubectl():
     def __init__(self, working_folder: str) -> None:
         self.execution = Execution(working_folder)
 
-    def export_secret(self, secret_name: str, namespace: str, output_file_name: str):
+    def export_secret(self, secret_name: str, namespace: str, output_file_name: str, decode = False):
         command = f'kubectl get secret -n {namespace} --kubeconfig {self.execution.kube_config_file} | grep "{secret_name}"'
         all_secrets_str = self.execution.run_command(
             command, show_output=False, kubeconfig=False).log.split("\n")
@@ -23,7 +24,10 @@ class Kubectl():
             token = Helper.json_to_object(secret_content)[
                 'data']['token']
             file_name = f'{output_file_name}.fennec_secret'
-            self.execution.exeport_secret(file_name, token)
+            if decode:
+                self.execution.exeport_secret(file_name, base64.b64decode(token))
+            else:
+                self.execution.exeport_secret(file_name, token)
         else:
             print(f"Failed to export secret: {secret_name}")
 
