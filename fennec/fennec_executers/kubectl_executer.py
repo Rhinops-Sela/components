@@ -105,3 +105,9 @@ class Kubectl():
             if name in namespace:
                 return True
         return False
+    
+    def get_ingress_address(self, ingress_name, namespace='all-namespaces'):
+        command_result = self.execution.run_command(f"kubectl get ingress {ingress_name} -n {namespace} -o json").log
+        ingress = Helper.json_to_object(command_result)
+        ingress_address = ingress['status']['loadBalancer']['ingress'][0]['hostname']
+        return ingress_address

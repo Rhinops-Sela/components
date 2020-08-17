@@ -8,17 +8,17 @@
     "global": true
   },
   "CREATE_CLUSTER": {
-    "debug": true
+    "debug": false
   },
   "ADMIN_ARN": {
     "debug": "arn:aws:iam::027065296145:user/iliag"
   },
   "INSTALL_CLUSTER_HPA": {
-    "debug": true,
+    "debug": false,
     "default": false
   },
   "INSTALL_CLUSTER_AUTOSCALER": {
-    "debug": true,
+    "debug": false,
     "default": false
   },
   "INSTALL_CLUSTER_DASHBOARD": {
@@ -26,11 +26,11 @@
     "default": false
   },
   "CLUSTER_DASHBOARD_URL": {
-    "debug": "dashboard.fennec.io",
+    "debug": "dashboard.fenneczaurus.io",
     "default": ""
   },
   "INSTALL_INGRESS_CONTROLER": {
-    "debug": true,
+    "debug": false,
     "default": false
   }
 }

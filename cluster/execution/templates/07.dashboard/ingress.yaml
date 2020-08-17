@@ -11,7 +11,7 @@ metadata:
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
 spec:
   rules:
-  - host: dashboard.fennec.io
+  - host: CLUSTER_DASHBOARD_URL
     http:
       paths:
       - path: /
@@ -20,5 +20,5 @@ spec:
           servicePort: 443
   tls:
   - hosts:
-    - dashboard.fennec.io
+    - CLUSTER_DASHBOARD_URL
     secretName: kubernetes-dashboard-certs

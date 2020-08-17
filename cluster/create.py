@@ -1,6 +1,6 @@
 import os
-import sys
 from fennec_cluster.cluster import Cluster
+from fennec_core_dns.core_dns import CoreDNS
 from fennec_executers.helm_executer import Helm
 from fennec_helpers.helper import Helper
 
@@ -70,6 +70,7 @@ if install_ingress_controller:
     nginx_chart.install_chart(release_name="bitnami", chart_url="https://charts.bitnami.com/bitnami", additional_values=[
         f"--values {values_file_path}"])
  """
+
 # Install Cluster dashboard
 install_cluster_dashboard = cluster.execution.local_parameters['INSTALL_CLUSTER_DASHBOARD']
 if install_cluster_dashboard:
@@ -78,12 +79,15 @@ if install_cluster_dashboard:
     values_file_path_execution = os.path.join(
         cluster.execution.templates_folder, "07.dashboard", "ingress-execute.yaml")
     user_url = cluster.execution.local_parameters['CLUSTER_DASHBOARD_URL']
-    values_to_replace = {'dashboard.fennec.io': f'{user_url}'}
+    values_to_replace = {'CLUSTER_DASHBOARD_URL': f'{user_url}'}
     Helper.replace_in_file(
-        values_file_path, values_file_path_execution, values_to_replace)
+        values_file_path, values_file_path_execution, values_to_replace, 100)
     deployment_folder = os.path.join(
         cluster.execution.templates_folder, "07.dashboard")
     cluster.install_folder(deployment_folder)
-cluster.export_secret(secret_name="admin-user",
-                      namespace="kube-system",
-                      output_file_name="dashboard")
+    cluster.export_secret(secret_name="admin-user",
+                        namespace="kube-system",
+                        output_file_name="dashboard")
+    ingress_address = cluster.get_ingress_address('kubernetes-dashboard-ingress', 'kubernetes-dashboard')
+    core_dns = CoreDNS(os.path.dirname(__file__))
+    core_dns.add_records(f"{user_url}={ingress_address}")
