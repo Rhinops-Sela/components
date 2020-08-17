@@ -15,6 +15,22 @@
       "serverValue": "NODEGROUP_NAME"
     },
     {
+      "template": "spot",
+      "group_enabler_master": "use_spot"
+    },
+    {
+      "template": "spot-on-demand-base-capacity",
+      "sub_group": "use_spot"
+    },
+    {
+      "template": "spot-on-demand-cpacity",
+      "sub_group": "use_spot"
+    },
+    {
+      "template": "spot-allocation",
+      "sub_group": "use_spot"
+    },
+    {
       "template": "autoscaling-maximum"
     },
     {
@@ -29,21 +45,6 @@
     },
     {
       "template": "private-network"
-    },
-    {
-      "template": "spot"
-    },
-    {
-      "template": "spot-allocation"
-    },
-    {
-      "template": "spot-on-demand-base-capacity"
-    },
-    {
-      "template": "spot-on-demand-cpacity"
-    },
-    {
-      "template": "spot-allocation"
     },
     {
       "template": "node-volume-size"

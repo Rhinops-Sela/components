@@ -48,6 +48,8 @@ class Nodegroup():
         if not "INSTANCE_TYPES" in self.execution.local_parameters:
             return
         instance_types = self.execution.local_parameters['INSTANCE_TYPES']
+        if not instance_types:
+            return
         for instance_type in instance_types.split(','):
             self.nodegroup['instancesDistribution']['instanceTypes'].append(
                 instance_type)
@@ -56,6 +58,8 @@ class Nodegroup():
         if not "TAINTS" in self.execution.local_parameters:
             return
         taints = self.execution.local_parameters['TAINTS']
+        if not taints:
+            return
         modified_nodegroup = Nodegroup.add_properties(
             "taints", taints, self.nodegroup)
         for taint in taints.split(';'):
@@ -67,6 +71,8 @@ class Nodegroup():
         if not "NODE_ROLE" in self.execution.local_parameters:
             return
         labels = f"role={self.execution.local_parameters['NODE_ROLE']}"
+        if not labels:
+            return
         modified_nodegroup = Nodegroup.add_properties(
             "labels", labels, self.nodegroup)
         self.add_tags(
@@ -85,25 +91,33 @@ class Nodegroup():
         if not "NODE_VOLUME_SIZE" in self.execution.local_parameters:
             return
         volume_size = self.execution.local_parameters['NODE_VOLUME_SIZE']
+        if not volume_size:
+            return
         self.nodegroup["volumeSize"] = volume_size
 
     def __set_initial_scale(self):
         if not "DESIRED" in self.execution.local_parameters:
             return
-        volume_size = self.execution.local_parameters['DESIRED']
-        self.nodegroup["desiredCapacity"] = volume_size
+        desired = self.execution.local_parameters['DESIRED']
+        if not desired:
+            return
+        self.nodegroup["desiredCapacity"] = desired
 
     def __set_min_scale(self):
         if not "MIN" in self.execution.local_parameters:
             return
-        volume_size = self.execution.local_parameters['MIN']
-        self.nodegroup["minSize"] = volume_size
+        min_scale = self.execution.local_parameters['MIN']
+        if not min_scale:
+            return
+        self.nodegroup["minSize"] = min_scale
 
     def __set_max_scale(self):
         if not "MAX" in self.execution.local_parameters:
             return
-        volume_size = self.execution.local_parameters['MAX']
-        self.nodegroup["maxSize"] = volume_size
+        max_scale = self.execution.local_parameters['MAX']
+        if not max_scale:
+            return 
+        self.nodegroup["maxSize"] = max_scale
 
     def add_tags(self, tags_custom: str = ""):
         tags = tags_custom if tags_custom else (
