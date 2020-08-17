@@ -2,6 +2,6 @@
   "controlType": "text",
   "tooltip": "Volume Size",
   "displayName": "Volume Size",
-  "regexValidation": "/^\\d+$/",
+  "regexValidation": "^[0-9]+$",
   "serverValue": "NODE_VOLUME_SIZE"
 }

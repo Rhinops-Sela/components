@@ -5,39 +5,34 @@ from fennec_executers.helm_executer import Helm
 from fennec_helpers.helper import Helper
 
 
-
-
 cluster = Cluster(os.path.dirname(__file__))
+if cluster.execution.local_parameters['CREATE_CLUSTER']:
+    cluster.create()
 
-if not cluster.execution.local_parameters['CREATE_CLUSTER']:
-    sys.exit()
-
-cluster.create()
-
-# Add admin ARN
-admin_arn = cluster.execution.local_parameters['ADMIN_ARN']
-arn_template = os.path.join(
-    cluster.execution.templates_folder, "02.auth", "aws-auth.yaml")
-arn_output = os.path.join(
-    cluster.execution.templates_folder, "02.auth", "aws-auth-execute.yaml")
-admin_arn = cluster.execution.local_parameters['ADMIN_ARN']
-username = admin_arn.split('/')[1]
-values_to_replace = {'ADMIN_USER': f'{admin_arn}',
-                     'ADMIN_USERNAME': f'{username}'}
-content = Helper.replace_in_file(
-    arn_template, arn_output, values_to_replace)
-cluster.patch_file(content, "kube-system", "configmap/aws-auth")
+    # Add admin ARN
+    admin_arn = cluster.execution.local_parameters['ADMIN_ARN']
+    arn_template = os.path.join(
+        cluster.execution.templates_folder, "02.auth", "aws-auth.yaml")
+    arn_output = os.path.join(
+        cluster.execution.templates_folder, "02.auth", "aws-auth-execute.yaml")
+    admin_arn = cluster.execution.local_parameters['ADMIN_ARN']
+    username = admin_arn.split('/')[1]
+    values_to_replace = {'ADMIN_USER': f'{admin_arn}',
+                        'ADMIN_USERNAME': f'{username}'}
+    content = Helper.replace_in_file(
+        arn_template, arn_output, values_to_replace)
+    cluster.patch_file(content, "kube-system", "configmap/aws-auth")
 
 
-# Install cert-manager
-cert_manater_chart = Helm(os.path.dirname(__file__), "cert-manager")
-values_file_path = os.path.join(
-    cluster.execution.templates_folder, "05.cert-manager", "cert-manager_values.yaml")
-cert_manater_chart.install_chart(release_name="jetstack",  chart_url="https://charts.jetstack.io",
-                                 additional_values=[f"--values {values_file_path}"])
+    # Install cert-manager
+    cert_manater_chart = Helm(os.path.dirname(__file__), "cert-manager")
+    values_file_path = os.path.join(
+        cluster.execution.templates_folder, "05.cert-manager", "cert-manager_values.yaml")
+    cert_manater_chart.install_chart(release_name="jetstack",  chart_url="https://charts.jetstack.io",
+                                    additional_values=[f"--values {values_file_path}"])
 
-cluster.install_folder(folder=os.path.join(
-    cluster.execution.templates_folder, '05.cert-manager', "kubectl"), namespace="cert-manager")
+    cluster.install_folder(folder=os.path.join(
+        cluster.execution.templates_folder, '05.cert-manager', "kubectl"), namespace="cert-manager")
 
 # Install HPA
 install_HPA = cluster.execution.local_parameters['INSTALL_CLUSTER_HPA']
@@ -46,7 +41,6 @@ if install_HPA:
         cluster.execution.templates_folder, "03.hpa", "hpa.yaml")
     cluster.create_namespace("horizontal-pod-scaler")
     cluster.install_file(hpa_instsllation, "horizontal-pod-scaler")
-
 
 # Install Cluster auto scaler
 install_cluster_autoscaler = cluster.execution.local_parameters['INSTALL_CLUSTER_AUTOSCALER']
@@ -68,6 +62,7 @@ install_ingress_controller = cluster.execution.local_parameters['INSTALL_INGRESS
 if install_ingress_controller:
     deployment_folder = os.path.join(
         cluster.execution.templates_folder, "06.nginx")
+    cluster.install_folder(deployment_folder)       
     """ cluster.install_folder(deployment_folder)
     nginx_chart = Helm(os.path.dirname(__file__), "nginx-ingress", "nginx-ingress-controller")
     values_file_path = os.path.join(

@@ -32,7 +32,7 @@
                   "env": [
                      {
                         "name": "DYNAMO_ENDPOINT",
-                        "value": "dynamodb.fennec.io"
+                        "value": "dynamodb-local"
                      }
                   ],
                   "ports": [

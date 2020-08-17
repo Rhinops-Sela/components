@@ -9,14 +9,11 @@ template_path = os.path.join(
 nodegroup = Nodegroup(os.path.dirname(__file__), template_path)
 nodegroup.create()
 
-values_to_replace = {
-    'DYNAMO_ENDPOINT': f'{nodegroup.execution.local_parameters["NAMESPACE"]}'}
+
 ui_deployment_template = os.path.join(
     nodegroup.execution.templates_folder, "admin", "01.deployment.json")
 ui_deployment_template_output = os.path.join(
     nodegroup.execution.templates_folder, "admin", "01.deployment-execute.json")
-content = Helper.replace_in_file(
-    ui_deployment_template, ui_deployment_template_output, values_to_replace)
 
 kubectl = Kubectl(os.path.dirname(__file__))
 kubectl.install_folder(os.path.join(

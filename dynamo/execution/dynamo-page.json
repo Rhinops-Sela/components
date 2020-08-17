@@ -6,6 +6,22 @@
   "description": "DynamoDB configuration & parameters",
   "inputs": [
     {
+      "template": "spot",
+      "group_enabler_master": "use_spot"
+    },
+    {
+      "template": "spot-on-demand-base-capacity",
+      "sub_group": "use_spot"
+    },
+    {
+      "template": "spot-on-demand-cpacity",
+      "sub_group": "use_spot"
+    },
+    {
+      "template": "spot-allocation",
+      "sub_group": "use_spot"
+    },
+    {
       "controlType": "text",
       "tooltip": "Please select the namespace",
       "displayName": "Namespace",
@@ -21,34 +37,6 @@
       "template": "dns-entry",
       "serverValue": "ADMIN_DNS_RECORD",
       "displayName": "DynamoDb Admin DNS Record"
-    },
-    {
-      "template": "autoscaling-maximum"
-    },
-    {
-      "template": "autoscaling-minimum"
-    },
-    {
-      "template": "autoscaling-desired"
-    },
-    {
-      "template": "node-volume-size"
-    },
-    {
-      "template": "spot",
-      "group_enabler_master": "use_spot"
-    },
-    {
-      "template": "spot-on-demand-base-capacity",
-      "sub_group": "use_spot"
-    },
-    {
-      "template": "spot-on-demand-cpacity",
-      "sub_group": "use_spot"
-    },
-    {
-      "template": "spot-allocation",
-      "sub_group": "use_spot"
     }
   ]
 }

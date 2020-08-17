@@ -14,8 +14,8 @@
       "instancesDistribution": {
         "instanceTypes": ["m5.large", "m5.xlarge", "m5.2xlarge"]
       },
-      "minSize": 1,
-      "maxSize": 4,
+      "minSize": 0,
+      "maxSize": 100,
       "desiredCapacity": 1,
       "volumeSize": 10,
       "volumeType": "gp2",
