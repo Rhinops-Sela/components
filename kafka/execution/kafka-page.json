@@ -21,6 +21,12 @@
       "serverValue": "BROKERS"
     },
     {
+      "template": "dns-entry",
+      "tooltip": "Url to used for access to the Kafka",
+      "displayName": "Kafka DNS Record",
+      "serverValue": "KAFKA_DNS_RECORD"
+    },
+    {
       "template": "spot",
       "group_enabler_master": "use_spot"
     },

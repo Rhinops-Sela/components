@@ -28,5 +28,8 @@
   },
   "ZOOKEEPR_IMAGE_TAG": {
     "debug": "5.5.0"
+  },
+  "ZOOKEEPER_DNS_RECORD": {
+    "debug": "zookeeper.fennec.io"
   }
 }

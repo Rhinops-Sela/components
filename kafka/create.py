@@ -8,12 +8,13 @@ from fennec_nodegorup.nodegroup import Nodegroup
 execution = Execution(os.path.dirname(__file__))
 namespace = execution.local_parameters['NAMESPACE']
 kafka_url = execution.local_parameters['KAFKA_DNS_RECORD']
+zookeeper_url = execution.local_parameters['ZOOKEEPER_DNS_RECORD']
 template_path = os.path.join(
     execution.templates_folder, "kafka-ng-template.json")
 nodegroup = Nodegroup(os.path.dirname(__file__), template_path)
 nodegroup.create()
 
-kafka_chart = Helm(os.path.dirname(__file__), namespace=namespace, chart_name="bitnami/kafka")
+kafka_chart = Helm(os.path.dirname(__file__), namespace=namespace, chart_name="kafka")
 values_file_path = os.path.join(
     execution.execution_folder, "kafka-values.json")
 values_file_object = Helper.file_to_object(values_file_path)
@@ -24,11 +25,11 @@ values_file_object['cp-zookeeper']['imageTag'] = execution.local_parameters['ZOO
 execution_file = os.path.join(
     os.path.dirname(__file__), "kafka-execute.values.json")
 Helper.to_json_file(values_file_object, execution_file)
-kafka_chart.install_chart(release_name="kafka",
+kafka_chart.install_chart(release_name="bitnami",
                                   chart_url="https://charts.bitnami.com/bitnami",
                                   additional_values=[f"--values {execution_file}"], 
                                   timeout = 360)
-#core_dns = CoreDNS(os.path.dirname(__file__))
-#core_dns.add_records(f"{kafka_url}=elasticsearch-master.{namespace}.svc.cluster.local")
-#if execution.local_parameters['INSTALL_ZOOKEEPER']:                                  
-    #core_dns.add_records(f"{kafka_url}=elasticsearch-master.{namespace}.svc.cluster.local")
+core_dns = CoreDNS(os.path.dirname(__file__))
+core_dns.add_records(f"{kafka_url}=kafka-headless.{namespace}.svc.cluster.local")
+if execution.local_parameters['INSTALL_ZOOKEEPER']:                                  
+    core_dns.add_records(f"{zookeeper_url}=kafka-zookeeper-headless.{namespace}.svc.cluster.local")
