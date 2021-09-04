@@ -1,0 +1,66 @@
+{
+  "name": "elasticsearch",
+  "executer": "python",
+  "mandatory": false,
+  "displayName": "ES",
+  "image": "assets/component_logos/elasticsearch.png",
+  "description": "ES configuration & parameters",
+  "inputs": [
+    {
+      "template": "namespace"
+    },
+    {
+      "template": "image_tag",
+      "serverValue": "KAFKA_IMAGE_TAG"
+    },
+    {
+      "controlType": "text",
+      "tooltip": "# of borkers",
+      "displayName": "Brokers",
+      "regexValidation": "^[0-9]*$",
+      "serverValue": "BROKERS"
+    },
+    {
+      "template": "spot",
+      "group_enabler_master": "use_spot"
+    },
+    {
+      "template": "spot-on-demand-base-capacity",
+      "sub_group": "use_spot"
+    },
+    {
+      "template": "spot-on-demand-cpacity",
+      "sub_group": "use_spot"
+    },
+    {
+      "template": "spot-allocation",
+      "sub_group": "use_spot"
+    },
+    {
+      "template": "dns-entry",
+      "tooltip": "Url to used for access to the borkers",
+      "displayName": "Brokers DNS Record",
+      "serverValue": "BROKERS_DNS_RECORD"
+    },
+    {
+      "controlType": "checkbox",
+      "group_enabler_master": "zookeeper_installer",
+      "tooltip": "Install Zookeeper",
+      "displayName": "Install Zookeeper?",
+      "serverValue": "INSTALL_ZOOKEEPER",
+      "value": true
+    },
+    {
+      "template": "image_tag",
+      "serverValue": "ZOOKEEPR_IMAGE_TAG",
+      "sub_group": "zookeeper_installer"
+    },
+    {
+      "template": "dns-entry",
+      "sub_group": "zookeeper_installer",
+      "tooltip": "Url to used for access to Kafka Zookeeper",
+      "displayName": "Zookeeper DNS Record",
+      "serverValue": "ZOOKEEPER_DNS_RECORD"
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "apiVersion": "eksctl.io/v1alpha5",
+  "kind": "ClusterConfig",
+  "metadata": {
+    "name": "fennec",
+    "region": "eu-west-2"
+  },
+  "nodeGroups": [
+    {
+      "name": "kafka",
+      "labels":{
+        "role": "kafka"
+      },
+      "instancesDistribution": {
+        "instanceTypes": [
+          "m5.xlarge",
+          "m5.large",
+          "m5.2xlarge"
+        ]
+      },
+      "minSize": 1,
+      "maxSize": 20,
+      "desiredCapacity": 1,
+      "volumeSize": 50,
+      "volumeType": "gp2",
+      "privateNetworking": true,
+      "iam": {
+        "withAddonPolicies": {
+          "autoScaler": true
+        }
+      },
+      "tags": {
+        "k8s.io/cluster-autoscaler/node-template/role": "kafka",
+        "k8s.io/cluster-autoscaler/node-template/taint/kafka": "true:NoSchedule"
+      },
+      "taints": { "kafka": "true:NoSchedule"}
+    }
+  ]
+}

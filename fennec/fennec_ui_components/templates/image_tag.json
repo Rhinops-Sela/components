@@ -1,0 +1,7 @@
+{
+  "controlType": "text",
+  "tooltip": "Tag for the image",
+  "displayName": "Docker Image Tag",
+  "regexValidation": "^[0-9]*$",
+  "serverValue": "IMAGE_TAG"
+}

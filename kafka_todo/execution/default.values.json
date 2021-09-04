@@ -1,0 +1,32 @@
+{
+  "NAMESPACE": {
+    "debug": "kafka"
+  },
+  "BROKERS": {
+    "debug": "3"
+  },
+  "USE_SPOT": {
+    "debug": true
+  },
+  "ALLOCATION_STRATEGY": {
+    "debug": "lowest-price"
+  },
+  "ON_DEMEND_BASE_CAPACITY": {
+    "debug": 0
+  },
+  "ON_DEMEND_ABOVE_BASE_PERCENTAGE": {
+    "debug": 0
+  },
+  "KAFKA_DNS_RECORD": {
+    "debug": "kafka.fennec.io"
+  },
+  "KAFKA_IMAGE_TAG": {
+    "debug": "5.5.0"
+  },
+  "INSTALL_ZOOKEEPER": {
+    "debug": true
+  },
+  "ZOOKEEPR_IMAGE_TAG": {
+    "debug": "5.5.0"
+  }
+}
