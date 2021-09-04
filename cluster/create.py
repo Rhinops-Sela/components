@@ -6,32 +6,30 @@ from fennec_helpers.helper import Helper
 
 
 cluster = Cluster(os.path.dirname(__file__))
-if cluster.execution.local_parameters['CREATE_CLUSTER']:
-    cluster.create()
+cluster.create()
 
-    # Add admin ARN
-    admin_arn = cluster.execution.local_parameters['ADMIN_ARN']
-    arn_template = os.path.join(
-        cluster.execution.templates_folder, "02.auth", "aws-auth.yaml")
-    arn_output = os.path.join(
-        cluster.execution.templates_folder, "02.auth", "aws-auth-execute.yaml")
-    admin_arn = cluster.execution.local_parameters['ADMIN_ARN']
-    username = admin_arn.split('/')[1]
-    values_to_replace = {'ADMIN_USER': f'{admin_arn}',
-                         'ADMIN_USERNAME': f'{username}'}
-    content = Helper.replace_in_file(
-        arn_template, arn_output, values_to_replace)
-    cluster.patch_file(content, "kube-system", "configmap/aws-auth")
+# Add admin ARN
+admin_arn = cluster.execution.local_parameters['ADMIN_ARN']
+arn_template = os.path.join(
+    cluster.execution.templates_folder, "02.auth", "aws-auth.yaml")
+arn_output = os.path.join(
+    cluster.execution.templates_folder, "02.auth", "aws-auth-execute.yaml")
+username = admin_arn.split('/')[1]
+values_to_replace = {'ADMIN_USER': f'{admin_arn}',
+                     'ADMIN_USERNAME': f'{username}'}
+content = Helper.replace_in_file(
+    arn_template, arn_output, values_to_replace)
+cluster.patch_file(content, "kube-system", "configmap/aws-auth", arn_output)
 
-    # Install cert-manager
-    cert_manater_chart = Helm(os.path.dirname(__file__), "cert-manager")
-    values_file_path = os.path.join(
-        cluster.execution.templates_folder, "05.cert-manager", "cert-manager_values.yaml")
-    cert_manater_chart.install_chart(release_name="jetstack",  chart_url="https://charts.jetstack.io",
-                                     additional_values=[f"--values {values_file_path}"])
+# Install cert-manager
+cert_manater_chart = Helm(os.path.dirname(__file__), "cert-manager")
+values_file_path = os.path.join(
+    cluster.execution.templates_folder, "05.cert-manager", "cert-manager_values.yaml")
+cert_manater_chart.install_chart(release_name="jetstack",  chart_url="https://charts.jetstack.io",
+                                 additional_values=[f"--values {values_file_path}"])
 
-    cluster.install_folder(folder=os.path.join(
-        cluster.execution.templates_folder, '05.cert-manager', "kubectl"), namespace="cert-manager")
+cluster.install_folder(folder=os.path.join(
+    cluster.execution.templates_folder, '05.cert-manager', "kubectl"), namespace="cert-manager")
 
 # Install HPA
 install_HPA = cluster.execution.local_parameters['INSTALL_CLUSTER_HPA']
@@ -48,14 +46,13 @@ if install_cluster_autoscaler:
         os.path.dirname(__file__), "cluster-autoscaler")
     values_file_path = os.path.join(
         cluster.execution.templates_folder, "04.cluster-autoscaler", "auto_scaler.yaml")
-    cluster_auto_scaler_chart.install_chart(release_name="stable", chart_url="https://kubernetes-charts.storage.googleapis.com",
+    cluster_auto_scaler_chart.install_chart(release_name="stable", chart_url="https://charts.helm.sh/stable",
                                             additional_values=[
                                                 f"--values {values_file_path}",
                                                 f"--set autoDiscovery.clusterName={cluster.execution.cluster_name}",
                                                 f"--set awsRegion={cluster.execution.cluster_region}",
                                                 "--version 7.0.0"
                                             ])
-
 # Install Nginx Controller
 install_ingress_controller = cluster.execution.local_parameters['INSTALL_INGRESS_CONTROLER']
 if install_ingress_controller:
@@ -92,3 +89,17 @@ if install_cluster_dashboard:
         'kubernetes-dashboard-ingress', 'kubernetes-dashboard')
     core_dns = CoreDNS(os.path.dirname(__file__))
     core_dns.add_records(f"{user_url}={ingress_address}")
+
+# Install Cluster dashboard
+# install_cluster_dashboard = cluster.execution.local_parameters['INSTALL_CLUSTER_DASHBOARD']
+# if install_cluster_dashboard:
+#     user_url = cluster.execution.local_parameters['CLUSTER_DASHBOARD_URL']
+#     deployment_folder = os.path.join(
+#         cluster.execution.templates_folder, "06.dashboard")
+#     cluster.install_folder(deployment_folder)
+#     cluster.export_secret(secret_name="admin-user",
+#                           namespace="kube-system",
+#                           output_file_name="dashboard",
+#                           decode=True)
+#     core_dns = CoreDNS(os.path.dirname(__file__))
+#     core_dns.add_records(f"{user_url}=kubernetes-dashboard.kubernetes-dashboard")

@@ -11,7 +11,7 @@ class Kubectl():
     def __init__(self, working_folder: str) -> None:
         self.execution = Execution(working_folder)
 
-    def export_secret(self, secret_name: str, namespace: str, output_file_name: str, decode = False):
+    def export_secret(self, secret_name: str, namespace: str, output_file_name: str, decode=False):
         command = f'kubectl get secret -n {namespace} --kubeconfig {self.execution.kube_config_file} | grep "{secret_name}"'
         all_secrets_str = self.execution.run_command(
             command, show_output=False, kubeconfig=False).log.split("\n")
@@ -25,7 +25,8 @@ class Kubectl():
                 'data']['token']
             file_name = f'{output_file_name}.fennec_secret'
             if decode:
-                self.execution.exeport_secret(file_name, base64.b64decode(token))
+                self.execution.exeport_secret(
+                    file_name, base64.b64decode(token))
             else:
                 self.execution.exeport_secret(file_name, token)
         else:
@@ -104,14 +105,16 @@ class Kubectl():
         return True if not objects_in_namespace else False
 
     def check_if_exists(self, name: str) -> bool:
-        namespaces = self.execution.run_command("kubectl get namespace -n all").log
+        namespaces = self.execution.run_command(
+            "kubectl get namespace -n all").log
         for namespace in namespaces.split('\n'):
             if name in namespace:
                 return True
         return False
-    
+
     def get_ingress_address(self, ingress_name, namespace='all-namespaces'):
-        command_result = self.execution.run_command(f"kubectl get ingress {ingress_name} -n {namespace} -o json").log
+        command_result = self.execution.run_command(
+            f"kubectl get ingress {ingress_name} -n {namespace} -o json").log
         ingress = Helper.json_to_object(command_result)
         ingress_address = ingress['status']['loadBalancer']['ingress'][0]['hostname']
         return ingress_address
