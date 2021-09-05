@@ -1,4 +1,5 @@
 from pathlib import Path
+import time
 import os
 import base64
 from fennec_execution import Execution
@@ -112,9 +113,13 @@ class Kubectl():
                 return True
         return False
 
-    def get_ingress_address(self, ingress_name, namespace='all-namespaces'):
-        command_result = self.execution.run_command(
-            f"kubectl get ingress {ingress_name} -n {namespace} -o json").log
-        ingress = Helper.json_to_object(command_result)
-        ingress_address = ingress['status']['loadBalancer']['ingress'][0]['hostname']
-        return ingress_address
+    def get_ingress_address(self, ingress_name, namespace='all-namespaces',max_tries=10):
+        for i in range(max_tries):
+            try:
+                command_result = self.execution.run_command(f"kubectl get ingress {ingress_name} -n {namespace} -o json").log
+                ingress = Helper.json_to_object(command_result)
+                ingress_address = ingress['status']['loadBalancer']['ingress'][0]['hostname']
+                return ingress_address
+            except Exception:
+                time.sleep(10) 
+                continue
