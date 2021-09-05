@@ -1,6 +1,6 @@
 {
   "CLUSTER_NAME": {
-    "debug": "fennec2",
+    "debug": "fennec",
     "global": true
   },
   "CLUSTER_REGION": {
@@ -30,7 +30,7 @@
     "default": ""
   },
   "INSTALL_INGRESS_CONTROLER": {
-    "debug": false,
+    "debug": true,
     "default": false
   }
 }
