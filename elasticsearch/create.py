@@ -36,7 +36,7 @@ if execution.local_parameters['INSTALL_KIBANA']:
         execution.execution_folder, "kibana-values.json")
     values_file_object = Helper.file_to_object(values_file_path)
     values_file_object[
-        'elasticsearchHosts'] = f"http://{es_url}:9200"
+        'elasticsearchHosts'] = f"http://elasticsearch-master-headless:9200"
     execution_file = os.path.join(
         os.path.dirname(__file__), "kibana-execute.values.json")
     Helper.to_json_file(values_file_object, execution_file)
