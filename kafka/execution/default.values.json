@@ -21,13 +21,15 @@
     "debug": "kafka.fennec.io"
   },
   "KAFKA_IMAGE_TAG": {
-    "debug": "5.5.0"
+    "debug": "5.5.0",
+    "default": "5.5.0"
   },
   "INSTALL_ZOOKEEPER": {
     "debug": true
   },
   "ZOOKEEPR_IMAGE_TAG": {
-    "debug": "5.5.0"
+    "debug": "5.5.0",
+    "default": "5.5.0"
   },
   "ZOOKEEPER_DNS_RECORD": {
     "debug": "zookeeper.fennec.io"

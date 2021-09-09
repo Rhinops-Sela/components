@@ -1,7 +1,7 @@
 {
-  "controlType": "text",
+  "controlType": "select",
   "tooltip": "Tag for the image",
   "displayName": "Docker Image Tag",
-  "regexValidation": "^[0-9]*$",
+  "options": ["5.5.0"],
   "serverValue": "IMAGE_TAG"
 }

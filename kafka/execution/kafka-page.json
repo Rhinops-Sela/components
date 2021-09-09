@@ -1,10 +1,10 @@
 {
-  "name": "elasticsearch",
+  "name": "kafka",
   "executer": "python",
   "mandatory": false,
-  "displayName": "ES",
-  "image": "assets/component_logos/elasticsearch.png",
-  "description": "ES configuration & parameters",
+  "displayName": "Kafka",
+  "image": "assets/component_logos/kafka.png",
+  "description": "Kafka configuration & parameters",
   "inputs": [
     {
       "template": "namespace"
@@ -41,12 +41,6 @@
     {
       "template": "spot-allocation",
       "sub_group": "use_spot"
-    },
-    {
-      "template": "dns-entry",
-      "tooltip": "Url to used for access to the borkers",
-      "displayName": "Brokers DNS Record",
-      "serverValue": "BROKERS_DNS_RECORD"
     },
     {
       "controlType": "checkbox",
