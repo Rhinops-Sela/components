@@ -9,7 +9,7 @@ class CoreDNS():
     def __init__(self, working_folder: str):
         self.execution = Execution(working_folder)
         self.namespace = "kube-system"
-        self.anchor_str = "        rewrite name fennec.ai fennec.ai"
+        self.anchor_str = "        rewrite name fennec.io fennec.io"
 
     def add_records(self, dns_records: str, delimiter=";", inner_delimiter="="):
         dns_records = self.__init_dns_recotds(

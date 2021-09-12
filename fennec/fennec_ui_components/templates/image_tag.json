@@ -1,0 +1,7 @@
+{
+  "controlType": "select",
+  "tooltip": "Tag for the image",
+  "displayName": "Docker Image Tag",
+  "options": ["5.5.0"],
+  "serverValue": "IMAGE_TAG"
+}
