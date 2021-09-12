@@ -5,3 +5,5 @@ outputs/
 *-execute*.json
 *-execute*.yaml
 *.pyc
+**/build/*
+**/dist/*
