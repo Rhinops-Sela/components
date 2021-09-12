@@ -13,7 +13,7 @@ template_path = os.path.join(
 nodegroup = Nodegroup(os.path.dirname(__file__), template_path)
 nodegroup.create()
 
-elasticsearch_chart = Helm(os.path.dirname(__file__), "elk", "elasticsearch")
+elasticsearch_chart = Helm(os.path.dirname(__file__), namespace=namespace, chart_name="elasticsearch")
 values_file_path = os.path.join(
     execution.execution_folder, "es-values.json")
 values_file_object = Helper.file_to_object(values_file_path)
@@ -30,13 +30,13 @@ core_dns = CoreDNS(os.path.dirname(__file__))
 core_dns.add_records(f"{es_url}=elasticsearch-master.{namespace}.svc.cluster.local")
 
 if execution.local_parameters['INSTALL_KIBANA']:
-    kibana_chart = Helm(os.path.dirname(__file__), "elk", "kibana")
+    kibana_chart = Helm(os.path.dirname(__file__), namespace, "kibana")
     kibana_url = execution.local_parameters['KIBANA_DNS_RECORD']
     values_file_path = os.path.join(
         execution.execution_folder, "kibana-values.json")
     values_file_object = Helper.file_to_object(values_file_path)
     values_file_object[
-        'elasticsearchHosts'] = f"http://{es_url}:9200"
+        'elasticsearchHosts'] = f"http://elasticsearch-master-headless:9200"
     execution_file = os.path.join(
         os.path.dirname(__file__), "kibana-execute.values.json")
     Helper.to_json_file(values_file_object, execution_file)

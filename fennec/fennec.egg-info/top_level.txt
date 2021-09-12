@@ -1,7 +1,8 @@
 fennec_cluster
 fennec_core_dns
+fennec_executers
 fennec_execution
-fennec_helm
 fennec_helpers
 fennec_namespace
+fennec_nodegorup
 fennec_ui_components

@@ -8,10 +8,9 @@ data:
     .:53 {
         errors
         health
-        rewrite name fennec.ai fennec.ai
+        rewrite name fennec.io fennec.io
         kubernetes cluster.local in-addr.arpa ip6.arpa {
           pods insecure
-          upstream
           fallthrough in-addr.arpa ip6.arpa
         }
         prometheus :9153
@@ -20,7 +19,7 @@ data:
         loop
         reload
         loadbalance
-    }
+    }    
 kind: ConfigMap
 metadata:
   labels:

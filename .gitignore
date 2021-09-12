@@ -1,5 +1,7 @@
 output/
 outputs/
+**/dist/*
+**/build/*
 *.kube
 *__pycache__*
 *-execute*.json

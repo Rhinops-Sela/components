@@ -38,8 +38,12 @@ metadata:
   namespace: kubernetes-dashboard
 spec:
   ports:
-    - port: 443
+    - name: https
+      port: 443
       targetPort: 8443
+    - name: http
+      port: 80
+      targetPort: 9090
   selector:
     k8s-app: kubernetes-dashboard
 
@@ -225,9 +229,9 @@ spec:
           emptyDir: {}
       serviceAccountName: kubernetes-dashboard
       nodeSelector:
-        role: monitoring
+        role: general
       tolerations:
-        - key: "monitoring"
+        - key: "general"
           operator: "Equal"
           value: "true"
 
@@ -292,9 +296,9 @@ spec:
             runAsGroup: 2001
       serviceAccountName: kubernetes-dashboard
       nodeSelector:
-        role: monitoring
+        role: general
       tolerations:
-        - key: "monitoring"
+        - key: "general"
           operator: "Equal"
           value: "true"
       volumes:

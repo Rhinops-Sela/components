@@ -2,6 +2,10 @@ rbac:
   create: true
 cloudProvider: aws
 autoDiscovery:
-  enabled: "true"
+  enabled: true
 nodeSelector:
   role: general
+tolerations:
+- key: "general"
+  operator: "Equal"
+  value: "true"

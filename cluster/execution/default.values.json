@@ -8,7 +8,7 @@
     "global": true
   },
   "CREATE_CLUSTER": {
-    "debug": false
+    "debug": true
   },
   "ADMIN_ARN": {
     "debug": "arn:aws:iam::027065296145:user/iliag"
@@ -26,11 +26,11 @@
     "default": false
   },
   "CLUSTER_DASHBOARD_URL": {
-    "debug": "dashboard.fenneczaurus.io",
+    "debug": "dashboard.fennec.io",
     "default": ""
   },
   "INSTALL_INGRESS_CONTROLER": {
-    "debug": false,
+    "debug": true,
     "default": false
   }
 }
