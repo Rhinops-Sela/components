@@ -16,10 +16,8 @@ ui_deployment_template_output = os.path.join(
     nodegroup.execution.templates_folder, "admin", "01.deployment-execute.json")
 
 kubectl = Kubectl(os.path.dirname(__file__))
-kubectl.install_folder(os.path.join(
-    nodegroup.execution.templates_folder, "dynamodb"), "dynamodb")
-kubectl.install_folder(os.path.join(
-    nodegroup.execution.templates_folder, "admin"), "dynamodb")
+kubectl.install_folder("dynamodb", namespace=nodegroup.execution.local_parameters['NAMESPACE'])
+kubectl.install_folder(folder="admin/dynamodb", namespace=nodegroup.execution.local_parameters['NAMESPACE'])
 
 core_dns = CoreDNS(os.path.dirname(__file__))
 admin_record  = f"{nodegroup.execution.local_parameters['ADMIN_DNS_RECORD']}=dynamodb-local-admin.{nodegroup.execution.local_parameters['NAMESPACE']}.svc.cluster.local"
