@@ -20,7 +20,7 @@ class Execution:
         self.__load_global_parameters__()
         print(f"local: {self.local_parameters}")
         print(f"global: {self.global_parameters}")
-        self.set_aws_credentials()
+        #self.set_aws_credentials()
 
     @property
     def output_folder(self):
