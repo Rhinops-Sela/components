@@ -43,4 +43,4 @@ admin_file_object['spec']['template']['spec']['containers'][0]['env'][0]['value'
 execution_file = os.path.join(
     os.path.dirname(__file__), "redis-admin-execute.values.json")
 Helper.to_json_file(admin_file_object, execution_file)   
-helm_chart.install_folder(ui_foler, namespace)
+helm_chart.install_folder(base_folder=execution.execution_folder ,folder='ui', namespace=namespace)
