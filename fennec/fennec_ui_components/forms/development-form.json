@@ -1,13 +1,5 @@
 [
   {
-    "name": "aws_security",
-    "displayName": "AWS Security",
-    "description": "AWS Parametes which will be avaliabel as environment variabels during the deployment",
-    "pages": [
-      "aws-security-parameters-page"
-    ]
-  },
-  {
     "name": "cluster",
     "description": "EKS cluster configuration",
     "displayName": "Cluster",
