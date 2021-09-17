@@ -8,19 +8,6 @@ from fennec_helpers.helper import Helper
 cluster = Cluster(os.path.dirname(__file__))
 cluster.create()
 
-# Add admin ARN
-admin_arn = cluster.execution.local_parameters['ADMIN_ARN']
-arn_template = os.path.join(
-    cluster.execution.templates_folder, "02.auth", "aws-auth.yaml")
-arn_output = os.path.join(
-    cluster.execution.templates_folder, "02.auth", "aws-auth-execute.yaml")
-username = admin_arn.split('/')[1]
-values_to_replace = {'ADMIN_USER': f'{admin_arn}',
-                     'ADMIN_USERNAME': f'{username}'}
-content = Helper.replace_in_file(
-    arn_template, arn_output, values_to_replace)
-cluster.patch_file(content, "kube-system", "configmap/aws-auth", arn_output)
-
 # Install cert-manager
 cert_manater_chart = Helm(os.path.dirname(__file__), "cert-manager")
 values_file_path = os.path.join(
