@@ -15,8 +15,7 @@ values_file_path = os.path.join(
 cert_manater_chart.install_chart(release_name="jetstack",  chart_url="https://charts.jetstack.io",
                                  additional_values=[f"--values {values_file_path}"])
 
-cluster.install_folder(folder=os.path.join(
-    cluster.execution.templates_folder, '05.cert-manager', "kubectl"), namespace="cert-manager")
+cluster.install_folder(folder='05.cert-manager/kubectl', namespace="cert-manager")
 
 # Install HPA
 install_HPA = cluster.execution.local_parameters['INSTALL_CLUSTER_HPA']
@@ -43,9 +42,7 @@ if install_cluster_autoscaler:
 # Install Nginx Controller
 install_ingress_controller = cluster.execution.local_parameters['INSTALL_INGRESS_CONTROLER']
 if install_ingress_controller:
-    deployment_folder = os.path.join(
-        cluster.execution.templates_folder, "06.nginx")
-    cluster.install_folder(deployment_folder)
+    cluster.install_folder(folder="06.nginx")
     """ cluster.install_folder(deployment_folder)
     nginx_chart = Helm(os.path.dirname(__file__), "nginx-ingress", "nginx-ingress-controller")
     values_file_path = os.path.join(
@@ -65,9 +62,7 @@ if install_cluster_dashboard:
     values_to_replace = {'CLUSTER_DASHBOARD_URL': f'{user_url}'}
     Helper.replace_in_file(
         values_file_path, values_file_path_execution, values_to_replace, 100)
-    deployment_folder = os.path.join(
-        cluster.execution.templates_folder, "07.dashboard")
-    cluster.install_folder(deployment_folder)
+    cluster.install_folder(folder="07.dashboard")
     cluster.export_secret(secret_name="admin-user",
                           namespace="kube-system",
                           output_file_name="dashboard",
