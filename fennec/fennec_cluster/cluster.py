@@ -6,6 +6,19 @@ from fennec_core_dns.core_dns import CoreDNS
 
 
 class Cluster(Kubectl):
+
+    @property
+    def name(self):
+        return self.execution.global_parameters['CLUSTER_NMAE']
+
+    @property
+    def username(self):
+        return self.execution.local_parameters['ADMIN_ARN'].split('/')[1]
+
+    @property
+    def admin_arn(self):
+        return self.execution.local_parameters['ADMIN_ARN']
+
     def __init__(self, working_folder: str):
         self.working_folder = working_folder
         Kubectl.__init__(self, working_folder)
