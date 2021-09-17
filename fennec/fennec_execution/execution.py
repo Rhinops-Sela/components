@@ -25,7 +25,7 @@ class Execution:
     @property
     def output_folder(self):
         self.global_parameters.
-        return os.path.abspath(os.path.join(self.working_folder, '..', f'outputs-{self.global_parameters["FENNEC_OUTPUTS_FOLDER"]}'))
+        return os.path.abspath(os.path.join(self.working_folder, '..', f'{self.global_parameters["FENNEC_OUTPUTS_FOLDER"]}'))
 
     @property
     def debug(self):
