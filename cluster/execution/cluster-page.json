@@ -9,10 +9,6 @@
   "description": "Please provide cluster information, if cluster doesn't exists it will be created",
   "inputs": [
     {
-      "serverValue": "FENNEC_OUTPUTS_FOLDER",
-      "global": true
-    },
-    {
       "controlType": "text",
       "serverValue": "CLUSTER_NAME",
       "regexValidation": ".*",
