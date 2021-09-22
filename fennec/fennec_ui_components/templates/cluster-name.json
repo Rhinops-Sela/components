@@ -1,7 +1,10 @@
 {
-  "controlType": "text",
+  "controlType": "select",
   "tooltip": "Please provide the correct cluster information",
   "displayName": "Cluster Name",
+  "options": [
+    "fennec"
+  ],
   "regexValidation": ".*",
   "serverValue": "CLUSTER_NAME",
   "global": true
