@@ -13,14 +13,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       
-      - name: Print artifact-workspace
-        run: |
-          echo "$GITHUB_WORKSPACE"
-          cd $GITHUB_WORKSPACE
-          ls
-#       #Publish artifacts-components
-#       - name: Archive production artifacts
-#         uses: actions/upload-artifact@v2
-#         with:
-#           name: components
-#           path: $GITHUB_WORKSPACE/
+#       - name: Print artifact-workspace
+#         run: |
+#           echo "$GITHUB_WORKSPACE"
+#           cd $GITHUB_WORKSPACE
+#           ls
+      #Publish artifacts-components
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: components
+          path: $GITHUB_WORKSPACE/
