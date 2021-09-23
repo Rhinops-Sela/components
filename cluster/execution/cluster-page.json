@@ -9,12 +9,7 @@
   "description": "Please provide cluster information, if cluster doesn't exists it will be created",
   "inputs": [
     {
-      "controlType": "text",
-      "serverValue": "CLUSTER_NAME",
-      "regexValidation": ".*",
-      "global": true,
-      "tooltip": "Will be used as the cluster name for enire installation",
-      "displayName": "Cluster Name"
+      "template": "cluster-name"
     },
     {
       "template": "region",
