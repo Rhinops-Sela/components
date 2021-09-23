@@ -23,4 +23,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: components
-          path: $GITHUB_WORKSPACE/
+          path: $GITHUB_WORKSPACE/s
