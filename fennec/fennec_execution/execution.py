@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 import subprocess
 from collections import namedtuple
-import os
+import os, stat
 import fcntl
 
 from fennec_helpers.helper import Helper
@@ -126,6 +126,7 @@ class Execution:
     def run_command(self, command: str, show_output=True, continue_on_error=False, kubeconfig=True):
         output_str = ""
         if kubeconfig:
+            os.chmod(self.kube_config_file, stat.S_IRWXU)
             os.environ['KUBECONFIG'] = self.kube_config_file
         process = subprocess.Popen(
             ['/bin/bash', '-c', f'{command}'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT,)

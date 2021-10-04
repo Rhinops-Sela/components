@@ -1,5 +1,6 @@
 {
   "FENNEC_OUTPUTS_FOLDER": {
+    "debug": "../..",
     "global": true
   },
   "CLUSTER_NAME": {
