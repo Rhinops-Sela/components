@@ -33,7 +33,7 @@ class Helper:
     @staticmethod
     def json_to_object(string_to_convert: str):
         try:
-            fixed_str = string_to_convert.replace('\n', '')            
+            fixed_str = string_to_convert.replace('\n', '')
             converted = json.loads(fixed_str)
             return converted
         except ValueError:
@@ -47,7 +47,8 @@ class Helper:
     @staticmethod
     def replace_in_file(source_file: str, output_file: str, strings_to_replace: dict, max=1):
         fin = open(source_file, "rt")
-        fout =  open(output_file + "_temp", "wt") if source_file == output_file else open(output_file, "wt")
+        fout = open(output_file + "_temp",
+                    "wt") if source_file == output_file else open(output_file, "wt")
         file_content = ""
         for line in fin:
             file_content += line
@@ -61,6 +62,15 @@ class Helper:
         if source_file == output_file:
             os.rename(output_file + "_temp", output_file)
         return file_content
+
+    @staticmethod
+    def set_permissions(command: str, permissions):
+        command_objects = command.split(' ')
+        for command_object in command_objects:
+            is_file = os.path.isfile(command_object)
+            if is_file:
+                for permission in permissions:
+                    os.chmod(command_object, permission)
 
     @staticmethod
     def num(s):
