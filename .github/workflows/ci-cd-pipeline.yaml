@@ -1,0 +1,27 @@
+name: components-CI
+
+on:
+  push:
+    # Sequence of patterns matched against refs/heads
+    branches:
+      - develop
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - uses: actions/checkout@v2
+      
+#       - name: Print artifact-workspace
+#         run: |
+#           echo "$GITHUB_WORKSPACE"
+#           cd $GITHUB_WORKSPACE
+#           ls
+      #Publish artifacts-components
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: components
+          path: ${{ github.workspace }}
