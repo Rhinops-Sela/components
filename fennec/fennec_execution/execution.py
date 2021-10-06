@@ -125,6 +125,7 @@ class Execution:
 
     def run_command(self, command: str, show_output=True, continue_on_error=False, kubeconfig=True):
         output_str = ""
+        print(f'Will execute: {command}')
         if kubeconfig:
             Helper.set_permissions(self.kube_config_file, stat.S_IRWXU)
             os.environ['KUBECONFIG'] = self.kube_config_file
