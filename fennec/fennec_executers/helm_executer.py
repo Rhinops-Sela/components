@@ -23,7 +23,8 @@ class Helm(Kubectl):
         return False
 
     def install_chart(self, release_name: str, chart_url: str = "", additional_values=[], timeout = 300):
-        verb = "upgrade" if self.installed else "install"
+        verb = "upgrade --install"
+        self.execution.run_command("helm repo add stable https://charts.helm.sh/stable")
         if chart_url:
             self.execution.run_command(
                 f"helm repo add {release_name} {chart_url}")
