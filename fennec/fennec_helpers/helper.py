@@ -64,13 +64,12 @@ class Helper:
         return file_content
 
     @staticmethod
-    def set_permissions(command: str, permissions):
+    def set_permissions(command: str, permission):
         command_objects = command.split(' ')
         for command_object in command_objects:
             is_file = os.path.isfile(command_object)
             if is_file:
-                for permission in permissions:
-                    os.chmod(command_object, permission)
+                os.chmod(command_object, permission)
 
     @staticmethod
     def num(s):
