@@ -26,28 +26,17 @@ jobs:
           name: components
           path: ${{ github.workspace }}
   
-  job_create_repository_dispatch:
-    needs: [build]
-    runs-on: windows-latest
-    env:
-      GITHUB_PAT: ${{ secrets.PERSONAL_TOKEN }}
+  send_repository_dispatch:
+    runs-on: ubuntu-latest
+
     steps:
-      - name: Create a repository dispatch event to trigger workflow
-        shell: pwsh
+      - name: Send repository_dispatch
+        env:
+          PAT: ${{ secrets.PERSONAL_TOKEN }}
         run: |
-          $pat = $env:GITHUB_PAT
-          $uri = "https://api.github.com/repos/Rhinops-Sela/components/dispatches"
-          $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f "", $pat)))
-          $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
-          $headers.Add("Authorization", ("Basic {0}" -f $base64AuthInfo))
-          $headers.Add("Accept", "application/vnd.github.everest-preview+json")
-          $headers.Add("Content-Type", "application/json")
-          $body = "{
-            `"event_type`": `"test-repository-dispatch`",
-            `"client_payload`": {
-              `"unit`": false,
-              `"integration`": true
-            }
-          }"
-          $response = Invoke-RestMethod -Uri $uri -Headers $headers -Body $body -Method POST
-          $response | ConvertTo-Json
+          curl \
+            -X POST \
+            -H "Authorization: token $PAT" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/molkree/github_actions/dispatches \
+            -d '{"event_type":"components_built"}'
