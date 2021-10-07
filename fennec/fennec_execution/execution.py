@@ -20,7 +20,7 @@ class Execution:
         self.__load_global_parameters__()
         print(f"local: {self.local_parameters}")
         print(f"global: {self.global_parameters}")
-        #self.set_aws_credentials()
+        self.set_aws_credentials()
 
     @property
     def output_folder(self):
@@ -82,17 +82,21 @@ class Execution:
             working_dictionary[parameter_name] = calculated_value
 
     def set_aws_credentials(self):
-        if not self.debug:
-            os.environ['AWS_ACCESS_KEY_ID'] = f'{self.global_parameters["AWS_ACCESS_KEY_ID"]}'
-            os.environ['AWS_SECRET_ACCESS_KEY'] = f'{self.global_parameters["AWS_SECRET_ACCESS_KEY"]}'
-        os.environ['AWS_DEFAULT_REGION'] = self.cluster_region
+        # if not self.debug:
+        #     os.environ['AWS_ACCESS_KEY_ID'] = f'{self.global_parameters["AWS_ACCESS_KEY_ID"]}'
+        #     os.environ['AWS_SECRET_ACCESS_KEY'] = f'{self.global_parameters["AWS_SECRET_ACCESS_KEY"]}'
+        os.environ['AWS_REGION'] = self.cluster_region
+        
 
     def create_kubernetes_client(self):
         self.__kube_config_file = os.path.join(self.working_folder, '.kube')
-        os.system(
-            f'aws eks update-kubeconfig --name {self.cluster_name} --kubeconfig {self.kube_config_file}')
+        command = f'aws eks update-kubeconfig --name {self.cluster_name} --kubeconfig {self.kube_config_file}'
+        print(command)
+        os.remove(self.kube_config_file)
+        os.system(command)
         Helper.copy_file(self.kube_config_file,
                          os.path.join(self.output_folder, ".kube"))
+
 
     def calculate_variable_value(self, parameter_name, parameter_value):
         if self.debug:
@@ -125,14 +129,15 @@ class Execution:
 
     def run_command(self, command: str, show_output=True, continue_on_error=False, kubeconfig=True):
         output_str = ""
-        print(f'Will execute: {command}')
+        my_env = os.environ.copy()
         if kubeconfig:
             Helper.set_permissions(self.kube_config_file, stat.S_IRWXU)
-            os.environ['KUBECONFIG'] = self.kube_config_file
+            command = f'export KUBECONFIG={self.kube_config_file} && {command}'
         Helper.set_permissions(command, 0o777)
+        print(f'Will execute: {command}')
 
         process = subprocess.Popen(
-            ['/bin/bash', '-c', f'{command}'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT,)
+            ['/bin/bash', '-c', f'{command}'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         while True:
             output = process.stdout.readline()
             poll = process.poll()
