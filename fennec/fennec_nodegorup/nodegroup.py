@@ -55,7 +55,7 @@ class Nodegroup():
                 instance_type)
 
     def __add_taints__(self):
-        if not "TAINTS" in self.execution.local_parameters:
+        if not "TAINTS" in self.execution.local_parameters or self.execution.local_parameters['TAINTS'] == "":
             return
         taints = self.execution.local_parameters['TAINTS']
         if not taints:
@@ -68,7 +68,7 @@ class Nodegroup():
         self.nodegroup = modified_nodegroup
 
     def __add_node_role(self):
-        if not "NODE_ROLE" in self.execution.local_parameters:
+        if not "NODE_ROLE" in self.execution.local_parameters or self.execution.local_parameters['NODE_ROLE'] == "":
             return
         labels = f"role={self.execution.local_parameters['NODE_ROLE']}"
         if not labels:
@@ -80,7 +80,7 @@ class Nodegroup():
         self.nodegroup = modified_nodegroup
 
     def __add_labels__(self):
-        if not "LABELS" in self.execution.local_parameters:
+        if not "LABELS" in self.execution.local_parameters or self.execution.local_parameters['LABELS'] == "":
             return
         labels = self.execution.local_parameters['LABELS']
         modified_nodegroup = Nodegroup.add_properties(
