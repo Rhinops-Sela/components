@@ -6,6 +6,9 @@ from fennec_helpers.helper import Helper
 
 
 cluster = Cluster(os.path.dirname(__file__))
+if cluster.check_if_cluster_exists(): 
+   print("Cluster already exists")
+   os._exit(0)
 cluster.create()
 
 # Install cert-manager

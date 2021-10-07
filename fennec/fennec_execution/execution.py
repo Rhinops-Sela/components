@@ -129,7 +129,6 @@ class Execution:
 
     def run_command(self, command: str, show_output=True, continue_on_error=False, kubeconfig=True):
         output_str = ""
-        my_env = os.environ.copy()
         if kubeconfig:
             Helper.set_permissions(self.kube_config_file, stat.S_IRWXU)
             command = f'export KUBECONFIG={self.kube_config_file} && {command}'
